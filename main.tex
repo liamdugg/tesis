@@ -1,0 +1,114 @@
+\documentclass[a4paper,10pt]{article}
+
+% Idioma
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Paquetes
+\usepackage{csquotes}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{textcomp, gensymb}
+
+\usepackage{tikz}
+\usepackage{circuitikz}
+
+\usepackage[affil-it]{authblk}
+\usepackage[backend=biber, style=ieee]{biblatex}
+\addbibresource{referencias.bib}
+
+% Configuraciones
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\begin{figure}[t]
+    \centering
+    \includegraphics[scale=0.15]{imgs/utn.jpg}
+    \vspace{0.5cm}
+\end{figure}
+    {\LARGE Proyecto Final\par}
+    {\LARGE 2026\par}
+    \vspace{1cm}
+    {\huge\bfseries Titulo del Proyecto\par}
+    \vspace{1cm}
+    {\LARGE Tesina\par}
+    \vspace{1cm}
+    {\Large\itshape Liam Duggan, Facundo Repetto, Juan Locreille\par}
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+
+% -----------------------------------------------------------
+\newpage
+\section{Objeto del Documento} \label{sec:0_objeto}
+
+% -----------------------------------------------------------
+\newpage
+\section{Abstract} \label{sec:1_abstract}
+
+% -----------------------------------------------------------
+\newpage
+\section{Introducción Teórica y Marco Teórico} \label{sec:2_marcoteorico}
+
+\input{sections/clase_ab}
+\input{sections/gan}
+\input{sections/radioenlace}
+
+% -----------------------------------------------------------
+\newpage
+\section{Desarrollo de la solución a implementar} \label{sec:3_solucion}
+
+% -----------------------------------------------------------
+\newpage
+\section{Resultados, Mediciones y Verificación} \label{sec:4_resmedver}
+
+% -----------------------------------------------------------
+\newpage
+\section{Conclusiones} \label{sec:5_concl}
+
+% -----------------------------------------------------------
+\newpage
+\section{Referencias} \label{sec:6_refs}
+\printbibliography[heading=none]
+
+% -----------------------------------------------------------
+\newpage
+\section{Bibliografía} \label{sec:7_biblio}
+
+% -----------------------------------------------------------
+\newpage
+\section{Índice de Figuras y Tablas} \label{sec:7b_indice}
+\listoffigures
+\listoftables
+
+% -----------------------------------------------------------
+\newpage
+\section{Apéndices} \label{sec:8_apendix}
+
+\subsection{Circuitos Eléctricos} \label{sec:9_circ}
+
+\subsection{Hojas de Datos} \label{sec:10_hd}
+
+\subsection{Programas Fuente} \label{sec:11_soft}
+
+\subsection{Layout PCB} \label{sec:12_pcblay}
+
+\end{document}

@@ -1,0 +1,90 @@
+\subsection{Elección de la Clase de Polarización} \label{sec:clase_polarizacion}
+
+La selección del punto de polarización de un amplificador de potencia de radiofrecuencia determina, de manera directa, el compromiso fundamental entre linealidad y eficiencia de conversión de potencia continua a potencia de radiofrecuencia. Este compromiso se cuantifica habitualmente mediante el ángulo de conducción del transistor, definido como la fracción del ciclo de la señal de entrada durante la cual el dispositivo permanece polarizado por encima de su tensión de \textit{pinch-off} o de umbral y, por lo tanto, conduce corriente de drenador. De acuerdo con este criterio, las clases de polarización clásicas se ordenan según un ángulo de conducción decreciente: la Clase A conduce durante la totalidad del ciclo ($360^\circ$), la Clase B durante exactamente la mitad del ciclo ($180^\circ$), la Clase C durante una fracción menor a la mitad del ciclo, y la Clase AB ocupa la región intermedia entre las Clases A y B, con un ángulo de conducción comprendido entre $180^\circ$ y $360^\circ$.
+
+La Clase A, al mantener el transistor permanentemente activo, preserva con alta fidelidad la forma de onda de la señal de entrada y exhibe, en consecuencia, la mejor linealidad de las tres alternativas. Sin embargo, esta propiedad se obtiene al costo de una eficiencia de drenador teórica máxima del $50\%$, dado que el dispositivo disipa permanentemente una corriente continua de polarización equivalente a la mitad de la corriente máxima, incluso en ausencia de señal de entrada. Para una misión satelital con restricciones estrictas de potencia disponible y de disipación térmica, este nivel de eficiencia resulta inadecuado, ya que demandaría un sobredimensionamiento significativo del subsistema de potencia del CubeSat para sostener la misma potencia de salida de radiofrecuencia.
+
+En el extremo opuesto, la Clase C reduce el ángulo de conducción por debajo de $180^\circ$ polarizando al transistor por debajo de su tensión de \textit{pinch-off}, de modo que el dispositivo permanece apagado durante la mayor parte del ciclo y conduce únicamente en torno al pico positivo de la señal de excitación. Esta operación permite alcanzar eficiencias teóricas que se aproximan al $100\%$ a medida que el ángulo de conducción se reduce, pero introduce una distorsión no lineal severa, dado que la forma de onda de corriente de drenador se aleja sustancialmente de una réplica escalada de la señal de entrada. Esta no linealidad resulta incompatible con esquemas de modulación lineal como M-PSK, cuyo filtrado de conformación espectral (Sección~\ref{sec:radioenlace}) introduce variaciones de envolvente en la señal incluso tratándose de modulaciones de fase pura, las cuales se traducirían en regeneración espectral fuera de banda y en degradación de la tasa de error de bit si fuesen amplificadas por una etapa fuertemente no lineal. Adicionalmente, la Clase C exige niveles de excitación de entrada considerablemente mayores para alcanzar la potencia de salida nominal, lo cual incrementa el riesgo de operación cercana a los límites de ruptura del dispositivo y dificulta la estabilidad del punto de polarización.
+
+La Clase AB constituye, por lo tanto, el compromiso adoptado para el diseño del amplificador: al polarizar al transistor levemente por encima de su tensión de \textit{pinch-off}, se preserva un comportamiento aproximadamente lineal en la región de operación de interés sin incurrir en la penalización de eficiencia máxima de la Clase A. A esta ventaja se agrega un argumento práctico determinante para la implementación: a diferencia de las topologías de conmutación de alta eficiencia (Clases E, F o sus variantes), que requieren terminaciones de impedancia armónica precisas y resultan altamente sensibles a las reactancias parásitas del encapsulado del transistor, la Clase AB se implementa mediante una red de polarización resistiva o inductiva simple sobre la compuerta y el drenador, sin imponer condiciones adicionales sobre la red de adaptación de salida más allá de la habitual adaptación a la impedancia óptima de carga. Esta simplicidad de implementación, sumada al compromiso favorable entre linealidad y eficiencia, motiva su elección como clase de polarización del amplificador desarrollado.
+
+\subsubsection{Deducción de la Eficiencia en Función del Ángulo de Conducción}
+
+Para cuantificar de manera analítica el compromiso descripto, se modela la corriente de drenador del transistor como una forma de onda senoidal recortada simétricamente respecto del origen, de acuerdo con el modelo clásico de ángulo de conducción \cite{CRIPPS}:
+
+\begin{equation}
+    i_D(x) =
+    \begin{cases}
+        I_{max} \dfrac{\cos x - \cos\theta}{1-\cos\theta}, & |x| \le \theta \\[6pt]
+        0, & \theta < |x| \le \pi
+    \end{cases}
+    \label{eq:corriente_drenador}
+\end{equation}
+
+donde $x = \omega t$ es la fase instantánea de la señal de excitación, $I_{max}$ es el valor de pico de la corriente de drenador y $2\theta$ es el ángulo de conducción del dispositivo, de modo que $\theta = \pi$ corresponde a la Clase A (conducción permanente), $\theta = \pi/2$ corresponde a la Clase B (conducción durante medio ciclo) y valores de $\theta$ inferiores a $\pi/2$ corresponden a la Clase C. La región de la Clase AB queda delimitada, en consecuencia, por $\pi/2 < \theta < \pi$.
+
+La potencia de continua entregada por la fuente de alimentación es proporcional a la componente de corriente continua de esta forma de onda, mientras que la potencia de radiofrecuencia entregada a la carga es proporcional a la amplitud de su componente fundamental. Ambas componentes se obtienen mediante el desarrollo en serie de Fourier de la ecuación~\eqref{eq:corriente_drenador}:
+
+\begin{equation}
+    I_{dc} = \frac{1}{2\pi}\int_{-\theta}^{\theta} i_D(x)\,dx = I_{max}\,\frac{\sin\theta - \theta\cos\theta}{\pi(1-\cos\theta)}
+    \label{eq:idc_fourier}
+\end{equation}
+
+\begin{equation}
+    I_1 = \frac{1}{\pi}\int_{-\theta}^{\theta} i_D(x)\cos x\,dx = I_{max}\,\frac{\theta - \sin\theta\cos\theta}{\pi(1-\cos\theta)}
+    \label{eq:i1_fourier}
+\end{equation}
+
+Asumiendo que la tensión de drenador oscila con su excursión máxima ideal entre $0$ y $2V_{DD}$, de modo que la amplitud de la componente fundamental de tensión iguala a la tensión continua de alimentación ($V_1 = V_{DD}$), la eficiencia de drenador se define como el cociente entre la potencia de radiofrecuencia entregada a la carga y la potencia continua consumida:
+
+\begin{equation}
+    \eta(\theta) = \frac{P_{RF}}{P_{DC}} = \frac{\tfrac{1}{2} I_1 V_1}{I_{dc} V_{DD}} = \frac{1}{2}\,\frac{I_1}{I_{dc}}
+    \label{eq:eficiencia_general}
+\end{equation}
+
+Sustituyendo las ecuaciones~\eqref{eq:idc_fourier} y \eqref{eq:i1_fourier} en \eqref{eq:eficiencia_general}, se obtiene la expresión cerrada de la eficiencia teórica en función del ángulo de conducción:
+
+\begin{equation}
+    \boxed{\eta(\theta) = \frac{1}{2}\,\frac{\theta - \sin\theta\cos\theta}{\sin\theta - \theta\cos\theta}}
+    \label{eq:eficiencia_conduccion}
+\end{equation}
+
+Evaluando la ecuación~\eqref{eq:eficiencia_conduccion} en los casos límite, se recuperan los valores característicos reportados habitualmente en la bibliografía. Para $\theta = \pi$ (Clase A), el límite de la expresión converge a $\eta = 0{,}5$, es decir, una eficiencia máxima del $50\%$. Para $\theta = \pi/2$ (Clase B), se obtiene $\eta = \pi/4 \approx 0{,}785$, equivalente al $78{,}5\%$ de eficiencia máxima teórica. La región de la Clase AB se ubica, en consecuencia, en el intervalo continuo comprendido entre estos dos valores extremos ($50\% < \eta_{AB} < 78{,}5\%$), mientras que para $\theta \to 0$ (Clase C) la eficiencia tiende asintóticamente al $100\%$, a expensas de la linealidad discutida previamente. El punto de polarización específico dentro del rango de la Clase AB se ajusta experimentalmente mediante simulación de gran señal del transistor CGH40006S, buscando maximizar la eficiencia de drenador sin comprometer la linealidad requerida por el esquema de modulación M-PSK adoptado para el enlace.
+
+La Figura~\ref{fig:circuito_polarizacion} ilustra el esquema simplificado de una etapa de amplificación con redes de polarización independientes de compuerta y drenador, empleado como referencia conceptual para el análisis precedente. La tensión continua de compuerta $V_{GG}$ fija el punto de operación del transistor por encima de su tensión de \textit{pinch-off}, mientras que el inductor $L_g$ aísla la fuente de polarización de la señal de radiofrecuencia; de manera análoga, el inductor de choque $L_d$ entrega la corriente continua de drenador desde la fuente $V_{DD}$ sin atenuar la componente de radiofrecuencia hacia la carga, la cual se acopla mediante el capacitor de bloqueo $C_{out}$.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[transform shape]
+    	% Paths, nodes and wires:
+    	\node[nigfete] at (7, 4.27){};
+    	\draw (3.25, 4) to[capacitor, l={$DC \, Block$}] (4.5, 4);
+    	\draw (7.5, 5) to[capacitor, l={$DC \, Block$}] (8.75, 5);
+    	\draw (5.5, 2.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (5.5, 3.75);
+    	\draw (7, 5.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (7, 6.75);
+    	\draw (5, 4) -- (6, 4) |- (5.5, 4) -| (5.5, 3.75);
+    	\draw (5.5, 2.25) to[battery1, l={$V_{GG}$}] (5.5, 1.25);
+    	\node[oscillator](N1) at (2.74, 3.01){} node[anchor=east] at ([xshift=-0.03cm]N1.west){$v_{in}$};
+    	\draw (2.25, 2.5) -| (2.25, 1);
+    	\node[tlground] at (2.25, 1){};
+    	\node[tlground] at (5.5, 1){};
+    	\node[tlground] at (7, 1){};
+    	\draw (7, 3.5) -- (7, 1);
+    	\draw (9.25, 4.5) to[american resistor, l={$R_L$}] (9.25, 2.5);
+    	\node[tlground] at (9.25, 1){};
+    	\draw (11, 6.25) to[battery1, l={$V_{DD}$}] (11, 5.25);
+    	\draw (11, 5.25) -| (11, 1);
+    	\node[tlground] at (11, 1){};
+    	\draw (7, 5.25) -| (7, 5.04);
+    	\draw (7, 5) -- (7.5, 5);
+    	\draw (8.75, 5) -- (9.25, 5) -| (9.25, 4.5);
+    	\draw (9.25, 2.5) -| (9.25, 1);
+    	\draw (7, 6.75) -| (7, 7) -- (11, 7) -| (11, 6.25);
+    	\draw (2.25, 4) -| (2.25, 3.5);
+    	\draw (2.25, 4) -- (3.25, 4);
+    	\draw (4.5, 4) -- (5, 4);
+    	\draw (5.5, 1.25) -| (5.5, 1);
+    \end{tikzpicture}
+    \caption{Esquema simplificado de una etapa de amplificación de radiofrecuencia con redes de polarización independientes de compuerta ($V_{GG}$) y drenador ($V_{DD}$), utilizado como referencia para el análisis del ángulo de conducción.}
+    \label{fig:circuito_polarizacion}
+\end{figure}
