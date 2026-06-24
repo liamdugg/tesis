@@ -1,11 +1,7 @@
 import numpy as np
-import scienceplots
 import matplotlib.pyplot as plt
 
 plt.style.use('tesis.mplstyle')
-#plt.style.use('science')
-
-plt.rcParams.update({'figure.dpi': '600'})
 
 # Corriente normalizada (Imax = 1)
 def current(theta, alpha):
@@ -52,17 +48,16 @@ plt.plot(alphas, dc     , label='DC')
 plt.plot(alphas, harm[0], label='Fundamental')
 
 for k in range(1,5):
-    plt.plot(alphas, harm[k], label=f'{k+1}th')
+    plt.plot(alphas, harm[k], label=f'{k+1}° Armónico')
 
 plt.gca().invert_xaxis()
-#plt.xlabel(r'Ángulo de Conducción $\alpha$ (rad)')
-plt.xlabel("Voltage (mV)")
+plt.xlabel(r'Ángulo de Conducción $\alpha$ (rad)')
 plt.ylabel('Amplitud (Imax = 1)')
-plt.xticks([2*np.pi, np.pi, 0],[r'$2\pi$', r'$\pi$', '0'])
+plt.xticks([2*np.pi, 1.5*np.pi, np.pi, 0.5*np.pi,0], [r'$2\pi$ \n A', r'$\frac{3}{2}\pi$', r'$\pi \n B$', r'$\frac{1}{2}\pi$', '0'])
 plt.xlim(2*np.pi, 0)
 plt.grid(True, alpha=0.3)
 plt.legend()
 plt.tight_layout()
 
-plt.savefig('figure.png')
+plt.savefig('pa_harmonics.png')
 #plt.show()
