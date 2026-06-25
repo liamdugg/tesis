@@ -49,7 +49,7 @@ A partir de las componentes de continua y de la fundamental obtenidas de las ecu
     \label{eq:eficiencia_alpha}
 \end{equation}
 
-La Figura~\ref{fig:eficiencia_alpha} grafica la ecuación~\eqref{eq:eficiencia_alpha} para el rango completo de ángulos de conducción de interés, señalando los puntos correspondientes a las clases de operación tradicionales: $\alpha = 360^\circ$ (Clase A, $\eta = 50\%$), $\alpha = 180^\circ$ (Clase B, $\eta \approx 78{,}5\%$), el intervalo $180^\circ < \alpha < 360^\circ$ correspondiente a la Clase AB, y la región $\alpha < 180^\circ$ correspondiente a la Clase C, en la cual la eficiencia continúa incrementándose a expensas de la linealidad evidenciada en la Figura~\ref{fig:armonicos_alpha}.
+La Fig.~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alpha} para el rango completo de ángulos de conducción de interés, señalando los puntos correspondientes a las clases de operación tradicionales: $\alpha = 360^\circ$ (Clase A, $\eta = 50\%$), $\alpha = 180^\circ$ (Clase B, $\eta \approx 78{,}5\%$), el intervalo $180^\circ < \alpha < 360^\circ$ correspondiente a la Clase AB, y la región $\alpha < 180^\circ$ correspondiente a la Clase C, en la cual la eficiencia continúa incrementándose a expensas de la linealidad evidenciada en la Figura~\ref{fig:armonicos_alpha}.
 
 \begin{figure}[H]
     \centering
@@ -61,6 +61,8 @@ La Figura~\ref{fig:eficiencia_alpha} grafica la ecuación~\eqref{eq:eficiencia_a
 \subsubsection{Parámetros de Pequeña Señal}
 
 La caracterización de un amplificador de potencia en régimen de pequeña señal, es decir, en condiciones de excitación suficientemente reducidas como para que el dispositivo se comporte linealmente, se realiza mediante sus parámetros de dispersión o parámetros $S$. A diferencia de los parámetros de impedancia o admitancia, los parámetros $S$ no relacionan tensiones y corrientes en los puertos del dispositivo, sino ondas de potencia incidentes y reflejadas, lo cual permite su medición directa a frecuencias de microondas sin requerir condiciones de circuito abierto o cortocircuito en los puertos, físicamente impracticables en esa banda de frecuencias.
+
+Para un dispositivo de dos puertos como el transistor considerado, con el puerto de entrada asociado al terminal de \textit{gate} y el puerto de salida asociado al terminal de \textit{drain}, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros $S$ relacionan estas ondas mediante:
 
 \begin{figure}[htbp]
     \centering
@@ -88,10 +90,8 @@ La caracterización de un amplificador de potencia en régimen de pequeña seña
 	\draw (6.75, 7.75) -- (7.25, 7.75) -| (7.25, 9.25) -- (6.75, 9.25);
 \end{tikzpicture}
     \caption{Representación simplificada de un cuadripolo mediante parámetros de dispersión ($S$).}
-    \label{fig:parametros_s_simples}
+    \label{fig:cuadripolo_s}
 \end{figure}
-
-Para un dispositivo de dos puertos como el transistor considerado, con el puerto de entrada asociado al terminal de \textit{gate} y el puerto de salida asociado al terminal de \textit{drain}, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$. Los cuatro parámetros $S$ relacionan estas ondas mediante:
 
 \begin{equation}
     \begin{pmatrix} b_1 \\ b_2 \end{pmatrix} =
@@ -110,18 +110,22 @@ donde cada parámetro individual se obtiene, por definición, excitando un únic
     \label{eq:definicion_s}
 \end{equation}
 
-El parámetro $S_{11}$ corresponde al coeficiente de reflexión en el puerto de entrada con el puerto de salida adaptado, y cuantifica la fracción de la onda incidente en el \textit{gate} que es reflejada hacia la fuente de excitación; de manera análoga, $S_{22}$ corresponde al coeficiente de reflexión en el puerto de salida con la entrada adaptada, y cuantifica la fracción de potencia reflejada desde el \textit{drain} hacia la carga. Ambos parámetros son magnitudes complejas adimensionales cuyo módulo, idealmente nulo en una condición de adaptación perfecta, determina directamente el desempeño de adaptación de impedancia del dispositivo en cada puerto.
+El parámetro $S_{11}$ corresponde al coeficiente de reflexión en el puerto de entrada con el puerto de salida adaptado, y cuantifica la fracción de la onda incidente en el \textit{gate} que es reflejada hacia la fuente de excitación; de manera análoga, $S_{22}$ corresponde al coeficiente de reflexión en el puerto de salida con la entrada adaptada, y cuantifica la fracción de potencia reflejada desde el \textit{drain} hacia la carga. Ambos parámetros son magnitudes complejas adimensionales cuyo módulo, idealmente nulo en una condición de adaptación perfecta y de valor unitario en el caso de una reflexión total, determina directamente el desempeño de adaptación de impedancia del dispositivo en cada puerto.
 
-El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde el puerto de entrada hacia el puerto de salida, y representa la ganancia de inserción compleja del dispositivo en la condición de adaptación impuesta; su módulo al cuadrado, expresado en decibeles como $20\log_{10}|S_{21}|$, constituye la ganancia de pequeña señal del amplificador en la frecuencia considerada. El parámetro $S_{12}$ corresponde al coeficiente de transmisión inversa, desde el puerto de salida hacia el puerto de entrada, y cuantifica el grado de acoplamiento parásito entre ambos puertos; un valor de $S_{12}$ apreciable indica una realimentación interna significativa del dispositivo, factor que, como se describe a continuación, condiciona directamente la estabilidad del amplificador frente a variaciones en las impedancias de fuente y carga.
+El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde el puerto de entrada hacia el puerto de salida, y representa la ganancia compleja del dispositivo en la condición de adaptación impuesta. Su módulo al cuadrado, expresado en decibeles como $20\log_{10}|S_{21}|$, constituye la ganancia de pequeña señal del amplificador en la frecuencia considerada. El parámetro $S_{12}$ corresponde al coeficiente de transmisión inversa, desde el puerto de salida hacia el puerto de entrada, y cuantifica la magnitud de la realimentación interna del dispositivo. Un mayor valor de $S_{12}$ indica una realimentación interna mayor del dispositivo, factor que, como será descripto a continuación, condiciona directamente la estabilidad del amplificador frente a variaciones en las impedancias de fuente y carga.
 
-A partir de estos cuatro parámetros se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación espontánea para alguna combinación de impedancias de fuente y carga dentro de la carta de Smith. El criterio de estabilidad más extendido es el factor de Rollet ($K$), el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad, definido como:
+\subsubsection{Estabilidad}
+
+A partir de los cuatro parámetros $S$ se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación para alguna combinación de impedancias de fuente y carga. Un dispositivo se clasifica como \textbf{incondicionalmente estable} en una frecuencia dada cuando permanece estable para cualquier combinación posible de impedancias de fuente y carga, es decir, para la totalidad del diagrama de Smith. Por el contrario, un dispositivo se clasifica como \textbf{condicionalmente estable} cuando existen regiones dentro del diagrama de Smith, denominadas regiones de inestabilidad, para las cuales alguna combinación particular de impedancias de fuente o carga provoca que el dispositivo oscile. En este último caso, el diseñador debe restringir las impedancias de las redes de adaptación a las regiones estables identificadas mediante los círculos de estabilidad correspondientes.
+
+El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad \cite{Edwards1992}, definido como:
 
 \begin{equation}
     \mu = \frac{1 - |S_{11}|^2}{|S_{22} - S_{11}^{*}\Delta| + |S_{12}S_{21}|}
     \label{eq:mu_factor}
 \end{equation}
 
-El factor $\mu$ resulta preferible al factor $K$ de Rollet por dos motivos. En primer lugar, la condición $\mu > 1$ es necesaria y suficiente por sí sola para garantizar la estabilidad incondicional del dispositivo, sin requerir la verificación simultánea de una segunda condición sobre $\Delta$ como ocurre con el criterio de $K$. En segundo lugar, el valor numérico de $\mu$ constituye una medida directa del margen de estabilidad del dispositivo, en el sentido de que valores de $\mu$ progresivamente mayores a la unidad indican una mayor distancia respecto de la condición límite de inestabilidad, mientras que el factor $K$ no admite esta interpretación cuantitativa de manera tan directa. Ambos factores se calculan a partir del mismo conjunto de parámetros $S$ medidos o simulados, por lo cual resultan complementarios y consistentes entre sí en la región de estabilidad incondicional, difiriendo únicamente en la facilidad de interpretación del margen de diseño.
+El factor $\mu$ resulta preferible al factor $K$ de Rollet por dos motivos. En primer lugar, la condición $\mu > 1$ es necesaria y suficiente por sí sola para garantizar la estabilidad incondicional del dispositivo, sin requerir la verificación simultánea de una segunda condición sobre $\Delta$ como ocurre con el criterio de $K$. En segundo lugar, el valor numérico de $\mu$ constituye una medida directa del margen de estabilidad del dispositivo. Valores de $\mu$ progresivamente mayores a la unidad indican una mayor distancia respecto de la condición límite de inestabilidad, mientras que el factor $K$ no admite esta interpretación cuantitativa de manera tan directa. Ambos factores se calculan a partir del mismo conjunto de parámetros $S$ medidos o simulados, por lo cual resultan complementarios y consistentes entre sí en la región de estabilidad incondicional, difiriendo únicamente en la facilidad de interpretación del margen de diseño.
 
 \subsubsection{Parámetros de Gran Señal}
 
