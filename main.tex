@@ -13,6 +13,8 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{caption}
+\captionsetup{font=footnotesize, labelfont=bf}
+
 \usepackage{subcaption}
 \usepackage{float}
 \usepackage{xcolor}
@@ -21,6 +23,10 @@
 
 \usepackage{tikz}
 \usepackage{circuitikz}
+\usepackage{colortbl}
+
+\definecolor{coppercolor}{RGB}{229, 179, 58}
+\definecolor{dielectriccolor}{RGB}{112, 173, 104}
 
 \usepackage[affil-it]{authblk}
 \usepackage[backend=biber, style=ieee]{biblatex}
@@ -71,44 +77,34 @@
 \input{sections/power_amps}
 \input{sections/gan}
 \input{sections/radioenlace}
-
-% -----------------------------------------------------------
-\newpage
-\section{Desarrollo de la solución a implementar} \label{sec:3_solucion}
-
-% -----------------------------------------------------------
-\newpage
-\section{Resultados, Mediciones y Verificación} \label{sec:4_resmedver}
+\input{sections/solucion.tex}
+\input{sections/resultados.tex}
 
 % -----------------------------------------------------------
 \newpage
 \section{Conclusiones} \label{sec:5_concl}
 
 % -----------------------------------------------------------
-\newpage
+%\newpage
 \section{Referencias} \label{sec:6_refs}
 \printbibliography[heading=none]
 
 % -----------------------------------------------------------
-\newpage
+%\newpage
 \section{Bibliografía} \label{sec:7_biblio}
 
 % -----------------------------------------------------------
-\newpage
+%\newpage
 \section{Índice de Figuras y Tablas} \label{sec:7b_indice}
 \listoffigures
 \listoftables
 
 % -----------------------------------------------------------
-\newpage
+%\newpage
 \section{Apéndices} \label{sec:8_apendix}
-
 \subsection{Circuitos Eléctricos} \label{sec:9_circ}
-
 \subsection{Hojas de Datos} \label{sec:10_hd}
-
 \subsection{Programas Fuente} \label{sec:11_soft}
-
 \subsection{Layout PCB} \label{sec:12_pcblay}
 
 \end{document}
