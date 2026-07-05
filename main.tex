@@ -6,6 +6,12 @@
 \usepackage[T1]{fontenc}
 
 % Paquetes
+\usepackage{array}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{xltabular}
+\usepackage{multirow}
 \usepackage{csquotes}
 \usepackage{titlesec}
 \usepackage{titling}
@@ -71,9 +77,7 @@
 \section{Abstract} \label{sec:1_abstract}
 
 % -----------------------------------------------------------
-\newpage
-\section{Introducción Teórica y Marco Teórico} \label{sec:2_marcoteorico}
-
+\input{sections/anteproyecto.tex}
 \input{sections/power_amps}
 \input{sections/gan}
 \input{sections/radioenlace}

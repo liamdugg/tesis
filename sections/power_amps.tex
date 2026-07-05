@@ -1,9 +1,9 @@
-\subsection{Teoría de Amplificadores de Potencia} \label{sec:teoria_pa}
-
+\newpage
+\section{Teoría de Amplificadores de Potencia} \label{sec:teoria_pa}
 El diseño de un amplificador de potencia de radiofrecuencia requiere, como paso previo, la comprensión de su principio de funcionamiento, de los parámetros relevantes que caracterizan su desempeño y de las ventajas y desventajas que conlleva operarlo bajo un punto de polarización u otro. Esta comprensión resulta indispensable dado que la elección del modo de operación condiciona simultáneamente la linealidad, la eficiencia, la potencia de salida y la robustez térmica del dispositivo, parámetros que rara vez pueden optimizarse de manera independiente y que, por el contrario, se relacionan mediante compromisos de diseño que deben evaluarse en conjunto antes de proceder a la implementación física.
 
-\subsubsection{Clases Tradicionales de Operación}
-
+% -----------------------------------------------------------------------------------------------%
+\subsection{Clases Tradicionales de Operación}
 Las clases de operación clásicas de un amplificador de potencia, denominadas Clase A, Clase AB, Clase B y Clase C, se distinguen entre sí por la fracción del ciclo de la señal de excitación durante la cual el transistor permanece polarizado por encima de su tensión de umbral y conduce corriente de \textit{drain}, magnitud que se cuantifica mediante el ángulo de conducción. Considerando una corriente de \textit{drain} que conduce simétricamente respecto del origen de fase durante un ángulo de conducción $\alpha$, es decir, en el intervalo $-\alpha/2 \le x \le \alpha/2$ donde $x = \omega t$ es la fase instantánea de la señal de excitación, la forma de onda de corriente puede modelarse como una senoidal recortada de acuerdo con la siguiente expresión, presentada por Cripps \cite{Cripps2006}:
 
 \begin{equation}
@@ -40,8 +40,7 @@ La Figura~\ref{fig:armonicos_alpha} ilustra la amplitud normalizada de las prime
     \label{fig:armonicos_alpha}
 \end{figure}
 
-\subsubsection{Eficiencia de Drain en Función del Ángulo de Conducción}
-
+\subsection{Eficiencia de Drain en Función del Ángulo de Conducción}
 A partir de las componentes de continua y de la fundamental obtenidas de las ecuaciones~\eqref{eq:idc_generic} y \eqref{eq:in_generic}, la eficiencia de \textit{drain} del amplificador, definida como el cociente entre la potencia de radiofrecuencia entregada a la carga y la potencia continua consumida, queda determinada en función del ángulo de conducción mediante la expresión cerrada presentada en la referencia citada:
 
 \begin{equation}
@@ -58,8 +57,8 @@ La Fig.~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alpha}
     \caption{Eficiencia de \textit{drain} teórica en función del ángulo de conducción, con las regiones correspondientes a las Clases A, AB, B y C señaladas.}
 \end{figure}
 
-\subsubsection{Parámetros de Pequeña Señal}
-
+% -----------------------------------------------------------------------------------------------%
+\subsection{Parámetros de Pequeña Señal}
 La caracterización de un amplificador de potencia en régimen de pequeña señal, es decir, en condiciones de excitación suficientemente reducidas como para que el dispositivo se comporte linealmente, se realiza mediante sus parámetros de dispersión o parámetros $S$. A diferencia de los parámetros de impedancia o admitancia, los parámetros $S$ no relacionan tensiones y corrientes en los puertos del dispositivo, sino ondas de potencia incidentes y reflejadas, lo cual permite su medición directa a frecuencias de microondas sin requerir condiciones de circuito abierto o cortocircuito en los puertos, físicamente impracticables en esa banda de frecuencias.
 
 Para un dispositivo de dos puertos como el transistor considerado, con el puerto de entrada asociado al terminal de \textit{gate} y el puerto de salida asociado al terminal de \textit{drain}, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros $S$ relacionan estas ondas mediante:
@@ -114,8 +113,8 @@ El parámetro $S_{11}$ corresponde al coeficiente de reflexión en el puerto de 
 
 El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde el puerto de entrada hacia el puerto de salida, y representa la ganancia compleja del dispositivo en la condición de adaptación impuesta. Su módulo al cuadrado, expresado en decibeles como $20\log_{10}|S_{21}|$, constituye la ganancia de pequeña señal del amplificador en la frecuencia considerada. El parámetro $S_{12}$ corresponde al coeficiente de transmisión inversa, desde el puerto de salida hacia el puerto de entrada, y cuantifica la magnitud de la realimentación interna del dispositivo. Un mayor valor de $S_{12}$ indica una realimentación interna mayor del dispositivo, factor que, como será descripto a continuación, condiciona directamente la estabilidad del amplificador frente a variaciones en las impedancias de fuente y carga.
 
-\subsubsection{Estabilidad}
-
+% -----------------------------------------------------------------------------------------------%
+\subsection{Estabilidad}
 A partir de los cuatro parámetros $S$ se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación para alguna combinación de impedancias de fuente y carga. Un dispositivo se clasifica como \textbf{incondicionalmente estable} en una frecuencia dada cuando permanece estable para cualquier combinación posible de impedancias de fuente y carga, es decir, para la totalidad del diagrama de Smith. Por el contrario, un dispositivo se clasifica como \textbf{condicionalmente estable} cuando existen regiones dentro del diagrama de Smith, denominadas regiones de inestabilidad, para las cuales alguna combinación particular de impedancias de fuente o carga provoca que el dispositivo oscile. En este último caso, el diseñador debe restringir las impedancias de las redes de adaptación a las regiones estables identificadas mediante los círculos de estabilidad correspondientes.
 
 El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad \cite{Edwards1992}, definido como:
@@ -127,8 +126,8 @@ El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rol
 
 El factor $\mu$ resulta preferible al factor $K$ de Rollet por dos motivos. En primer lugar, la condición $\mu > 1$ es necesaria y suficiente por sí sola para garantizar la estabilidad incondicional del dispositivo, sin requerir la verificación simultánea de una segunda condición sobre $\Delta$ como ocurre con el criterio de $K$. En segundo lugar, el valor numérico de $\mu$ constituye una medida directa del margen de estabilidad del dispositivo. Valores de $\mu$ progresivamente mayores a la unidad indican una mayor distancia respecto de la condición límite de inestabilidad, mientras que el factor $K$ no admite esta interpretación cuantitativa de manera tan directa. Ambos factores se calculan a partir del mismo conjunto de parámetros $S$ medidos o simulados, por lo cual resultan complementarios y consistentes entre sí en la región de estabilidad incondicional, difiriendo únicamente en la facilidad de interpretación del margen de diseño.
 
-\subsubsection{Parámetros de Gran Señal}
-
+% -----------------------------------------------------------------------------------------------%
+\subsection{Parámetros de Gran Señal}
 A diferencia de los parámetros de pequeña señal, la caracterización de gran señal evalúa el comportamiento del amplificador en el régimen de excitación de interés para la aplicación final, en el cual el dispositivo abandona progresivamente su comportamiento lineal a medida que se aproxima a su punto de saturación.
 
 El \textbf{punto de compresión de 1 dB} (P1dB) se define como el nivel de potencia de salida para el cual la ganancia del amplificador se reduce en 1 dB respecto de su valor en pequeña señal, y constituye el límite convencional superior del régimen de operación considerado aproximadamente lineal. La \textbf{potencia de saturación} ($P_{sat}$) corresponde al nivel máximo de potencia de salida que el dispositivo es capaz de entregar, independientemente del nivel de excitación aplicado, y se ubica siempre por encima del P1dB dado que la curva de transferencia de potencia continúa incrementándose, aunque con ganancia marginal decreciente, más allá del punto de compresión.
@@ -149,7 +148,6 @@ de modo que la PAE resulta siempre menor o igual a la eficiencia de \textit{drai
 La \textbf{potencia de salida} del amplificador, generalmente especificada en el punto de compresión de 1 dB o en saturación según el contexto de diseño, constituye, junto con la eficiencia, uno de los parámetros centrales para la evaluación de cualquier sistema de comunicaciones de radiofrecuencia.
 
 Finalmente, el \textbf{ancho de banda} del amplificador admite más de una definición según el criterio adoptado. El ancho de banda de ganancia, definido de manera análoga al de cualquier sistema lineal, corresponde al rango de frecuencias dentro del cual la ganancia se mantiene dentro de 3 dB de su valor máximo (ancho de banda de 3 dB). De manera independiente, el ancho de banda de adaptación se define a partir del coeficiente de reflexión de entrada, como el rango de frecuencias en el cual $S_{11}$ se mantiene por debajo de un umbral preestablecido, habitualmente $-10\text{ dB}$, garantizando que la potencia reflejada hacia la fuente de excitación permanezca acotada en un porcentaje reducido de la potencia incidente. Ambas definiciones no necesariamente coinciden en frecuencia ni en extensión, dado que la condición de adaptación de impedancia y la condición de ganancia plana responden a mecanismos físicos distintos dentro de la red de adaptación del amplificador, por lo cual ambos anchos de banda deben reportarse de manera independiente al caracterizar el dispositivo.
-
 
 
 %\begin{figure}[H]

@@ -1,9 +1,10 @@
-\subsection{Tecnología GaN HEMT} \label{sec:gan_hemt}
-\subsubsection{Contexto y relevancia de la tecnología del transistor}
+\newpage
+\section{Tecnología GaN HEMT} \label{sec:gan_hemt}
+\subsection{Contexto y relevancia de la tecnología del transistor}
 La selección del transistor constituye una de las decisiones de diseño con mayor impacto sobre el desempeño global de un amplificador de potencia destinado a aplicaciones CubeSat, ya que de ella dependen simultáneamente la eficiencia, la masa del sistema de disipación térmica y la confiabilidad del enlace en el ambiente orbital. Las restricciones propias de una plataforma nanosatelital, en particular la disponibilidad limitada de potencia eléctrica y el presupuesto de masa acotado, exigieron evaluar tecnologías semiconductoras capaces de entregar una densidad de potencia elevada sin comprometer la eficiencia. En este contexto, el nitruro de galio (GaN) se consolidó como la tecnología candidata para cumplir ese rol, dado que combina una tensión de ruptura elevada, una densidad de corriente superior a la de tecnologías competidoras y una eficiencia de potencia añadida (PAE) adecuada.
 
 % ------------------------------------------------------------------------ %
-\subsubsection{Principio de funcionamiento y características del transistor GaN HEMT}
+\subsection{Principio de funcionamiento y características del transistor GaN HEMT}
 Una de las propiedades principales del nitruro de galio es que es un material semiconductor de banda prohibida ancha (\textit{wide bandgap}). Esto implica que los portadores deben adquirir una mayor energía para pasar a la banda de conducción que en un material semiconductor normal, como el silicio. De esta propiedad se desprenden tres características fundamentales: una tensión de ruptura considerablemente mayor a la de un semiconductor convencional, la posibilidad de operar a mayores temperaturas y una mayor inmunidad a la radiación \cite{Mishra2008, Deblecker2015}.
 
 La mayor tensión de ruptura permite, en primera instancia, operar el transistor a tensiones más elevadas y se traduce, además, en un campo eléctrico crítico mayor, de modo que la velocidad de saturación resulta también más elevada, lo que habilita trabajar a mayores frecuencias y obtener velocidades de conmutación superiores. La relación entre el campo eléctrico y la velocidad de los portadores se describe, de acuerdo con \cite{Taur_Ning_2021}, mediante la ecuación~\eqref{eq:vel_field}:
@@ -65,7 +66,7 @@ Existen dos configuraciones principales: el field plate conectado al gate (\text
 Asimismo, una característica intrínseca de la mayoría de los GaN HEMT comerciales, incluido el dispositivo utilizado en este trabajo, es que se fabrican en modo de agotamiento (\textit{depletion mode}, D-mode), también descripto como dispositivo normalmente encendido (\textit{normally-on}). Esto significa que, en ausencia de polarización de gate ($V_{GS}=0$), el 2DEG permanece completo y el canal conduce sin restricción, de modo que el transistor requiere una tensión de gate negativa, por debajo de la tensión de umbral, para interrumpir o regular la conducción~\cite{Macom}. Esta propiedad de canal permanente introduce un requisito particular en la secuencia de encendido y apagado del circuito de polarización. Si la tensión de drain se aplica antes de que el gate haya alcanzado una tensión suficientemente negativa para mantener el dispositivo en corte, el transistor conduce de manera no controlada en el instante de energizado, lo que puede dar lugar a corrientes de drain excesivas y al consecuente riesgo de fuga térmica o daño permanente del dispositivo. Por este motivo, la secuencia de polarización recomendada establece que el gate debe alcanzar su tensión de corte antes de aplicar tensión al drain, y que, de manera inversa, el drain debe quedar sin tensión antes de remover la polarización negativa del gate \cite{Macom}. El cumplimiento estricto de esta secuencia constituye un requisito de diseño para la etapa de polarización del amplificador, dado que su incumplimiento compromete tanto la integridad del transistor como la confiabilidad del sistema en su conjunto.
 
 % ------------------------------------------------------------------------ %
-\subsubsection{Comparación con tecnologías LDMOS y GaAs}
+\subsection{Comparación con tecnologías LDMOS y GaAs}
 Las dos tecnologías semiconductoras que históricamente compitieron con el GaN en el espacio de los amplificadores de potencia en RF son el silicio difundido lateralmente (\textit{Laterally Diffused Metal Oxide Semiconductor}, LDMOS) y el arseniuro de galio (GaAs). El LDMOS es un transistor de efecto de campo de silicio cuya estructura incorpora una región de drift débilmente dopada entre el canal y el contacto de drain, lo que permite sostener tensiones de drain relativamente elevadas para un dispositivo de silicio. Esta tecnología domina el segmento de estaciones base celulares en bandas de frecuencia bajas, debido a su bajo costo de fabricación y su elevada robustez, aunque su frecuencia de corte y su densidad de potencia resultan insuficientes para aplicaciones de banda S con los requisitos de eficiencia y tamaño que impone una plataforma CubeSat.
 
 El GaAs, por su parte, es un semiconductor compuesto de banda prohibida intermedia entre la del silicio y la del GaN, que se emplea típicamente en transistores pseudomórficos de alta movilidad electrónica (\textit{pseudomorphic HEMT}, pHEMT). Su principal ventaja sobre el silicio es la mayor movilidad electrónica, lo que posibilita una frecuencia de operación más elevada. No obstante, su tensión de ruptura y su densidad de potencia resultan considerablemente menores que las del GaN, lo que obliga a emplear dispositivos de mayor periferia de compuerta para alcanzar una potencia de salida equivalente, con la consecuente penalización en masa y en facilidad de adaptación de impedancias \cite{Mishra2008}.
@@ -74,8 +75,8 @@ La Figura~\ref{fig:freq_power_materiales} resume gráficamente esta comparación
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{imgs/transistor_tech_comparison.png}
-    \caption{Rangos característicos de potencia de radiofrecuencia y frecuencia de operación alcanzables para distintas tecnologías semiconductoras \cite{Bowick2008}.}
+    \includegraphics[width=0.7\linewidth]{imgs/transistor_tech_comparison.png}
+    \caption{Rangos característicos de potencia de RF y frecuencia de operación alcanzables para distintas tecnologías semiconductoras \cite{Bowick2008}.}
     \label{fig:freq_power_materiales}
 \end{figure}
 
@@ -99,7 +100,7 @@ En la Tabla~\ref{tab:material_comparison} se resumen las propiedades físicas m�
 \end{table}
 
 % ------------------------------------------------------------------------ %
-\subsubsection{Figura de mérito de Johnson}
+\subsection{Figura de mérito de Johnson}
 A fin de comparar cuantitativamente el potencial de los distintos materiales semiconductores para aplicaciones simultáneas de alta frecuencia y alta potencia, Johnson propuso una figura de mérito (\textit{Johnson Figure of Merit}, JFM) derivada del producto entre el campo eléctrico de ruptura $E_c$ y la velocidad de saturación de los portadores $v_{sat}$ \cite{johnson1965}:
 
 \begin{equation}
