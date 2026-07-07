@@ -1,0 +1,97 @@
+%%% Document Options %%%
+\documentclass[
+    language=spanish,
+    school=utnfrba,
+    docstage=final,
+    media=paper,
+    linkcolor=red!45!black,
+    chapterstyle=classic,
+    coverstyle=classic
+]{IPLeiriaThesis} % Refer to the Wiki for a list of available options.
+
+%%% Document Version %%%
+\DocumentVersion{1.0.0}
+
+%%% Document Metadata %%%
+\input{Metadata/Metadata}
+
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{lipsum}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{minted}
+
+% --- Tablas ---
+\usepackage{array}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{xltabular}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+% --- Texto y citas ---
+\usepackage{csquotes}
+\usepackage{setspace}
+\usepackage{textcomp, gensymb}
+
+% --- TikZ, circuitos y pgfplots ---
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usetikzlibrary{external}
+\usetikzlibrary{intersections}
+\usepackage{pgfplots}
+\usepgfplotslibrary{colorbrewer}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.18}
+\tikzexternalize[prefix=tikz/]
+
+% --- Colores personalizados ---
+\definecolor{coppercolor}{RGB}{229, 179, 58}
+\definecolor{dielectriccolor}{RGB}{112, 173, 104}
+
+\begin{document}
+
+%%% Front Matter %%%
+\include{Matter/00-Cover}
+\include{Matter/01-Front-Page}
+
+%%% Roman Numeration %%%
+\pagenumbering{roman}
+
+%%% Abstract %%%
+\include{Chapters/00-Abstract}
+
+%%% Table of Contents, List of Figures and List of Tables %%%
+\bookmarktocentry\tableofcontents
+\listoffigures
+%\listoftables
+
+%%% Arabic Numeration %%%
+\pagenumbering{arabic}
+
+%%% Chapters (**Insert Yours Here**) %%%
+\include{Chapters/01-Anteproyecto}
+\include{Chapters/02-PowerAmps}
+\include{Chapters/03-GaN}
+\include{Chapters/04-Acopladores}
+\include{Chapters/05-Solucion}
+\include{Chapters/06-Radioenlace}
+\include{Chapters/07-Resultados}
+\include{Chapters/08-Conclusiones}
+
+%%% Bibliography %%%
+\renewcommand{\refname}{Bibliografía}
+\printbibliography[title={\refname},heading=bibintoc]
+
+%%% Appendices: Work that *YOU* Developed %%%
+\appendix
+\input{Matter/06-Appendices}
+\input{Chapters/Appendices/00-AppendixA}
+\input{Chapters/Appendices/00-AppendixB}
+ 
+%%% Back Page %%%
+\input{Matter/08-Back-Page}
+
+\end{document}

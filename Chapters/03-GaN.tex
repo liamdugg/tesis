@@ -1,0 +1,110 @@
+\chapter[Tecnología GaN HEMT]{Tecnología GaN HEMT} \label{sec:gan_hemt}
+\section{Contexto y relevancia de la tecnología del transistor}
+La selección del transistor constituye una de las decisiones de diseño con mayor impacto sobre el desempeño global de un amplificador de potencia destinado a aplicaciones CubeSat, ya que de ella dependen simultáneamente la eficiencia, la masa del sistema de disipación térmica y la confiabilidad del enlace en el ambiente orbital. Las restricciones propias de una plataforma nanosatelital, en particular la disponibilidad limitada de potencia eléctrica y el presupuesto de masa acotado, exigieron evaluar tecnologías semiconductoras capaces de entregar una densidad de potencia elevada sin comprometer la eficiencia. En este contexto, el nitruro de galio (GaN) se consolidó como la tecnología candidata para cumplir ese rol, dado que combina una tensión de ruptura elevada, una densidad de corriente superior a la de tecnologías competidoras y una eficiencia de potencia añadida (PAE) adecuada.
+
+% ------------------------------------------------------------------------ %
+\section{Principio de funcionamiento y características del transistor GaN HEMT}
+Una de las propiedades principales del nitruro de galio es que es un material semiconductor de banda prohibida ancha (\textit{wide bandgap}). Esto implica que los portadores deben adquirir una mayor energía para pasar a la banda de conducción que en un material semiconductor normal, como el silicio. De esta propiedad se desprenden tres características fundamentales: una tensión de ruptura considerablemente mayor a la de un semiconductor convencional, la posibilidad de operar a mayores temperaturas y una mayor inmunidad a la radiación \cite{Mishra2008, Deblecker2015}.
+
+La mayor tensión de ruptura permite, en primera instancia, operar el transistor a tensiones más elevadas y se traduce, además, en un campo eléctrico crítico mayor, de modo que la velocidad de saturación resulta también más elevada, lo que habilita trabajar a mayores frecuencias y obtener velocidades de conmutación superiores. La relación entre el campo eléctrico y la velocidad de los portadores se describe, de acuerdo con \cite{Taur_Ning_2021}, mediante la ecuación~\eqref{eq:vel_field}:
+
+\begin{equation}
+    v(E) = \frac{\mu_n E}{1 + E/E_c}
+    \label{eq:vel_field}
+\end{equation}
+
+donde $\mu_n$ es la movilidad electrónica de bajo campo, $E$ el campo eléctrico aplicado y $E_c$ el campo eléctrico crítico del material. La ecuación~\eqref{eq:vel_field} muestra que, para campos del orden de $E_c$, la velocidad de los portadores tiende asintóticamente a su valor de saturación $v_{sat}$. Dado que el GaN admite valores de $E_c$ sustancialmente mayores antes de alcanzar la ruptura del material, el dispositivo puede operar con tensiones de drain más elevadas mientras los portadores siguen desplazándose a velocidad de saturación, lo que habilita simultáneamente alta tensión de operación y alta frecuencia de conmutación.
+
+Que los transistores GaN puedan operar a mayores temperaturas se explica considerando que, al ser la banda prohibida más ancha, resulta estadísticamente menos probable que los portadores pasen espontáneamente a la banda de conducción por excitación térmica, de modo que el material conserva su comportamiento semiconductor hasta temperaturas más elevadas \cite{Deblecker2015}. La mayor tolerancia a la radiación se explica por un mecanismo análogo: los impactos de partículas ionizantes deben transferir una energía mayor para generar pares electrón-hueco no deseados, por lo que una menor proporción de los impactos recibidos resulta capaz de afectar el comportamiento eléctrico del dispositivo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TODO: Chequear que estas citas esten bien y sean de mishra/macom/deblecker %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+El transistor de efecto de campo de alta movilidad electrónica (\textit{High Electron Mobility Transistor}, HEMT) basado en GaN se construye a partir de una heterojuntura entre dos materiales semiconductores de distinta banda prohibida de energía. La estructura típica consiste en una capa de GaN de alta pureza crecida mediante epitaxia (MOCVD o MBE) sobre un sustrato de carburo de silicio (SiC), seguida de una capa barrera delgada de AlGaN \cite{Mishra2008}. El sustrato de SiC se emplea preferentemente por su elevada conductividad térmica, factor relevante para la evacuación del calor generado durante la operación del dispositivo.
+
+En la interfaz entre el GaN y el AlGaN se produce una discontinuidad en la banda de conducción que, combinada con los efectos de polarización piezoeléctrica y espontánea propios de la estructura cristalina hexagonal del GaN, da origen a un pozo de potencial confinante. Dentro de este pozo se acumula una densidad superficial de carga elevada que constituye el denominado gas bidimensional de electrones (\textit{two-dimensional electron gas}, 2DEG) \cite{Mishra2008}. Los terminales del dispositivo, denominados drain, gate y source siguiendo la nomenclatura habitual en inglés, se disponen sobre la superficie de la estructura epitaxial, de modo que el drain y el source contactan eléctricamente al 2DEG, mientras que el gate, ubicado entre ambos, permite modular la conducción del canal.
+
+Debido al confinamiento de los portadores en el pozo de potencial, los electrones del 2DEG solo pueden desplazarse a lo largo de un eje, lo que reduce la dispersión asociada a choques en la estructura cristalina y, en consecuencia, disminuye la resistencia del canal. Adicionalmente, la separación espacial entre los electrones confinados en el canal de GaN y los átomos donores ubicados en la capa barrera de AlGaN reduce sustancialmente la dispersión por impurezas ionizadas, lo que permite alcanzar movilidades electrónicas superiores a las obtenidas en heterojunturas equivalentes de GaAs \cite{Mishra2008}. La elevada concentración de portadores del 2DEG, combinada con su movimiento restringido a una sola dirección, incrementa tanto la movilidad electrónica efectiva como la densidad de corriente que el canal es capaz de sostener. La densidad de corriente máxima $J_{D}$ resulta proporcional al producto entre la densidad superficial de carga del 2DEG y la velocidad de saturación de los portadores, de modo que un incremento en cualquiera de estos dos factores eleva directamente la capacidad de corriente del dispositivo sin necesidad de aumentar el área activa.
+
+La combinación de mayores densidades de corriente con la posibilidad de operar a tensiones más elevadas da como resultado un aumento considerable en la densidad de potencia de salida del dispositivo respecto de tecnologías competidoras. Esta característica resulta especialmente relevante en aplicaciones CubeSat, ya que una mayor densidad de potencia implica que, para una potencia de salida dada, el transistor disipa la misma potencia térmica en un área de silicio considerablemente menor, lo que reduce el tamaño y la masa del disipador requerido para mantener la temperatura de juntura dentro de límites admisibles. Esta reducción de masa constituye una ventaja determinante en plataformas nanosatelitales, donde el presupuesto de masa y volumen total del sistema se encuentra estrictamente acotado.
+
+Una magnitud adicional que vincula las propiedades del material con el desempeño práctico del dispositivo es la resistencia de canal en estado de conducción (\textit{on-state resistance}, $r_{on}$). En un un transistor de efecto de campo de óxido metálico semiconductor (MOSFET) o un HEMT, las pérdidas de conducción dependen esencialmente de la permitividad relativa $\varepsilon_r$ y del campo eléctrico de ruptura $E_c$ del material, de modo que $r_{on}$ resulta inversamente proporcional a ambas magnitudes \cite{Deblecker2015}:
+
+\begin{equation}
+    r_{on} \propto \frac{1}{\varepsilon_r \, E_c^3}
+    \label{eq:ron}
+\end{equation}
+
+La ecuación~\eqref{eq:ron} muestra que, dado que el GaN posee un campo de ruptura considerablemente mayor que el del silicio, la resistencia de canal alcanzable para una misma tensión de bloqueo resulta sustancialmente menor, lo que se traduce en menores pérdidas de conducción y, por lo tanto, en una eficiencia superior del amplificador.
+
+Finalmente, una limitación temprana de los GaN HEMT fue la denominada dispersión corriente continua a radiofrecuencia (\textit{DC-to-RF dispersion} o \textit{current collapse}), fenómeno asociado a trampas de carga superficiales y de volumen que reducían la potencia de salida obtenida en condiciones de gran señal respecto de la predicha por las curvas estáticas $I$-$V$ \cite{Mishra2008}. Dos innovaciones permitieron mitigar este efecto: la pasivación superficial mediante nitruro de silicio y la incorporación de field plates. El field plate consiste en una extensión metálica, conectada eléctricamente al gate o al source, que se superpone parcialmente sobre la región de acceso entre el gate y el drain mediante una capa dieléctrica intermedia. Su función es redistribuir el perfil del campo eléctrico en dicha región, reduciendo el valor del campo máximo en el borde del gate y desplazando parte de la caída de tensión hacia el borde del field plate \cite{Mishra2008}. Esta redistribución incrementa la tensión de ruptura del dispositivo y reduce simultáneamente el efecto de las trampas superficiales sobre la dispersión de potencia, lo que mejora tanto la linealidad como la densidad de potencia obtenible en gran señal. 
+
+La Figura~\ref{fig:cross_section_fieldplate} ilustra esquemáticamente esta diferencia estructural, comparando la sección transversal de un GaN HEMT convencional sin field plate con la de un dispositivo equivalente que incorpora dicha estructura sobre la región de acceso gate-drain.
+
+%\begin{figure}[H]
+%    \centering
+%    \begin{subfigure}[b]{0.48\textwidth}
+%        \centering
+%        \includegraphics[width=\textwidth]{cross_section_sin_fieldplate.png}
+%        \caption{Sin field plate.}
+%        \label{fig:cross_section_sin_fp}
+%    \end{subfigure}
+%    \hfill
+%    \begin{subfigure}[b]{0.48\textwidth}
+%        \centering
+%        \includegraphics[width=\textwidth]{cross_section_con_fieldplate.png}
+%        \caption{Con field plate.}
+%        \label{fig:cross_section_con_fp}
+%    \end{subfigure}
+%    \caption{Comparación esquemática de la sección transversal de un GaN HEMT sin field plate (a) y con field plate conectado al gate (b).}
+%    \label{fig:cross_section_fieldplate}
+%\end{figure}
+
+Existen dos configuraciones principales: el field plate conectado al gate (\textit{gate-connected field plate}), que introduce una capacitancia adicional gate-drain con la consecuente realimentación de Miller negativa y reducción de la frecuencia de corte, y el field plate conectado al source (\textit{source-connected field plate}), que evita dicha penalización al transformar la capacitancia adicional en una capacitancia drain-source absorbible por la red de salida \cite{Mishra2008}.
+
+Asimismo, una característica intrínseca de la mayoría de los GaN HEMT comerciales, incluido el dispositivo utilizado en este trabajo, es que se fabrican en modo de agotamiento (\textit{depletion mode}, D-mode), también descripto como dispositivo normalmente encendido (\textit{normally-on}). Esto significa que, en ausencia de polarización de gate ($V_{GS}=0$), el 2DEG permanece completo y el canal conduce sin restricción, de modo que el transistor requiere una tensión de gate negativa, por debajo de la tensión de umbral, para interrumpir o regular la conducción~\cite{Macom}. Esta propiedad de canal permanente introduce un requisito particular en la secuencia de encendido y apagado del circuito de polarización. Si la tensión de drain se aplica antes de que el gate haya alcanzado una tensión suficientemente negativa para mantener el dispositivo en corte, el transistor conduce de manera no controlada en el instante de energizado, lo que puede dar lugar a corrientes de drain excesivas y al consecuente riesgo de fuga térmica o daño permanente del dispositivo. Por este motivo, la secuencia de polarización recomendada establece que el gate debe alcanzar su tensión de corte antes de aplicar tensión al drain, y que, de manera inversa, el drain debe quedar sin tensión antes de remover la polarización negativa del gate \cite{Macom}. El cumplimiento estricto de esta secuencia constituye un requisito de diseño para la etapa de polarización del amplificador, dado que su incumplimiento compromete tanto la integridad del transistor como la confiabilidad del sistema en su conjunto.
+
+% ------------------------------------------------------------------------ %
+\section{Comparación con tecnologías LDMOS y GaAs}
+Las dos tecnologías semiconductoras que históricamente compitieron con el GaN en el espacio de los amplificadores de potencia en RF son el silicio difundido lateralmente (\textit{Laterally Diffused Metal Oxide Semiconductor}, LDMOS) y el arseniuro de galio (GaAs). El LDMOS es un transistor de efecto de campo de silicio cuya estructura incorpora una región de drift débilmente dopada entre el canal y el contacto de drain, lo que permite sostener tensiones de drain relativamente elevadas para un dispositivo de silicio. Esta tecnología domina el segmento de estaciones base celulares en bandas de frecuencia bajas, debido a su bajo costo de fabricación y su elevada robustez, aunque su frecuencia de corte y su densidad de potencia resultan insuficientes para aplicaciones de banda S con los requisitos de eficiencia y tamaño que impone una plataforma CubeSat.
+
+El GaAs, por su parte, es un semiconductor compuesto de banda prohibida intermedia entre la del silicio y la del GaN, que se emplea típicamente en transistores pseudomórficos de alta movilidad electrónica (\textit{pseudomorphic HEMT}, pHEMT). Su principal ventaja sobre el silicio es la mayor movilidad electrónica, lo que posibilita una frecuencia de operación más elevada. No obstante, su tensión de ruptura y su densidad de potencia resultan considerablemente menores que las del GaN, lo que obliga a emplear dispositivos de mayor periferia de compuerta para alcanzar una potencia de salida equivalente, con la consecuente penalización en masa y en facilidad de adaptación de impedancias \cite{Mishra2008}.
+
+La Figura~\ref{fig:freq_power_materiales} resume gráficamente esta comparación, ubicando a cada tecnología semiconductora según el rango de potencia de radiofrecuencia y la frecuencia de operación que resulta característico alcanzar con cada material. Se observa que el silicio, empleado en dispositivos LDMOS, cubre la región de menor frecuencia con niveles de potencia moderados, mientras que el GaAs se extiende hacia frecuencias mayores a costa de una potencia de RF disponible considerablemente inferior. El GaN, en cambio, ocupa una región claramente desplazada hacia valores simultáneamente mayores de potencia y de frecuencia respecto de ambas tecnologías, lo cual ilustra de manera directa la motivación expuesta en los párrafos anteriores para su adopción en el presente trabajo. Las regiones correspondientes a SiGe e InP, si bien se incluyen en la figura a modo de referencia comparativa más amplia, corresponden a tecnologías orientadas predominantemente a aplicaciones de muy alta frecuencia con niveles de potencia reducidos, por lo que no constituyen alternativas relevantes para los requisitos de la aplicación considerada.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/transistor_tech_comparison.png}
+    \caption{Rangos característicos de potencia de RF y frecuencia de operación alcanzables para distintas tecnologías semiconductoras \cite{Bowick2008}.}
+    \label{fig:freq_power_materiales}
+\end{figure}
+
+En la Tabla~\ref{tab:material_comparison} se resumen las propiedades físicas más relevantes de los materiales semiconductores considerados, a partir de los valores reportados en \cite{Mishra2008}.
+
+\begin{table}[H]
+    \centering
+    \caption{Propiedades físicas comparativas de Si, GaAs, SiC y GaN, relacionadas con el desempeño en aplicaciones de potencia de alta frecuencia.}
+    \label{tab:material_comparison}
+    \begin{tabular}{lccc}
+        \hline
+        \textbf{Propiedad}                                     & \textbf{Si} & \textbf{GaAs} & \textbf{GaN} \\
+        \hline
+        Banda prohibida $E_g$ (eV)                             & 1{,}1       & 1{,}42        & 3{,}39       \\
+        Campo de ruptura $E_c$ (MV/cm)                         & 0{,}3       & 0{,}4         & 3{,}3        \\
+        Movilidad electrónica $\mu_n$ (cm$^{2}$/V$\cdot$s)     & 1350        & 8500          & 1200         \\
+        Velocidad de saturación $v_{sat}$ ($\times 10^7$ cm/s) & 1{,}0       & 1{,}0         & 2{,}5        \\
+        Conductividad térmica $\Theta$ (W/cm$\cdot$K)          & 1{,}5       & 0{,}43        & 1{,}3        \\
+        \hline
+    \end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------------ %
+\section{Figura de mérito de Johnson}
+A fin de comparar cuantitativamente el potencial de los distintos materiales semiconductores para aplicaciones simultáneas de alta frecuencia y alta potencia, Johnson propuso una figura de mérito (\textit{Johnson Figure of Merit}, JFM) derivada del producto entre el campo eléctrico de ruptura $E_c$ y la velocidad de saturación de los portadores $v_{sat}$ \cite{johnson1965}:
+
+\begin{equation}
+    \mathrm{JM} = \left( \frac{E_c \, v_{sat}}{2\pi} \right)^2
+    \label{eq:jfm}
+\end{equation}
+
+En la ecuación~\eqref{eq:jfm}, $E_c$ se expresa en V/cm y $v_{sat}$ en cm/s, de modo que el resultado posee unidades de potencia al cuadrado sobre frecuencia al cuadrado, lo que permite interpretar a la JFM como un límite superior del producto entre la potencia y la frecuencia de operación que un transistor construido con ese material puede alcanzar. Esta magnitud surge de considerar que la máxima tensión que puede soportar el dispositivo está acotada por $E_c$, mientras que la máxima frecuencia de conmutación está acotada por el tiempo de tránsito de los portadores a través de la región activa, tiempo que depende inversamente de $v_{sat}$. Al evaluar la ecuación~\eqref{eq:jfm} para los materiales de la Tabla~\ref{tab:material_comparison} y normalizar los resultados respecto del silicio, se obtienen valores de JFM relativa de 2{,}7 para el GaAs, 20 para el 4H-SiC y 27{,}5 para el GaN \cite{Mishra2008}. Esta diferencia de más de un orden de magnitud respecto del silicio, y de un factor cercano a 10 respecto del GaAs, proporciona una justificación cuantitativa adicional para la selección de GaN como tecnología del transistor de potencia de este trabajo.
