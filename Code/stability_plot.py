@@ -9,8 +9,8 @@ matplotlib.style.use('tesis.mplstyle')
 
 SCRIPT_DIR  = Path(__file__).resolve().parent
 SCRIPTS_DIR = SCRIPT_DIR.parent
-MEAS_DIR    = SCRIPTS_DIR / "measurements"
-OUTPUT_DIR  = SCRIPTS_DIR / "imgs"
+MEAS_DIR    = SCRIPTS_DIR / "Measurements"
+OUTPUT_DIR  = SCRIPTS_DIR / "Figures"
 
 df = pd.read_csv(MEAS_DIR / "Stability.csv")
 

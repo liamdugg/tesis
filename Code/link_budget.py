@@ -1,6 +1,4 @@
 import os
-os.environ["PATH"] = r"C:\texlive\2026\bin\windows" + ";" + os.environ.get("PATH", "")
-
 import numpy as np
 import tkinter as tk
 import matplotlib

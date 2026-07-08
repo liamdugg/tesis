@@ -7,7 +7,7 @@ from scipy.interpolate import interp1d
 from matplotlib.widgets import TextBox
 
 script_dir       = Path(__file__).parent
-measurements_dir = script_dir.parent / "measurements"
+measurements_dir = script_dir.parent / "Measurements"
 
 file_path = measurements_dir / "CADENA_IMD_Sweep_-5dBm.csv"
 #file_path = measurements_dir / "IMD_Sweep_-10dBm.csv"

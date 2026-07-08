@@ -131,7 +131,23 @@ A diferencia de los parámetros de pequeña señal, la caracterización de gran 
 
 El \textbf{punto de compresión de 1 dB} (P1dB) se define como el nivel de potencia de salida para el cual la ganancia del amplificador se reduce en 1 dB respecto de su valor en pequeña señal, y constituye el límite convencional superior del régimen de operación considerado aproximadamente lineal. La \textbf{potencia de saturación} ($P_{sat}$) corresponde al nivel máximo de potencia de salida que el dispositivo es capaz de entregar, independientemente del nivel de excitación aplicado, y se ubica siempre por encima del P1dB dado que la curva de transferencia de potencia continúa incrementándose, aunque con ganancia marginal decreciente, más allá del punto de compresión.
 
+\typeout{parskip vale: \the\parskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/p1dB_theory.png}
+    \caption{Curva teórica del punto de compresión de 1\,dB \cite{Taranto2020}.}
+    \label{fig:p1db_theory}
+\end{figure}
+
 La linealidad del amplificador en presencia de múltiples tonos se evalúa mediante el ensayo de dos tonos de igual amplitud y frecuencias cercanas, a partir del cual se mide la \textbf{relación de intermodulación de tercer orden} (IMD3), definida como la diferencia en decibeles entre la potencia de la componente fundamental y la potencia de los productos de intermodulación de tercer orden generados por la no linealidad del dispositivo en las frecuencias $2f_1 - f_2$ y $2f_2 - f_1$. A partir de la pendiente teórica de 3:1 entre la potencia de los productos de tercer orden y la potencia fundamental en escala logarítmica, se extrapola el \textbf{punto de intercepción de tercer orden referido a la salida} (OIP3), magnitud teórica que no es físicamente alcanzable por el dispositivo, pero que constituye una figura de mérito estándar para comparar la linealidad de distintos amplificadores de manera independiente del nivel de potencia de excitación empleado durante el ensayo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/oip3_theory.png}
+    \caption{Curva teórica del punto de intercepcion de tercer orden referido a la salida y del punto de compresión de 1\,dB \cite{Taranto2020}.}
+    \label{fig:oip3_theory}
+\end{figure}
 
 Adicionalmente, las no linealidades del dispositivo dan lugar a la \textbf{conversión AM-AM y AM-PM}, fenómenos mediante los cuales una variación en la amplitud de la señal de entrada produce, respectivamente, una variación no proporcional en la amplitud de la señal de salida y una variación indeseada en su fase instantánea. Estos efectos resultan particularmente relevantes para esquemas de modulación lineal con filtrado de conformación espectral, dado que las variaciones de envolvente introducidas por dicho filtrado, al atravesar una etapa con conversión AM-AM y AM-PM apreciable, se traducen en distorsión de la constelación recibida y en regeneración espectral fuera de la banda asignada.
 

@@ -14,8 +14,8 @@ c_i		= palette[1]   # naranja
 c_spec	= palette[0]   # azul
 
 SCRIPT_DIR	= Path(__file__).resolve().parent
-MEAS_DIR	= SCRIPT_DIR.parent / "measurements"
-OUTPUT_DIR	= SCRIPT_DIR.parent / "imgs"
+MEAS_DIR	= SCRIPT_DIR.parent / "Measurements"
+OUTPUT_DIR	= SCRIPT_DIR.parent / "Figures"
 
 def read_spectrum(path: Path):
 	rows = []

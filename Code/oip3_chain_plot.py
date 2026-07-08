@@ -11,8 +11,8 @@ from matplotlib.transforms import blended_transform_factory
 matplotlib.style.use('tesis.mplstyle')
 
 SCRIPT_DIR	= Path(__file__).resolve().parent
-MEAS_DIR	= SCRIPT_DIR.parent / "measurements"
-OUTPUT_DIR	= SCRIPT_DIR.parent / "imgs"
+MEAS_DIR	= SCRIPT_DIR.parent / "Measurements"
+OUTPUT_DIR	= SCRIPT_DIR.parent / "Figures"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 palette	= sns.color_palette("muted", 2)

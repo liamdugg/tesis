@@ -11,8 +11,8 @@ matplotlib.style.use('tesis.mplstyle')
 
 SCRIPT_DIR	= Path(__file__).resolve().parent   # scripts/Python/
 SCRIPTS_DIR	= SCRIPT_DIR.parent                 # scripts/
-MEAS_DIR	= SCRIPTS_DIR / "measurements"
-OUTPUT_DIR	= SCRIPTS_DIR / "imgs"
+MEAS_DIR	= SCRIPTS_DIR / "Measurements"
+OUTPUT_DIR	= SCRIPTS_DIR / "Figures"
 
 palette = sns.color_palette("muted", 2)
 c_grid  = "#b0b0b0"

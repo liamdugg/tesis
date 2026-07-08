@@ -8,7 +8,7 @@ from collections import defaultdict
 
 matplotlib.style.use('tesis.mplstyle')
 
-file_path = Path(__file__).parent.parent / "measurements" / "PAE_Power_Contours.txt"
+file_path = Path(__file__).parent.parent / "Measurements" / "PAE_Power_Contours.txt"
 
 pae_data = defaultdict(lambda: defaultdict(list))
 pwr_data = defaultdict(lambda: defaultdict(list))
@@ -184,7 +184,7 @@ for lvl in pae_levels:
     y -= step
 
 # Guardar
-output_path = Path(__file__).parent.parent / "imgs" / "loadpull_plot.png"
+output_path = Path(__file__).parent.parent / "Figures" / "loadpull_plot.png"
 output_path.parent.mkdir(parents=True, exist_ok=True)
 
 fig.savefig(output_path, format='png', bbox_inches='tight')
