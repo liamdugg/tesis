@@ -1,95 +1,156 @@
 \chapter[Teoría de Amplificadores de Potencia]{Teoría de Amplificadores de Potencia} \label{sec:teoria_pa}
-El diseño de un amplificador de potencia de radiofrecuencia requiere, como paso previo, la comprensión de su principio de funcionamiento, de los parámetros relevantes que caracterizan su desempeño y de las ventajas y desventajas que conlleva operarlo bajo un punto de polarización u otro. Esta comprensión resulta indispensable dado que la elección del modo de operación condiciona simultáneamente la linealidad, la eficiencia, la potencia de salida y la robustez térmica del dispositivo, parámetros que rara vez pueden optimizarse de manera independiente y que, por el contrario, se relacionan mediante compromisos de diseño que deben evaluarse en conjunto antes de proceder a la implementación física.
+Los amplificadores de potencia (Power Amplifiers, PA) constituyen una etapa de la cadena de transmisión de un sistema de comunicaciones por radiofrecuencia. Su función es incrementar el nivel de potencia de una señal de RF hasta un valor suficiente para su transmisión, proporcionando la potencia necesaria a la carga, típicamente una antena, a partir de la potencia suministrada por una fuente de alimentación de continua. Debido a que esta etapa procesa los niveles más elevados de potencia del transmisor, su desempeño tiene un impacto directo sobre el consumo energético, la autonomía del sistema y la calidad de la señal transmitida.
+
+En el caso ideal, un amplificador de potencia amplifica la señal de entrada sin modificar su forma de onda. Al mismo tiempo, toda la potencia de continua suministrada por la fuente debe convertirse en potencia útil de RF, minimizando la potencia disipada en forma de calor. Es decir, el caso ideal presenta una eficiencia del 100\,\%. Este aspecto resulta particularmente importante en aplicaciones espaciales, donde la potencia disponible y la capacidad de disipación térmica son recursos limitados.
+
+Sin embargo, este comportamiento no puede alcanzarse en dispositivos reales. El transistor, como elemento activo, presenta una característica de transferencia inherentemente no lineal, cuya respuesta depende tanto de las condiciones de polarización como del nivel de excitación. Como consecuencia, parte de la potencia suministrada se disipa en forma de calor y la señal de salida experimenta distintos tipos de distorsión, tales como compresión de ganancia, generación de armónicos y productos de intermodulación. Estas limitaciones impiden maximizar simultáneamente la potencia de salida, la eficiencia y la linealidad del amplificador. En consecuencia, el diseño de un amplificador de potencia consiste en encontrar un compromiso adecuado entre estas prestaciones, de acuerdo con los requerimientos de la aplicación.
+
+En este capítulo se presentan los fundamentos teóricos necesarios para el diseño de amplificadores de potencia de RF. En primer lugar se analiza el principio de funcionamiento de los amplificadores de potencia y la influencia del ángulo de conducción sobre las distintas clases de operación, estableciendo la relación entre eficiencia, potencia de salida y contenido armónico. Posteriormente se introducen los parámetros de pequeña y gran señal empleados para caracterizar el desempeño del amplificador, así como las principales métricas de linealidad utilizadas en aplicaciones de comunicaciones. Finalmente, se describen los conceptos de adaptación de impedancias y el método de \textit{load-pull}, herramienta fundamental para la determinación de la impedancia óptima de carga en el diseño de amplificadores de potencia.
 
 % -----------------------------------------------------------------------------------------------%
-\section{Clases Tradicionales de Operación}
-Las clases de operación clásicas de un amplificador de potencia, denominadas Clase A, Clase AB, Clase B y Clase C, se distinguen entre sí por la fracción del ciclo de la señal de excitación durante la cual el transistor permanece polarizado por encima de su tensión de umbral y conduce corriente de \textit{drain}, magnitud que se cuantifica mediante el ángulo de conducción. Considerando una corriente de \textit{drain} que conduce simétricamente respecto del origen de fase durante un ángulo de conducción $\alpha$, es decir, en el intervalo $-\alpha/2 \le x \le \alpha/2$ donde $x = \omega t$ es la fase instantánea de la señal de excitación, la forma de onda de corriente puede modelarse como una senoidal recortada de acuerdo con la siguiente expresión, presentada por Cripps \cite{Cripps2006}:
+\section{Funcionamiento y clases de operación} \label{sec:funcionamiento_clases}
+La Figura~\ref{fig:pa_topology} muestra el esquema simplificado de un amplificador de potencia de RF de una sola etapa basado en un transistor MOS de canal N. La señal de entrada se aplica al gate del transistor a través de un capacitor de acople (\textit{DC block}), el cual impide el paso de la componente continua de polarización mientras permite el paso de la señal de radiofrecuencia. De manera análoga, un segundo capacitor desacopla la tensión continua presente en el drain de la carga conectada a la salida.
+
+La alimentación de continua se suministra al drenador mediante un choke de RF (\textit{Radio Frequency Choke}, RFC). Este elemento presenta una impedancia prácticamente nula para la componente continua, permitiendo la circulación de la corriente de alimentación, mientras que ofrece una elevada impedancia a la frecuencia de operación, evitando que la potencia de RF se derive hacia la fuente de alimentación. De este modo, la mayor parte de la energía de radiofrecuencia es transferida hacia la carga.
+
+Finalmente, la red resonante formada por el inductor y el capacitor conectados en derivación se encuentra sintonizada a la frecuencia fundamental de operación. En resonancia, esta red presenta una elevada impedancia, permitiendo el desarrollo de la tensión correspondiente a la componente fundamental sobre la carga \(R_L\). Para las componentes armónicas, en cambio, la impedancia de la red disminuye considerablemente, proporcionando un camino de baja impedancia hacia masa que atenúa dichas componentes. Como resultado, la tensión presente sobre la carga es aproximadamente senoidal aun cuando la corriente generada por el transistor contenga un importante contenido armónico. En otras palabras, el paralelo LC actúa como filtro pasabanda sintonizado a la frecuencia fundamental de la señal.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[transform shape]
+        % Paths, nodes and wires:
+        \node[nigfete] at (7, 4.27){};
+        \draw (3.25, 4) to[capacitor, l={$DC \, Block$}] (4.5, 4);
+        \draw (7.5, 5) to[capacitor, l={$DC \, Block$}] (8.75, 5);
+        \draw (5.5, 2.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (5.5, 3.75);
+        \draw (7, 5.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (7, 6.75);
+        \draw (5, 4) -- (6, 4) |- (5.5, 4) -| (5.5, 3.75);
+        \draw (5.5, 2.25) to[battery1, l={$V_{GG}$}] (5.5, 1.25);
+        \node[oscillator](N1) at (2.74, 3.01){} node[anchor=east] at ([xshift=-0.03cm]N1.west){$v_{in}$};
+        \draw (2.25, 2.5) -| (2.25, 1);
+        \node[tlground] at (2.25, 1){};
+        \node[tlground] at (5.5, 1){};
+        \node[tlground] at (7, 1){};
+        \draw (7, 3.5) -- (7, 1);
+        \draw (11.75, 4.5) to[american resistor, /tikz/circuitikz/bipoles/length=1.26cm, l={$R_L$}] (11.75, 2.5);
+        \node[tlground] at (9.25, 1){};
+        \draw (14, 6.25) to[battery1, l={$V_{DD}$}] (14, 5.25);
+        \draw (14, 5.25) -| (14, 1);
+        \node[tlground] at (14, 1){};
+        \draw (7, 5.25) -| (7, 5.04);
+        \draw (7, 5) -- (7.5, 5);
+        \draw (8.75, 5) -- (9.25, 5) -| (9.25, 4.5);
+        \draw (7, 6.75) -- (7, 7) -- (14, 7) -- (14, 6.25);
+        \draw (2.25, 4) -| (2.25, 3.5);
+        \draw (2.25, 4) -- (3.25, 4);
+        \draw (4.5, 4) -- (5, 4);
+        \draw (5.5, 1.25) -| (5.5, 1);
+        \draw (10.5, 3) to[capacitor, l_={$C$}] (10.5, 4);
+        \draw (9.25, 4.25) to[cute inductor, mirror, l={$L$}, label distance=-0.04cm] (9.25, 2.75);
+        \draw (9.25, 4.5) -| (9.25, 4.25);
+        \draw (9.25, 5) -- (10.5, 5) -| (10.5, 4);
+        \draw (10.5, 3) -| (10.5, 1);
+        \draw (9.25, 2.75) -| (9.25, 1);
+        \node[tlground] at (10.5, 1){};
+        \draw (10.5, 5) -| (11.75, 4.5);
+        \draw (11.75, 2.5) -| (11.75, 1);
+        \node[tlground] at (11.75, 1){};
+        \node[circ] at (10.5, 5){};
+        \node[circ] at (9.25, 5){};
+        \node[circ] at (5.5, 4){};
+        \node[circ] at (7, 5){};
+    \end{tikzpicture}
+    \caption{Circuito simplificado de un amplificador.}
+    \label{fig:pa_topology}
+\end{figure}
+
+A diferencia de los amplificadores de pequeña señal, un amplificador de potencia opera con niveles elevados de excitación, por lo que el transistor abandona la región estrictamente lineal de su característica de transferencia. En estas condiciones, la corriente de drain deja de ser proporcional a la tensión aplicada en gate y comienza a depender del intervalo durante el cual el dispositivo conduce corriente.
+
+En un transistor NMOS, la conducción sólo tiene lugar cuando la tensión instantánea entre gate y source supera la tensión umbral del dispositivo. Si la señal de excitación posee una amplitud suficientemente elevada o el transistor se polariza próximo al corte, esta condición únicamente se verifica durante una fracción del período de la señal. Durante el resto del ciclo el transistor permanece en corte y la corriente de drain es prácticamente nula. El intervalo angular durante el cual existe conducción recibe el nombre de \textbf{ángulo de conducción} y se representa mediante \(\alpha\).
+
+El valor del ángulo de conducción depende principalmente del punto de polarización elegido para el transistor. Si el dispositivo permanece conduciendo durante todo el ciclo de la señal, el ángulo de conducción es igual a \(360^\circ\) (\(2\pi\) rad). Al disminuir progresivamente la corriente de polarización, el transistor conduce durante una porción cada vez menor del período, reduciendo el valor de \(\alpha\). En consecuencia, la forma de onda de la corriente de drain deja de ser senoidal y adquiere la forma de pulsos de duración decreciente. Suponiendo una señal de entrada senoidal, la corriente instantánea de drain puede expresarse como
 
 \begin{equation}
-    i_D(x) =
+    i_D(\theta)=
     \begin{cases}
-        I_{max}\left[\cos x - \cos\left(\dfrac{\alpha}{2}\right)\right], & |x| \le \dfrac{\alpha}{2} \\[6pt]
-        0, & \dfrac{\alpha}{2} < |x| \le \pi
+        I_{\mathrm{pk}}\left(\dfrac{\cos\theta-\cos(\alpha/2)}{1-\cos(\alpha/2)}\right)^2, & |\theta|\leq\dfrac{\alpha}{2} \\[2ex] 
+        0, & |\theta|>\dfrac{\alpha}{2},
     \end{cases}
-    \label{eq:id_alpha}
+\label{eq:id_theta}
 \end{equation}
 
-A partir de esta forma de onda, el valor medio de la corriente de \textit{drain}, correspondiente a la componente de continua consumida desde la fuente de alimentación, se obtiene mediante:
+donde \(I_{\mathrm{pk}}\) representa la corriente máxima de drenador y \(\theta=\omega t\) \cite{cripps2006}. En la Figura~\ref{fig:id_classes} se ilustran las formas de onda de la corriente de drain para las distintas clases de operación del amplificador.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/id_classes.png}
+    \caption{Corrientes de drain para las distintas clases de operación de un amplificador suponiendo la debida polarización del circuito para cada caso.}
+    \label{fig:id_classes}
+\end{figure}
+
+Al tratarse de una función periódica, la corriente puede desarrollarse mediante una serie de Fourier, obteniéndose una componente continua y un conjunto de componentes armónicas de la forma
 
 \begin{equation}
-    I_{dc} = \frac{1}{2\pi}\int_{-\alpha/2}^{\alpha/2} i_D(x)\,dx
+i_D(\theta)= I_{DC} + \sum_{n=1}^{\infty}\,I_n\cos(n\theta),
+\label{eq:fourier}
+\end{equation}
+
+siendo \(I_{DC}\) la componente continua e \(I_n\) la amplitud de la componente armónica de orden \(n\), obtenidas respectivamente mediante
+
+\begin{equation}
+    I_{DC} = \frac{1}{2\pi}\int_{-\alpha/2}^{\alpha/2} i_D(\theta)\,d\theta
     \label{eq:idc_generic}
 \end{equation}
 
-y la amplitud de cada componente armónica de orden $n$ presente en la corriente de \textit{drain} se obtiene de manera análoga mediante la expresión genérica de descomposición en serie de Fourier:
-
 \begin{equation}
-    I_n = \frac{1}{\pi}\int_{-\alpha/2}^{\alpha/2} i_D(x)\cos(nx)\,dx, \qquad n = 1, 2, 3, \dots
+    I_n = \frac{1}{\pi}\int_{-\alpha/2}^{\alpha/2} i_D(\theta)\cos(n\theta)\,d\theta, \qquad n = 1, 2, 3, \dots
     \label{eq:in_generic}
 \end{equation}
 
-Las ecuaciones~\eqref{eq:id_alpha} a \eqref{eq:in_generic} admiten solución cerrada para cada valor de $n$, desarrollo que se encuentra detallado en la referencia citada y que no se reproduce en esta sección, dado que el interés inmediato reside en el comportamiento cualitativo de estas componentes en función del ángulo de conducción.
+El análisis de estas componentes resulta de particular interés, ya que permite relacionar el ángulo de conducción con la potencia disponible en la frecuencia fundamental, el contenido armónico de la corriente y la eficiencia. Asimismo, el valor de \(\alpha\) constituye el criterio utilizado para clasificar los amplificadores de potencia en las distintas clases de operación. En términos generales, un ángulo de conducción de \(360^\circ\) corresponde a un amplificador de clase A, mientras que valores comprendidos entre \(180^\circ\) y \(360^\circ\) dan lugar a la clase AB. Cuando el transistor conduce exactamente durante medio período se obtiene la clase B, y para ángulos inferiores a \(180^\circ\) se habla de operación en clase C.
 
-La Figura~\ref{fig:armonicos_alpha} ilustra la amplitud normalizada de las primeras cinco componentes armónicas de la corriente de \textit{drain} ($I_{dc}$ a $I_5$) en función del ángulo de conducción $\alpha$, evaluadas mediante la resolución analítica de las ecuaciones~\eqref{eq:idc_generic} y \eqref{eq:in_generic}. Se observa que, a medida que el ángulo de conducción se reduce desde $\alpha = 360^\circ$ (Clase A) hacia valores progresivamente menores, la componente de continua $I_{dc}$ disminuye monótonamente, mientras que las componentes armónicas de orden superior a la fundamental, prácticamente nulas en Clase A, adquieren magnitud creciente. Este comportamiento constituye la manifestación en el dominio espectral de la distorsión progresiva de la forma de onda de corriente respecto de una réplica senoidal pura, a medida que el transistor abandona la conducción permanente característica de la Clase A.
+La reducción del ángulo de conducción disminuye la potencia disipada en el dispositivo y, por lo tanto, aumenta la eficiencia de conversión de potencia a la salida del transistor. Sin embargo, esta mejora se obtiene a costa de la pérdida de linealidad en la corriente de drain, aumentando el contenido armónico. Como consecuencia, ninguna clase de operación resulta simultáneamente óptima en cuanto a potencia de salida, eficiencia y linealidad.
+
+La Figura~\ref{fig:armonicos_alpha} ilustra la amplitud normalizada de las primeras cinco componentes armónicas de la corriente de drain y el valor de la componente de continua en función del ángulo de conducción, evaluadas mediante la resolución de las ecuaciones~\eqref{eq:idc_generic} y \eqref{eq:in_generic}. Se observa que, a medida que el ángulo de conducción se reduce desde $\alpha = 360^\circ$ (Clase A) hacia valores progresivamente menores, la componente de continua $I_{DC}$ disminuye monótonamente, mientras que la componente fundamental $I_1$ se mantiene prácticamente constante en un amplio rango de valores de $\alpha$, alcanzando su máximo relativo en las proximidades de la Clase B, para luego decrecer también en el régimen de Clase C. Las componentes armónicas de orden superior ($I_2$ a $I_5$), prácticamente nulas en Clase A, adquieren magnitud creciente a medida que el ángulo de conducción se reduce, siendo esta aparición de armónicos la manifestación de la distorsión ej la forma de onda de corriente.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Figures/pa_harmonics.png}
-    \caption{Amplitud normalizada de las componentes $I_{dc}$ a $I_5$ de la corriente de \textit{drain} en función del ángulo de conducción $\alpha$.}
+    \caption{Amplitud normalizada de las componentes $I_{DC}$ a $I_5$ de la corriente de drain en función del ángulo de conducción $\alpha$.}
     \label{fig:armonicos_alpha}
 \end{figure}
 
-\section{Eficiencia de Drain en Función del Ángulo de Conducción}
-A partir de las componentes de continua y de la fundamental obtenidas de las ecuaciones~\eqref{eq:idc_generic} y \eqref{eq:in_generic}, la eficiencia de \textit{drain} del amplificador, definida como el cociente entre la potencia de radiofrecuencia entregada a la carga y la potencia continua consumida, queda determinada en función del ángulo de conducción mediante la expresión cerrada presentada en la referencia citada:
+A partir de las componentes de continua y de la fundamental, la eficiencia de drain del amplificador, definida como el cociente entre la potencia de RF entregada a la carga y la potencia continua consumida, queda determinada en función del ángulo de conducción mediante la expresión:
 
+% TODO: cita al que cita Razavi
 \begin{equation}
     \eta(\alpha) = \frac{1}{4}\,\frac{\alpha - \sin\alpha}{\sin(\alpha/2) - (\alpha/2)\cos(\alpha/2)}
     \label{eq:eficiencia_alpha}
 \end{equation}
 
-La Fig.~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alpha} para el rango completo de ángulos de conducción de interés, señalando los puntos correspondientes a las clases de operación tradicionales: $\alpha = 360^\circ$ (Clase A, $\eta = 50\%$), $\alpha = 180^\circ$ (Clase B, $\eta \approx 78{,}5\%$), el intervalo $180^\circ < \alpha < 360^\circ$ correspondiente a la Clase AB, y la región $\alpha < 180^\circ$ correspondiente a la Clase C, en la cual la eficiencia continúa incrementándose a expensas de la linealidad evidenciada en la Figura~\ref{fig:armonicos_alpha}.
+La Figura~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alpha} para el rango completo de ángulos de conducción de interés, señalando la eficiencia correspondiente a cada clase de operación: $\eta = 50\%$ para la Clase A, $\eta \approx 78{,}5\%$ para la Clase B, valores intermedios entre ambos para la Clase AB, y valores crecientes por encima de este último para la Clase C, que tiende al $100\%$ en el límite de ángulo de conducción nulo. Este límite carece de sentido práctico, ya que implica ausencia total de conducción de corriente y potencia de salida nula.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Figures/pa_efficiency.png}
-    \caption{Eficiencia de \textit{drain} teórica en función del ángulo de conducción, con las regiones correspondientes a las Clases A, AB, B y C señaladas.}
+    \caption{Eficiencia de drain teórica en función del ángulo de conducción, con las regiones correspondientes a las Clases A, AB, B y C señaladas.}
     \label{fig:pa_efficiency}
+\end{figure}
+
+La Figura~\ref{fig:rf_power_alpha} ilustra, en función del ángulo de conducción, la potencia de RF entregada a la carga referida a su valor en Clase A y evaluada asumiendo carga óptima y armónicos filtrados. Se observa que la potencia de RF permanece prácticamente constante, con una leve mejora, en el tramo comprendido entre la Clase A y la Clase B, tramo que coincide con el crecimiento inicial de $I_1$ señalado en la Figura~\ref{fig:armonicos_alpha}. Por debajo de la Clase B, en cambio, la potencia de RF decae de manera pronunciada a medida que el ángulo de conducción se reduce hacia la Clase C, como consecuencia directa de la disminución de $I_1$ en ese régimen. Esta comparación pone de manifiesto que la ganancia en eficiencia obtenida al reducir el ángulo de conducción no resulta gratuita, sino que compromete la potencia de RF disponible en la frecuencia fundamental, compromiso que motiva, en la práctica, la adopción de puntos de polarización intermedios como la Clase AB.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/logo.jpg}
+    \caption{Potencia de RF entregada a la carga, relativa a Clase A, en función del ángulo de conducción, asumiendo carga óptima y cortocircuito en las frecuencias armónicas.}
+    \label{fig:rf_power_alpha}
 \end{figure}
 
 % -----------------------------------------------------------------------------------------------%
 \section{Parámetros de Pequeña Señal}
-La caracterización de un amplificador de potencia en régimen de pequeña señal, es decir, en condiciones de excitación suficientemente reducidas como para que el dispositivo se comporte linealmente, se realiza mediante sus parámetros de dispersión o parámetros $S$. A diferencia de los parámetros de impedancia o admitancia, los parámetros $S$ no relacionan tensiones y corrientes en los puertos del dispositivo, sino ondas de potencia incidentes y reflejadas, lo cual permite su medición directa a frecuencias de microondas sin requerir condiciones de circuito abierto o cortocircuito en los puertos, físicamente impracticables en esa banda de frecuencias.
+La caracterización de un amplificador de potencia en régimen de pequeña señal, es decir, con una excitación suficientemente pequeña como para que el dispositivo se comporte linealmente, se realiza mediante sus parámetros de dispersión o parámetros $S$ \cite{kurokawa1965}. A diferencia de los parámetros de impedancia o admitancia, los parámetros $S$ no relacionan tensiones y corrientes en los puertos del dispositivo, sino ondas de potencia incidentes y reflejadas, lo cual permite su medición directa a frecuencias de microondas sin requerir condiciones de circuito abierto o cortocircuito en los puertos, físicamente impracticables en esa banda de frecuencias.
 
-Para un dispositivo de dos puertos como el transistor considerado, con el puerto de entrada asociado al terminal de \textit{gate} y el puerto de salida asociado al terminal de \textit{drain}, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros $S$ relacionan estas ondas mediante:
-
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[transform shape]
-	% Paths, nodes and wires:
-	\node[shape=rectangle, draw, line width=0.5pt, minimum width=2.982cm, minimum height=2.982cm] at (6.5, 8.5){};
-	\draw (5, 9.25) -- (4, 9.25);
-	\draw (5, 7.75) |- (4, 7.75);
-	\draw (8, 9.25) -- (9, 9.25);
-	\draw (8, 7.75) -- (9, 7.75);
-	\draw[line width=0.6pt, -latex] (4.25, 9.5) -- (4.75, 9.5);
-	\draw[line width=0.6pt, -latex] (4.75, 7.5) -- (4.25, 7.5);
-	\draw[line width=0.6pt, -latex] (8.25, 7.5) -- (8.75, 7.5);
-	\draw[line width=0.6pt, -latex] (8.75, 9.5) -- (8.25, 9.5);
-	\node[circ] at (4, 9.25){};
-	\node[circ] at (4, 7.75){};
-	\node[circ] at (9, 9.25){};
-	\node[circ] at (9, 7.75){};
-	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.215cm] at (4.5, 9.75){} node[anchor=center, align=center, inner sep=6pt] at (4.5, 9.75){$a_1$};
-	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.215cm] at (8.5, 9.75){} node[anchor=center, align=center, inner sep=6pt] at (8.5, 9.75){$a_2$};
-	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.215cm] at (4.5, 7.25){} node[anchor=center, align=center, inner sep=6pt] at (4.5, 7.25){$b_1$};
-	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.215cm] at (8.5, 7.25){} node[anchor=center, align=center, inner sep=6pt] at (8.5, 7.25){$b_2$};
-	\node[shape=rectangle, minimum width=0.465cm, minimum height=0.965cm] at (6.5, 8.5){} node[anchor=center, align=center, inner sep=6pt] at (6.5, 8.5){\LARGE S};
-	\draw (6.25, 9.25) -- (5.75, 9.25) -| (5.75, 7.75) -- (6.25, 7.75);
-	\draw (6.75, 7.75) -- (7.25, 7.75) -| (7.25, 9.25) -- (6.75, 9.25);
-\end{tikzpicture}
-    \caption{Representación simplificada de un cuadripolo mediante parámetros de dispersión ($S$).}
-    \label{fig:cuadripolo_s}
-\end{figure}
+Para un dispositivo de dos puertos como el transistor considerado (considerando el terminal de source conectado a masa), con el puerto de entrada asociado al terminal de gate y el puerto de salida asociado al terminal de drain, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros $S$ relacionan estas ondas mediante:
 
 \begin{equation}
     \begin{pmatrix} b_1 \\ b_2 \end{pmatrix} =
@@ -98,7 +159,7 @@ Para un dispositivo de dos puertos como el transistor considerado, con el puerto
     \label{eq:matriz_s}
 \end{equation}
 
-donde cada parámetro individual se obtiene, por definición, excitando un único puerto a la vez y terminando el puerto restante con una carga adaptada a $Z_0$ (de modo que la onda incidente en ese puerto sea nula), según:
+donde cada parámetro individual se obtiene, por definición, excitando un único puerto a la vez y colocando una carga adaptada en el puerto restante (de modo que la onda incidente en ese puerto sea nula), según:
 
 \begin{equation}
     S_{11} = \frac{b_1}{a_1}\bigg|_{a_2 = 0} \quad
@@ -108,30 +169,50 @@ donde cada parámetro individual se obtiene, por definición, excitando un únic
     \label{eq:definicion_s}
 \end{equation}
 
-El parámetro $S_{11}$ corresponde al coeficiente de reflexión en el puerto de entrada con el puerto de salida adaptado, y cuantifica la fracción de la onda incidente en el \textit{gate} que es reflejada hacia la fuente de excitación; de manera análoga, $S_{22}$ corresponde al coeficiente de reflexión en el puerto de salida con la entrada adaptada, y cuantifica la fracción de potencia reflejada desde el \textit{drain} hacia la carga. Ambos parámetros son magnitudes complejas adimensionales cuyo módulo, idealmente nulo en una condición de adaptación perfecta y de valor unitario en el caso de una reflexión total, determina directamente el desempeño de adaptación de impedancia del dispositivo en cada puerto.
+El parámetro $S_{11}$ corresponde al coeficiente de reflexión en el puerto de entrada con el puerto de salida adaptado, y cuantifica la fracción de la onda incidente en el gate que es reflejada hacia la fuente de excitación. De manera análoga, $S_{22}$ corresponde al coeficiente de reflexión en el puerto de salida con la entrada adaptada, y cuantifica la fracción de potencia reflejada desde el drain hacia la carga. Ambos parámetros son magnitudes complejas adimensionales cuyo módulo, idealmente nulo en una condición de adaptación perfecta y de valor unitario en el caso de una reflexión total, determina directamente el desempeño de adaptación de impedancia del dispositivo en cada puerto.
 
-El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde el puerto de entrada hacia el puerto de salida, y representa la ganancia compleja del dispositivo en la condición de adaptación impuesta. Su módulo al cuadrado, expresado en decibeles como $20\log_{10}|S_{21}|$, constituye la ganancia de pequeña señal del amplificador en la frecuencia considerada. El parámetro $S_{12}$ corresponde al coeficiente de transmisión inversa, desde el puerto de salida hacia el puerto de entrada, y cuantifica la magnitud de la realimentación interna del dispositivo. Un mayor valor de $S_{12}$ indica una realimentación interna mayor del dispositivo, factor que, como será descripto a continuación, condiciona directamente la estabilidad del amplificador frente a variaciones en las impedancias de fuente y carga.
+El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde el puerto de entrada hacia el puerto de salida, y representa la ganancia del dispositivo en la condición de adaptación impuesta. El parámetro $S_{12}$ corresponde al coeficiente de transmisión inversa, desde el puerto de salida hacia el puerto de entrada, y cuantifica la magnitud de la realimentación interna del dispositivo. Un mayor valor de $S_{12}$ indica una realimentación interna mayor del dispositivo, factor que condiciona directamente la estabilidad del amplificador frente a variaciones en las impedancias de fuente y carga, según se desarrolla en la subsección siguiente.
 
-% -----------------------------------------------------------------------------------------------%
-\section{Estabilidad}
-A partir de los cuatro parámetros $S$ se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación para alguna combinación de impedancias de fuente y carga. Un dispositivo se clasifica como \textbf{incondicionalmente estable} en una frecuencia dada cuando permanece estable para cualquier combinación posible de impedancias de fuente y carga, es decir, para la totalidad del diagrama de Smith. Por el contrario, un dispositivo se clasifica como \textbf{condicionalmente estable} cuando existen regiones dentro del diagrama de Smith, denominadas regiones de inestabilidad, para las cuales alguna combinación particular de impedancias de fuente o carga provoca que el dispositivo oscile. En este último caso, el diseñador debe restringir las impedancias de las redes de adaptación a las regiones estables identificadas mediante los círculos de estabilidad correspondientes.
+\subsection{Factor de Estabilidad}
+A partir de los parámetros S se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación para alguna combinación de impedancias de fuente y carga. Un dispositivo se clasifica como \textbf{incondicionalmente estable} para una frecuencia dada cuando permanece estable para cualquier combinación posible de impedancias de fuente y carga, es decir, para la totalidad del diagrama de Smith. Por el contrario, un dispositivo se clasifica como \textbf{condicionalmente estable} cuando existen regiones dentro del diagrama de Smith, denominadas regiones de inestabilidad, para las cuales alguna combinación de impedancias provoca que el dispositivo oscile. En este último caso, el diseñador debe restringir las impedancias de las redes de adaptación a las regiones estables identificadas mediante los círculos de estabilidad correspondientes.
 
-El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad \cite{Edwards1992}, definido como:
+El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad \cite{edwards1992}, definido como:
 
 \begin{equation}
     \mu = \frac{1 - |S_{11}|^2}{|S_{22} - S_{11}^{*}\Delta| + |S_{12}S_{21}|}
     \label{eq:mu_factor}
 \end{equation}
 
-El factor $\mu$ resulta preferible al factor $K$ de Rollet por dos motivos. En primer lugar, la condición $\mu > 1$ es necesaria y suficiente por sí sola para garantizar la estabilidad incondicional del dispositivo, sin requerir la verificación simultánea de una segunda condición sobre $\Delta$ como ocurre con el criterio de $K$. En segundo lugar, el valor numérico de $\mu$ constituye una medida directa del margen de estabilidad del dispositivo. Valores de $\mu$ progresivamente mayores a la unidad indican una mayor distancia respecto de la condición límite de inestabilidad, mientras que el factor $K$ no admite esta interpretación cuantitativa de manera tan directa. Ambos factores se calculan a partir del mismo conjunto de parámetros $S$ medidos o simulados, por lo cual resultan complementarios y consistentes entre sí en la región de estabilidad incondicional, difiriendo únicamente en la facilidad de interpretación del margen de diseño.
+El factor $\mu$ resulta preferible al factor $K$ de Rollet por dos motivos. En primer lugar, la condición $\mu > 1$ es necesaria y suficiente por sí sola para garantizar la estabilidad incondicional del dispositivo, sin requerir la verificación simultánea de una segunda condición sobre $\Delta$ como ocurre con el criterio de $K$. En segundo lugar, el valor numérico de $\mu$ constituye una medida directa del margen de estabilidad del dispositivo. Valores de $\mu$ progresivamente mayores a la unidad indican una mayor distancia respecto de la condición límite de inestabilidad, mientras que el factor $K$ no admite esta interpretación cuantitativa de manera tan directa. Ambos factores son calculados a partir de los parámetros S medidos o simulados, por lo cual resultan complementarios y consistentes entre sí.
+
+\subsection{Ganancia de Potencia en Pequeña Señal}
+La ganancia de un amplificador de potencia relaciona la potencia entregada a la carga con la potencia disponible en la fuente de excitación. En el caso general, en el cual las impedancias de generador ($Z_g$) y carga ($Z_L$) no coinciden necesariamente con la impedancia característica $Z_0$ empleada para definir los parámetros S, la ganancia de transducción (\textit{transducer power gain}, $G_T$) se define como el cociente entre la potencia efectivamente entregada a la carga y la potencia disponible de la fuente:
+
+\begin{equation}
+    G_T = \frac{|S_{21}|^2\,(1-|\Gamma_S|^2)(1-|\Gamma_L|^2)}{|(1-S_{11}\Gamma_S)(1-S_{22}\Gamma_L) - S_{12}S_{21}\Gamma_S\Gamma_L|^2}
+    \label{eq:ganancia_transductora}
+\end{equation}
+
+donde $\Gamma_S$ y $\Gamma_L$ son los coeficientes de reflexión de la fuente y de la carga, respectivamente, referidos a $Z_0$. La ecuación~\eqref{eq:ganancia_transductora} pone de manifiesto que la ganancia de un amplificador no depende exclusivamente de las propiedades intrínsecas del transistor, sino también de las impedancias presentadas en sus puertos de entrada y de salida, las cuales son determinadas por las redes de adaptación diseñadas.
+
+En el caso particular en que tanto la fuente como la carga se encuentran adaptadas a $Z_0$ ($\Gamma_S = \Gamma_L = 0$), condición habitual de caracterización mediante un analizador de redes vectorial, la ecuación~\eqref{eq:ganancia_transductora} se reduce a:
+
+\begin{equation}
+    G_T\big|_{\Gamma_S=\Gamma_L=0} = |S_{21}|^2
+    \label{eq:ganancia_s21}
+\end{equation}
+
+esta magnitud constituye la ganancia de pequeña señal del amplificador reportada habitualmente en las hojas de datos del fabricante y obtenida directamente a partir de la medición de parámetros S. Esta ganancia constituye una referencia de diseño relevante, dado que establece el límite superior de ganancia del dispositivo en la condición de excitación reducida, valor que, como se describe en la sección siguiente, decrece progresivamente a medida que el nivel de excitación se incrementa y el amplificador ingresa en su régimen de operación de gran señal.
 
 % -----------------------------------------------------------------------------------------------%
 \section{Parámetros de Gran Señal}
-A diferencia de los parámetros de pequeña señal, la caracterización de gran señal evalúa el comportamiento del amplificador en el régimen de excitación de interés para la aplicación final, en el cual el dispositivo abandona progresivamente su comportamiento lineal a medida que se aproxima a su punto de saturación.
+Los parámetros de pequeña señal descriptos en la sección anterior caracterizan al amplificador únicamente en la región donde su comportamiento puede aproximarse como lineal. Sin embargo, un amplificador de potencia se diseña precisamente para operar con niveles de excitación elevados, en los cuales el dispositivo abandona progresivamente dicha región lineal a medida que se aproxima a su punto de saturación. En estas condiciones, magnitudes como la ganancia dejan de ser constantes y pasan a depender del nivel de potencia de entrada, por lo cual la caracterización de pequeña señal resulta insuficiente para predecir el desempeño real del amplificador en su punto de operación de interés. Resulta entonces necesario definir un conjunto de parámetros adicionales, evaluados en régimen de gran señal, que permitan cuantificar tanto la potencia de salida alcanzable como la eficiencia con la cual dicha potencia es generada.
 
-El \textbf{punto de compresión de 1 dB} (P1dB) se define como el nivel de potencia de salida para el cual la ganancia del amplificador se reduce en 1 dB respecto de su valor en pequeña señal, y constituye el límite convencional superior del régimen de operación considerado aproximadamente lineal. La \textbf{potencia de saturación} ($P_{sat}$) corresponde al nivel máximo de potencia de salida que el dispositivo es capaz de entregar, independientemente del nivel de excitación aplicado, y se ubica siempre por encima del P1dB dado que la curva de transferencia de potencia continúa incrementándose, aunque con ganancia marginal decreciente, más allá del punto de compresión.
+La \textbf{potencia de salida} ($P_{out}$) del amplificador, generalmente especificada en algún punto particular de la curva de transferencia de potencia según el contexto de diseño, constituye, junto con la eficiencia, uno de los parámetros centrales para la evaluación de cualquier sistema de comunicaciones de radiofrecuencia. La \textbf{potencia de saturación} ($P_{sat}$) corresponde al nivel máximo de potencia de salida que el dispositivo es capaz de entregar, independientemente del incremento adicional que se aplique al nivel de excitación de entrada. Este límite se debe a que la excursión de tensión y corriente en el drain del transistor se encuentra físicamente acotada por la tensión de alimentación y por la corriente máxima que el dispositivo admite. Incrementos adicionales en la potencia de entrada no se traducen en incrementos de la potencia de salida.
 
-\typeout{parskip vale: \the\parskip}
+La \textbf{ganancia} del amplificador en régimen de gran señal, definida como el cociente entre la potencia de salida y la potencia de entrada, se mantiene aproximadamente constante mientras el dispositivo opera en la región lineal. A medida que la potencia de entrada se incrementa y el amplificador se aproxima a la saturación, la ganancia decrece. El \textbf{punto de compresión de 1 dB} (P1dB) constituye una de las figuras de mérito más relevantes de un amplificador de potencia, definido como el nivel de potencia de entrada para el cual la potencia de salida se aparta en 1 dB de la respuesta lineal extrapolada a partir del comportamiento de pequeña señal. Este punto marca, en consecuencia, el límite de la región de operación lineal del amplificador \cite[pp.~512--513]{pozar2012}.
+
+Un valor de P1dB elevado indica que el amplificador puede entregar una mayor potencia de salida antes de que su comportamiento se aparte significativamente de la linealidad, deseable en aplicaciones que emplean esquemas de modulación con envolvente no constante, dado que las variaciones de amplitud de la señal deben amplificarse sin introducir distorsión apreciable para evitar la degradación de la calidad de la comunicación. En la práctica, rara vez opera el amplificador exactamente en su punto de saturación, sino que reserva un margen de \textit{backoff} respecto del P1dB, de modo de garantizar un margen adicional de linealidad frente a variaciones de la señal de entrada, aspecto que se retoma con mayor detalle en la Sección~\ref{sec:linealidad}. El P1dB se ubica siempre por debajo de la potencia de saturación, dado que la curva de transferencia de potencia continúa incrementándose más allá del punto de compresión, aunque con ganancia decreciente, hasta saturarse.
 
 \begin{figure}[H]
     \centering
@@ -140,63 +221,113 @@ El \textbf{punto de compresión de 1 dB} (P1dB) se define como el nivel de poten
     \label{fig:p1db_theory}
 \end{figure}
 
-La linealidad del amplificador en presencia de múltiples tonos se evalúa mediante el ensayo de dos tonos de igual amplitud y frecuencias cercanas, a partir del cual se mide la \textbf{relación de intermodulación de tercer orden} (IMD3), definida como la diferencia en decibeles entre la potencia de la componente fundamental y la potencia de los productos de intermodulación de tercer orden generados por la no linealidad del dispositivo en las frecuencias $2f_1 - f_2$ y $2f_2 - f_1$. A partir de la pendiente teórica de 3:1 entre la potencia de los productos de tercer orden y la potencia fundamental en escala logarítmica, se extrapola el \textbf{punto de intercepción de tercer orden referido a la salida} (OIP3), magnitud teórica que no es físicamente alcanzable por el dispositivo, pero que constituye una figura de mérito estándar para comparar la linealidad de distintos amplificadores de manera independiente del nivel de potencia de excitación empleado durante el ensayo.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{Figures/oip3_theory.png}
-    \caption{Curva teórica del punto de intercepcion de tercer orden referido a la salida y del punto de compresión de 1\,dB \cite{Taranto2020}.}
-    \label{fig:oip3_theory}
-\end{figure}
-
-Adicionalmente, las no linealidades del dispositivo dan lugar a la \textbf{conversión AM-AM y AM-PM}, fenómenos mediante los cuales una variación en la amplitud de la señal de entrada produce, respectivamente, una variación no proporcional en la amplitud de la señal de salida y una variación indeseada en su fase instantánea. Estos efectos resultan particularmente relevantes para esquemas de modulación lineal con filtrado de conformación espectral, dado que las variaciones de envolvente introducidas por dicho filtrado, al atravesar una etapa con conversión AM-AM y AM-PM apreciable, se traducen en distorsión de la constelación recibida y en regeneración espectral fuera de la banda asignada.
-
-La \textbf{ganancia} del amplificador en régimen de gran señal, definida como el cociente entre la potencia de salida y la potencia de entrada para un nivel de excitación dado, decrece progresivamente respecto de su valor de pequeña señal a medida que el dispositivo se aproxima a la compresión, fenómeno que da origen, precisamente, a la definición del P1dB. La \textbf{eficiencia de drain} y la \textbf{eficiencia de potencia agregada} (\textit{power-added efficiency}, PAE) cuantifican, respectivamente, la fracción de la potencia continua consumida que se convierte en potencia de radiofrecuencia y la fracción de dicha potencia continua que se convierte en ganancia neta de potencia de radiofrecuencia, descontando la potencia de excitación entregada por la fuente de señal:
+La \textbf{eficiencia de drain} ($\eta_D$) y la \textbf{eficiencia de potencia agregada} (\textit{power-added efficiency}, PAE) cuantifican la fracción de la potencia continua consumida que se convierte en potencia de radiofrecuencia y la fracción de potencia continua que se convierte en ganancia neta de potencia de radiofrecuencia, descontando la potencia de excitación entregada por la fuente de señal, respectivamente.
 
 \begin{equation}
     \eta_D = \frac{P_{RF,out}}{P_{DC}}, \qquad \text{PAE} = \frac{P_{RF,out} - P_{RF,in}}{P_{DC}}
     \label{eq:pae_definicion}
 \end{equation}
 
-de modo que la PAE resulta siempre menor o igual a la eficiencia de \textit{drain}, diferenciándose de manera apreciable únicamente en amplificadores de ganancia reducida, en los cuales la potencia de excitación de entrada deja de ser despreciable respecto de la potencia de salida.
-
-La \textbf{potencia de salida} del amplificador, generalmente especificada en el punto de compresión de 1 dB o en saturación según el contexto de diseño, constituye, junto con la eficiencia, uno de los parámetros centrales para la evaluación de cualquier sistema de comunicaciones de radiofrecuencia.
-
-Finalmente, el \textbf{ancho de banda} del amplificador admite más de una definición según el criterio adoptado. El ancho de banda de ganancia, definido de manera análoga al de cualquier sistema lineal, corresponde al rango de frecuencias dentro del cual la ganancia se mantiene dentro de 3 dB de su valor máximo (ancho de banda de 3 dB). De manera independiente, el ancho de banda de adaptación se define a partir del coeficiente de reflexión de entrada, como el rango de frecuencias en el cual $S_{11}$ se mantiene por debajo de un umbral preestablecido, habitualmente $-10\text{ dB}$, garantizando que la potencia reflejada hacia la fuente de excitación permanezca acotada en un porcentaje reducido de la potencia incidente. Ambas definiciones no necesariamente coinciden en frecuencia ni en extensión, dado que la condición de adaptación de impedancia y la condición de ganancia plana responden a mecanismos físicos distintos dentro de la red de adaptación del amplificador, por lo cual ambos anchos de banda deben reportarse de manera independiente al caracterizar el dispositivo.
+de modo que la PAE resulta siempre menor o igual a la eficiencia de drain, diferenciándose de manera apreciable únicamente en amplificadores de ganancia reducida, en los cuales la potencia de excitación de entrada deja de ser despreciable respecto de la potencia de salida. Ambas magnitudes dependen del nivel de excitación aplicado, y se evalúan habitualmente en el punto de compresión de 1 dB o en saturación, según el criterio de diseño adoptado, dado que es precisamente en las proximidades de dicho régimen donde el amplificador opera con la eficiencia más elevada, como se desprende del análisis de las clases de operación desarrollado en la Sección~\ref{sec:funcionamiento_clases}.
 
 
-%\begin{figure}[H]
-%    \centering
-%    \begin{tikzpicture}[transform shape]
-%    	% Paths, nodes and wires:
-%    	\node[nigfete] at (7, 4.27){};
-%    	\draw (3.25, 4) to[capacitor, l={$DC \, Block$}] (4.5, 4);
-%    	\draw (7.5, 5) to[capacitor, l={$DC \, Block$}] (8.75, 5);
-%    	\draw (5.5, 2.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (5.5, 3.75);
-%    	\draw (7, 5.25) to[cute choke, l={$RF \, Choke$}, label distance=0.03cm] (7, 6.75);
-%    	\draw (5, 4) -- (6, 4) |- (5.5, 4) -| (5.5, 3.75);
-%    	\draw (5.5, 2.25) to[battery1, l={$V_{GG}$}] (5.5, 1.25);
-%    	\node[oscillator](N1) at (2.74, 3.01){} node[anchor=east] at ([xshift=-0.03cm]N1.west){$v_{in}$};
-%    	\draw (2.25, 2.5) -| (2.25, 1);
-%    	\node[tlground] at (2.25, 1){};
-%    	\node[tlground] at (5.5, 1){};
-%    	\node[tlground] at (7, 1){};
-%    	\draw (7, 3.5) -- (7, 1);
-%    	\draw (9.25, 4.5) to[american resistor, l={$R_L$}] (9.25, 2.5);
-%    	\node[tlground] at (9.25, 1){};
-%    	\draw (11, 6.25) to[battery1, l={$V_{DD}$}] (11, 5.25);
-%    	\draw (11, 5.25) -| (11, 1);
-%    	\node[tlground] at (11, 1){};
-%    	\draw (7, 5.25) -| (7, 5.04);
-%    	\draw (7, 5) -- (7.5, 5);
-%    	\draw (8.75, 5) -- (9.25, 5) -| (9.25, 4.5);
-%    	\draw (9.25, 2.5) -| (9.25, 1);
-%    	\draw (7, 6.75) -| (7, 7) -- (11, 7) -| (11, 6.25);
-%    	\draw (2.25, 4) -| (2.25, 3.5);
-%    	\draw (2.25, 4) -- (3.25, 4);
-%    	\draw (4.5, 4) -- (5, 4);
-%    	\draw (5.5, 1.25) -| (5.5, 1);
-%    \end{tikzpicture}
-%    \caption{Esquema simplificado de una etapa de amplificación de radiofrecuencia con redes de polarización independientes de gate ($V_{GG}$) y drain ($V_{DD}$), utilizado como referencia para el análisis del ángulo de conducción.}
-%    \label{fig:circuito_polarizacion}
-%\end{figure}
+% -----------------------------------------------------------------------------------------------%
+% OIP3 cita \cite[pp.~515--517]{Pozar2012}
+\section{Linealidad} \label{sec:linealidad}
+El comportamiento de un amplificador de potencia frente a distintos niveles de excitación puede dividirse conceptualmente en dos regímenes de operación. En la \textbf{región lineal}, correspondiente a niveles de potencia de entrada sensiblemente inferiores al P1dB, la potencia de salida crece proporcionalmente con la potencia de entrada y la ganancia permanece aproximadamente constante e igual a su valor de pequeña señal. A medida que el nivel de excitación se incrementa y el amplificador se aproxima a la saturación, ingresa en la \textbf{región de compresión}, en la cual la ganancia decrece progresivamente y la relación entre potencia de entrada y de salida deja de ser lineal, hasta alcanzar asintóticamente la potencia de saturación descripta en la sección anterior.
+
+Como ya se ha mencionado, el diseñador enfrenta un compromiso directo entre potencia de salida, eficiencia y linealidad. La práctica habitual para resolver este compromiso consiste en operar el amplificador con un cierto backoff, de modo de recuperar un margen de linealidad a costa de una eficiencia inferior. La magnitud del backoff depende de las características de la señal a amplificar, siendo particularmente relevante en esquemas de modulación con envolvente no constante, en los cuales las variaciones instantáneas de amplitud de la señal exigen que el amplificador permanezca en su región lineal incluso durante los picos de potencia de la envolvente.
+
+\subsection{Distorsión Armónica}
+Una primera manifestación de la no linealidad del amplificador es la distorsión armónica, ya introducida en la Sección~\ref{sec:funcionamiento_clases} al analizar la corriente de drain en función del ángulo de conducción. Dado que la relación entre la tensión aplicada en el gate y la corriente resultante en el drain no es lineal, una excitación de entrada puramente senoidal da origen, a la salida, a componentes en frecuencias múltiplos de la fundamental, según se desprende del desarrollo en serie de Fourier de la ecuación~\eqref{eq:fourier}. La magnitud relativa de estas componentes armónicas, ya cuantificada en la Figura~\ref{fig:armonicos_alpha} en función del ángulo de conducción, constituye una primera medida de la linealidad del dispositivo, aunque resulta insuficiente para caracterizar el comportamiento del amplificador frente a señales moduladas, dado que estas ocupan una banda de frecuencias en torno a la portadora en lugar de un único tono.
+
+% TODO: revisar y agregar citas
+\subsection{Productos de Intermodulación y Prueba de Dos Tonos}
+Cuando la señal de entrada del amplificador contiene más de una componente frecuencial, la no linealidad del dispositivo no solo genera armónicos de cada componente individual, sino también productos de intermodulación, es decir, componentes espectrales adicionales ubicadas en combinaciones lineales de las frecuencias originales. Este comportamiento resulta de particular relevancia, por ejemplo, para señales moduladas digitalmente, que ocupan una banda de frecuencias en torno a la portadora, por lo que las distintas componentes frecuenciales interactúan entre sí, generando productos de intermodulación que caen dentro o en las proximidades de la banda de interés y que no pueden eliminarse mediante filtrado posterior.
+
+Para analizar el origen de estos productos, la característica de transferencia no lineal del amplificador puede aproximarse mediante un desarrollo en serie de potencias de la tensión de entrada $v_{in}(t)$, truncado hasta el tercer orden:
+
+\begin{equation}
+    v_{out}(t) = a_1\,v_{in}(t) + a_2\,v_{in}^2(t) + a_3\,v_{in}^3(t)
+    \label{eq:serie_potencias}
+\end{equation}
+
+donde $a_1$ representa la ganancia lineal del amplificador, y los coeficientes $a_2$ y $a_3$ cuantifican, respectivamente, el grado de no linealidad de segundo y tercer orden de la característica de transferencia. La \textbf{prueba de dos tonos} consiste en excitar al amplificador con dos señales senoidales de igual amplitud $A$ y frecuencias cercanas entre sí, de modo que:
+
+\begin{equation}
+    v_{in}(t) = A\cos(\omega_1 t) + A\cos(\omega_2 t)
+    \label{eq:dos_tonos}
+\end{equation}
+
+Sustituyendo la ecuación~\eqref{eq:dos_tonos} en~\eqref{eq:serie_potencias} y desarrollando el término cúbico mediante identidades trigonométricas, se obtiene un conjunto de componentes espectrales en distintas combinaciones de $\omega_1$ y $\omega_2$. Entre ellas, el término $a_3\,v_{in}^3(t)$ da origen, en particular, a componentes en las frecuencias $2\omega_1 - \omega_2$ y $2\omega_2 - \omega_1$, cuya amplitud resulta:
+
+\begin{equation}
+    A_{IM3} = \frac{3}{4}\,a_3\,A^3
+    \label{eq:amplitud_im3}
+\end{equation}
+
+mientras que la amplitud de la componente fundamental, considerando la contribución del término cúbico sobre la propia frecuencia de excitación, resulta:
+
+\begin{equation}
+    A_{fund} = a_1\,A + \frac{9}{4}\,a_3\,A^3 \approx a_1\,A
+    \label{eq:amplitud_fund}
+\end{equation}
+
+donde la aproximación es válida en la región de operación de interés, en la cual el término lineal domina sobre la contribución de tercer orden. Entre los productos de intermodulación generados, los ubicados en $2f_1 - f_2$ y $2f_2 - f_1$ son los de mayor interés práctico, dado que se encuentran próximos a las frecuencias originales y, por lo tanto, no pueden ser removidos mediante filtrado sin afectar también a la señal deseada. Los productos de intermodulación de orden par, en cambio, aparecen alejados de la banda de interés y resultan de menor relevancia práctica en la mayoría de las aplicaciones de comunicaciones.
+
+De las ecuaciones~\eqref{eq:amplitud_im3} y \eqref{eq:amplitud_fund} se desprende que, en la región donde ambas aproximaciones resultan válidas, la potencia de la componente fundamental ($P_{fund} \propto A_{fund}^2 \propto A^2$) crece con una pendiente de 1 dB por cada dB de incremento en la potencia de entrada, mientras que la potencia de los productos de intermodulación de tercer orden ($P_{IM3} \propto A_{IM3}^2 \propto A^6$) crece con una pendiente de 3 dB por dB, dado que su amplitud resulta proporcional a $A^3$. Expresando ambas magnitudes en escala logarítmica, la potencia fundamental y la potencia de los productos de tercer orden pueden aproximarse mediante dos rectas de pendiente 1 y 3 respectivamente, en función de la potencia de entrada expresada en dBm. Estas rectas, extrapoladas más allá de la región donde la aproximación de la ecuación~\eqref{eq:serie_potencias} deja de ser válida, se interceptan en un punto teórico denominado \textbf{punto de intercepción de tercer orden} (IP3), definido formalmente como el nivel de potencia hipotético para el cual la potencia extrapolada de la componente fundamental igualaría a la de los productos de intermodulación de tercer orden. Este punto puede referirse tanto a la entrada del amplificador (\textit{Input IP3}, IIP3) como a su salida (\textit{Output IP3}, OIP3), siendo esta última la magnitud más utilizada en la práctica. El IP3 constituye un valor teórico que no es físicamente alcanzable por el dispositivo, dado que ambas curvas se saturan antes de alcanzar dicho punto, pero resulta una figura de mérito estándar para comparar la linealidad de distintos amplificadores de manera independiente del nivel de potencia de excitación empleado durante el ensayo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/oip3_theory.png}
+    \caption{Curva teórica del punto de intercepción de tercer orden referido a la salida y del punto de compresión de 1\,dB \cite{Taranto2020}.}
+    \label{fig:oip3_theory}
+\end{figure}
+
+Cripps \cite{cripps2006} señala que, para amplificadores de potencia con características de transferencia razonablemente suaves, el OIP3 se relaciona empíricamente con el P1dB mediante un factor aproximadamente constante, de modo que:
+
+\begin{equation}
+    OIP3 \approx P_{1dB} + 10 \text{ dB}
+    \label{eq:oip3_p1db}
+\end{equation}
+
+Esta relación empírica resulta de utilidad práctica, dado que permite estimar una figura de mérito de linealidad frente a señales de banda ancha (OIP3) a partir de una medición de compresión de ganancia mucho más simple de realizar (P1dB), sin necesidad de efectuar el ensayo de dos tonos completo en las etapas preliminares del diseño.
+
+% TODO: revisar y agregar citas
+\subsection{Distorsión AM-AM y AM-PM}
+Adicionalmente a la distorsión de amplitud descripta hasta aquí, las no linealidades del dispositivo dan lugar a la \textbf{conversión AM-AM y AM-PM}, fenómenos mediante los cuales una variación en la amplitud de la señal de entrada produce, respectivamente, una variación no proporcional en la amplitud de la señal de salida y una variación indeseada en su fase instantánea. La conversión AM-AM se relaciona directamente con la compresión de ganancia ya descripta, mientras que la conversión AM-PM no tiene un correlato evidente en las curvas de potencia de entrada y salida, dado que se manifiesta exclusivamente en la fase de la señal. Estos efectos resultan particularmente relevantes para esquemas de modulación con envolvente no constante, dado que las variaciones de amplitud propias de dichas modulaciones se traducen, al atravesar una etapa con conversión AM-AM y AM-PM apreciable, en distorsión de la constelación recibida y en regeneración espectral fuera de la banda asignada al canal.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Diseño y Optimización de Amplificadores de Potencia}
+El diseño de la etapa de amplificación no se limita a la selección del transistor y de su punto de polarización, sino que requiere adicionalmente el diseño de las redes de adaptación de impedancia que vinculan al dispositivo con la fuente de excitación y con la carga. La \textbf{adaptación de impedancia} consiste en interponer, entre dos puertos de impedancias distintas, una red circuital, típicamente reactiva e idealmente sin pérdidas, que transforma una de dichas impedancias en el conjugado complejo de la otra, o bien en algún otro valor de interés según el criterio de diseño adoptado, con el objetivo de controlar la transferencia de potencia entre ambos puertos.
+
+\subsection{Adaptación de Entrada}
+En el puerto de entrada del amplificador, el objetivo de diseño es maximizar la transferencia de potencia disponible desde la fuente de excitación hacia el gate del transistor. Este objetivo se alcanza mediante el teorema de máxima transferencia de energía, según el cual la potencia entregada a una carga es máxima cuando la impedancia de dicha carga es igual al complejo conjugado de la impedancia de la fuente que la excita. Aplicado al puerto de entrada del amplificador, esto implica diseñar la red de adaptación de entrada de modo que la impedancia que ve el generador sea igual al conjugado complejo de la impedancia de fuente $Z_g$, es decir, $Z_{in} = Z_S^*$. Dado que en el puerto de entrada el objetivo es únicamente maximizar la potencia entregada al dispositivo sin que existan consideraciones adicionales de gran señal, la adaptación conjugada resulta el criterio de diseño apropiado y suficiente para esta red.
+
+\subsection{Adaptación de Salida}
+El criterio de adaptación conjugada, sin embargo, no resulta aplicable de la misma manera en el puerto de salida del amplificador. En pequeña señal, la impedancia de carga que maximiza la transferencia de potencia hacia la carga sí corresponde al complejo conjugado de la impedancia de salida del transistor. No obstante, un amplificador de potencia opera en gran señal y su comportamiento se aparta del descripto por los parámetros S. En estas condiciones, la impedancia de carga que maximiza la potencia de salida y la eficiencia del amplificador no coincide, en general, con el complejo conjugado de $S_{22}$, dado que este último se mide bajo excitación reducida y no captura el comportamiento no lineal del transistor en gran señal.
+
+Puede demostrarse que, para un transistor cuya corriente de drain se aproxima mediante el modelo de ángulo de conducción presentado en la Sección~\ref{sec:funcionamiento_clases}, la resistencia de carga óptima que permite la máxima excursión simultánea de tensión y corriente en el drain, y que por lo tanto maximiza la potencia de salida en gran señal, se aproxima mediante:
+
+\begin{equation}
+    R_{L,opt} \approx \frac{2\,(V_{DD} - V_{knee})}{I_{max}}
+    \label{eq:rl_optima}
+\end{equation}
+
+donde $V_{DD}$ es la tensión de alimentación de drain, $V_{knee}$ es la tensión de "rodilla" del dispositivo, por debajo de la cual la corriente de drain deja de responder linealmente a la tensión aplicada, e $I_{max}$ es la corriente máxima de drain. La ecuación~\eqref{eq:rl_optima} muestra que la impedancia de carga óptima depende exclusivamente de los límites de excursión de tensión y corriente del dispositivo, y no de sus parámetros $S$ de pequeña señal, lo cual confirma que el criterio de adaptación conjugada no resulta aplicable al diseño de la red de salida de un amplificador de potencia.
+
+\subsection{Método de Load-Pull}
+Dado que la expresión~\eqref{eq:rl_optima} constituye únicamente una aproximación, que no contempla efectos como las capacitancias parásitas, armónicos en la impedancia de carga ni las no linealidades de orden superior de la corriente de drain, la impedancia óptima empleada en el diseño práctico se determina habitualmente mediante la técnica de \textbf{load-pull}. Esta técnica consiste en variar la impedancia de carga presentada al puerto de salida del transistor, manteniendo fijo el nivel de excitación de entrada, y registrar en cada punto del barrido el desempeño resultante del dispositivo.
+
+El resultado de un barrido de load-pull se representa habitualmente mediante contornos trazados sobre el diagrama de Smith, donde cada contorno conecta los puntos de impedancia de carga que producen un mismo valor de una magnitud de interés, típicamente la potencia de salida ($P_{out}$) o la eficiencia de potencia agregada (PAE). Estos contornos permiten identificar, para un nivel de excitación dado, la región del diagrama de Smith donde el dispositivo alcanza su máxima potencia de salida y la región donde alcanza su máxima eficiencia, regiones que, en general, no coinciden entre sí. La impedancia de carga de diseño se selecciona entonces como un compromiso entre ambos criterios, priorizando la intersección de los contornos donde ambas magnitudes se mantienen simultáneamente próximas a sus valores máximos, en lugar de optimizar exclusivamente alguna de las dos de forma aislada.
+
+\section{Conclusiones del Capítulo}
+A lo largo del capítulo se desarrollaron los fundamentos teóricos necesarios para abordar el diseño de un amplificador de potencia de RF. El análisis del ángulo de conducción permitió establecer que la clase de operación de un amplificador implica un compromiso entre eficiencia, potencia de salida y linealidad, dado que la reducción del ángulo de conducción mejora la eficiencia a expensas de un mayor contenido armónico y de una menor potencia disponible en la componente fundamental. Este compromiso constituye el criterio fundamental para la selección de la clase de polarización del transistor.
+
+Asimismo, se estableció que la caracterización de pequeña señal, si bien resulta indispensable para evaluar la estabilidad y la ganancia lineal del dispositivo, no es suficiente para predecir su comportamiento en el régimen de excitación de interés para un amplificador de potencia. Los parámetros de gran señal, en particular el punto de compresión de 1 dB, la potencia de saturación y las distintas métricas de eficiencia, resultan indispensables para caracterizar el desempeño real del dispositivo en su punto de operación.
+
+De manera análoga, se explicaron los mecanismos más relevantes que dan origen a la distorsión no lineal del amplificador, estableciendo al OIP3 como figura de mérito y su vinculación empírica con el P1dB. Se destacó que la conversión AM-AM y AM-PM introduce distorsión adicional de particular relevancia para esquemas de modulación con envolvente no constante, como los empleados en el presente trabajo.
+
+Finalmente, se discutió que el diseño de las redes de adaptación de impedancia no puede abordarse mediante un único criterio aplicable indistintamente a ambos puertos del amplificador. Mientras que la adaptación de entrada admite el criterio de máxima transferencia de potencia mediante adaptación conjugada, la adaptación de salida requiere de la determinación experimental o simulada de la impedancia óptima de carga mediante la técnica de load-pull.
+
+En síntesis, el diseño de un amplificador de potencia constituye un problema de optimización de múltiples variables, en el cual la potencia de salida, la eficiencia, la linealidad y la estabilidad se encuentran mutuamente acopladas, y en el cual ninguna de estas prestaciones puede maximizarse de manera aislada sin afectar a las restantes. Los criterios y herramientas presentados en este capítulo constituyen el marco teórico sobre el cual se fundamentan las decisiones de diseño del amplificador desarrollado en capítulos posteriores.
