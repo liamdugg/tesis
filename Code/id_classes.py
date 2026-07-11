@@ -77,4 +77,4 @@ ax[1, 0].set_ylabel("Corriente de Drain ($I_D$)")
 
 plt.tight_layout()
 
-fig.savefig(OUTPUT_FILE, dpi=300, bbox_inches="tight")
+fig.savefig(OUTPUT_FILE, bbox_inches="tight")
