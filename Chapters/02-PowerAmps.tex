@@ -133,7 +133,7 @@ La Figura~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alph
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Figures/pa_efficiency.png}
+    \includegraphics[width=0.7\linewidth]{Figures/pa_efficiency.png}
     \caption{Eficiencia de drain teórica en función del ángulo de conducción, con las regiones correspondientes a las Clases A, AB, B y C señaladas.}
     \label{fig:pa_efficiency}
 \end{figure}
@@ -142,7 +142,7 @@ La Figura~\ref{fig:rf_power_alpha} ilustra, en función del ángulo de conducci�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\linewidth]{Figures/rf_power.png}
+    \includegraphics[width=0.7\linewidth]{Figures/rf_power.png}
     \caption{Potencia de RF entregada a la carga, relativa a Clase A, en función del ángulo de conducción, asumiendo carga óptima y cortocircuito en las frecuencias armónicas.}
     \label{fig:rf_power_alpha}
 \end{figure}
@@ -151,7 +151,14 @@ La Figura~\ref{fig:rf_power_alpha} ilustra, en función del ángulo de conducci�
 \section{Parámetros de Pequeña Señal}
 La caracterización de un amplificador de potencia en régimen de pequeña señal, es decir, con una excitación suficientemente pequeña como para que el dispositivo se comporte linealmente, se realiza mediante sus parámetros de dispersión o parámetros S \cite{kurokawa1965}. A diferencia de los parámetros de impedancia o admitancia, los parámetros S no relacionan tensiones y corrientes en los puertos del dispositivo, sino ondas de potencia incidentes y reflejadas, lo cual permite su medición directa a frecuencias de microondas sin requerir condiciones de circuito abierto o cortocircuito en los puertos, físicamente impracticables en esa banda de frecuencias.
 
-Para un dispositivo de dos puertos como el transistor considerado (considerando el terminal de source conectado a masa), con el puerto de entrada asociado al terminal de gate y el puerto de salida asociado al terminal de drain, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros S relacionan estas ondas mediante:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/TwoPortNetworkScatteringAmplitudes.png}
+    \caption{Cuadripolo genérico de dos puertos con sus ondas incidentes y reflejadas \cite{TwoPortScattering}.}
+    \label{fig:cuadripolo_s}
+\end{figure}
+
+Para un dispositivo de dos puertos como el transistor considerado (considerando el terminal de source conectado a masa), con el puerto de entrada asociado al terminal de gate y el puerto de salida asociado al terminal de drain, se definen las ondas de tensión normalizadas incidente ($a_i$) y reflejada ($b_i$) en cada puerto $i$, referidas a una impedancia característica $Z_0$, según se ilustra en la Figura~\ref{fig:cuadripolo_s}. Los cuatro parámetros S relacionan estas ondas mediante
 
 \begin{equation}
     \begin{pmatrix} b_1 \\ b_2 \end{pmatrix} =
@@ -160,7 +167,7 @@ Para un dispositivo de dos puertos como el transistor considerado (considerando 
     \label{eq:matriz_s}
 \end{equation}
 
-donde cada parámetro individual se obtiene, por definición, excitando un único puerto a la vez y colocando una carga adaptada en el puerto restante (de modo que la onda incidente en ese puerto sea nula), según:
+donde cada parámetro individual se obtiene, por definición, excitando un único puerto a la vez y colocando una carga adaptada en el puerto restante (de modo que la onda incidente en ese puerto sea nula), según
 
 \begin{equation}
     S_{11} = \frac{b_1}{a_1}\bigg|_{a_2 = 0} \quad
@@ -177,7 +184,7 @@ El parámetro $S_{21}$ corresponde al coeficiente de transmisión directa, desde
 \subsection{Factor de Estabilidad}
 A partir de los parámetros S se evalúa la estabilidad del dispositivo, propiedad que determina si el amplificador es susceptible de entrar en oscilación para alguna combinación de impedancias de fuente y carga. Un dispositivo se clasifica como \textbf{incondicionalmente estable} para una frecuencia dada cuando permanece estable para cualquier combinación posible de impedancias de fuente y carga, es decir, para la totalidad del diagrama de Smith. Por el contrario, un dispositivo se clasifica como \textbf{condicionalmente estable} cuando existen regiones dentro del diagrama de Smith, denominadas regiones de inestabilidad, para las cuales alguna combinación de impedancias provoca que el dispositivo oscile. En este último caso, el diseñador debe restringir las impedancias de las redes de adaptación a las regiones estables identificadas mediante los círculos de estabilidad correspondientes.
 
-El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad \cite{edwards1992}, definido como:
+El criterio de estabilidad más extendido es el factor de Rollet ($K$) \cite{rollet1962}, el cual, junto con la condición adicional sobre el determinante $|\Delta| < 1$ (donde $\Delta = S_{11}S_{22} - S_{12}S_{21}$), garantiza estabilidad incondicional cuando $K > 1$. Sin embargo, el presente trabajo prioriza el empleo del factor $\mu$ de Edwards-Sinsky como criterio de estabilidad, definido como \cite{edwards1992}
 
 \begin{equation}
     \mu = \frac{1 - |S_{11}|^2}{|S_{22} - S_{11}^{*}\Delta| + |S_{12}S_{21}|}
@@ -201,7 +208,7 @@ donde $\Gamma_S$ y $\Gamma_L$ son los coeficientes de reflexión de la fuente y 
     \label{eq:gamma_in}
 \end{equation}
 
-En el caso particular en que tanto la fuente como la carga se encuentran adaptadas a $Z_0$ ($\Gamma_S = \Gamma_L = 0$), la ecuación~\eqref{eq:ganancia_transductora} se reduce a:
+En el caso particular en que tanto la fuente como la carga se encuentran adaptadas a $Z_0$ ($\Gamma_S = \Gamma_L = 0$), la ecuación~\eqref{eq:ganancia_transductora} se reduce a
 
 \begin{equation}
     G_T\big|_{\Gamma_S=\Gamma_L=0} = |S_{21}|^2
@@ -255,7 +262,7 @@ Para analizar el origen de estos productos, la característica de transferencia 
     \label{eq:serie_potencias}
 \end{equation}
 
-donde $a_1$ representa la ganancia lineal del amplificador, y los coeficientes $a_2$ y $a_3$ cuantifican, respectivamente, el grado de no linealidad de segundo y tercer orden de la característica de transferencia. La \textbf{prueba de dos tonos} consiste en excitar al amplificador con dos señales senoidales de igual amplitud $A$ y frecuencias cercanas entre sí, de modo que:
+donde $a_1$ representa la ganancia lineal del amplificador, y los coeficientes $a_2$ y $a_3$ cuantifican, respectivamente, el grado de no linealidad de segundo y tercer orden de la característica de transferencia. La \textbf{prueba de dos tonos} consiste en excitar al amplificador con dos señales senoidales de igual amplitud $A$ y frecuencias cercanas entre sí, de modo que
 
 \begin{equation}
     v_{in}(t) = A\cos(\omega_1 t) + A\cos(\omega_2 t)
@@ -269,7 +276,7 @@ Sustituyendo la ecuación~\eqref{eq:dos_tonos} en~\eqref{eq:serie_potencias} y d
     \label{eq:amplitud_im3}
 \end{equation}
 
-mientras que la amplitud de la componente fundamental, considerando la contribución del término cúbico sobre la propia frecuencia de excitación, resulta:
+mientras que la amplitud de la componente fundamental, considerando la contribución del término cúbico sobre la propia frecuencia de excitación, resulta
 
 \begin{equation}
     A_{fund} = a_1\,A + \frac{9}{4}\,a_3\,A^3 \approx a_1\,A
@@ -280,7 +287,7 @@ donde la aproximación es válida en la región de operación de interés, en la
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Figures/im_spectrum.png}
+    \includegraphics[width=0.65\linewidth]{Figures/im_spectrum.png}
     \caption{Productos de intermodulación cercanos a las frecuencias de los tonos de la señal de entrada.}
     \label{fig:im_spectrum}
 \end{figure}
@@ -324,7 +331,7 @@ El criterio de adaptación conjugada, sin embargo, no resulta aplicable de la mi
 
 Tomando el ejemplo de \cite[p.~12]{cripps2006}, y expandiendo sobre este, consideremos un transistor cuya salida se modela como una fuente de corriente con $I_{max}=1$~A en paralelo con una resistencia interna $R_{gen}=100\,\Omega$. Aplicando el criterio de adaptación conjugada, colocamos una carga $R_{load}=100\,\Omega$, resistencia que, en paralelo con $R_{gen}$, presenta una resistencia efectiva de $50\,\Omega$ a la fuente de corriente. En consecuencia, cuando la corriente alcanza su valor máximo de 1~A, la tensión resultante en los terminales del generador asciende a 50~V, valor que muy probablemente exceda la tensión que el dispositivo real es capaz de sostener, ya sea por su tensión de ruptura o por la tensión de alimentación disponible. Como consecuencia, el transistor entra en compresión a un nivel de corriente sustancialmente inferior a su capacidad física $I_{max}$, sin llegar a aprovechar la totalidad de la excursión de corriente disponible del dispositivo. Si la tensión de alimentación máxima es $V_{DD}=30\,V$ la corriente máxima que puede entregarse será de $0{,}6~\,A$ en lugar de $1~\,A$.
 
-Para evitar esta limitación y aprovechar la excursión completa de tensión y corriente que el transistor es capaz de entregar, resulta necesario seleccionar, en cambio, una resistencia de carga menor que la conjugada, denominada resistencia de \textbf{loadline}, dada aproximadamente por:
+Para evitar esta limitación y aprovechar la excursión completa de tensión y corriente que el transistor es capaz de entregar, resulta necesario seleccionar, en cambio, una resistencia de carga menor que la conjugada, denominada resistencia de \textbf{loadline}, dada aproximadamente por
 
 \begin{equation}
     R_{opt} \approx \frac{V_{max}}{I_{max}}
@@ -344,7 +351,7 @@ El resultado de un barrido de load-pull se representa habitualmente mediante con
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/load_pull_theory.png}
+    \includegraphics[width=0.65\linewidth]{Figures/load_pull_theory.png}
     \caption{Diagrama de Smith con contornos de impedancias para distintos valores de potencia de salida constante en un transistor de potencia\cite[p.~598]{pozar2011}.}
     \label{fig:load_pull_theory}
 \end{figure}

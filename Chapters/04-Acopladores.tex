@@ -1,13 +1,11 @@
 \chapter[Teoría de Acopladores Direccionales]{Teoría de Acopladores Direccionales} \label{cp:introduction}
 
-{
-\parindent0pt
-
-Los divisores de potencia y los acopladores direccionales son componentes pasivos de microondas que se utilizan para la división o combinación de potencia. En la división de potencia, una señal de entrada se divide en dos (o más) señales de salida de menor potencia, mientras que un combinador de potencia acepta dos o más señales de entrada y las combina en un puerto de salida. El acoplador o divisor puede tener tres, cuatro o más puertos, y puede ser (idealmente) sin pérdidas. Las redes de tres puertos adoptan la forma de uniones en T y otros divisores de potencia, mientras que las redes de cuatro puertos adoptan la forma de acopladores direccionales e híbridos. Los divisores de potencia suelen proporcionar señales de salida en fase con una relación de división de potencia igual (3 dB), pero también son posibles relaciones de división de potencia desiguales. Los acopladores direccionales pueden diseñarse para una división de potencia arbitraria, mientras que las uniones híbridas suelen tener una división de potencia igual. Las uniones híbridas tienen un desfase de 90° o 180° entre los puertos de salida.
+Los acopladores direccionales son componentes pasivos de que se utilizan para la división o combinación de potencia. La combinación de potencia ocurre cuando en un puerto de salida se juntan (o combinan) las señales de múltiples puertos de entrada. Un divisor de potencia presenta el caso opuesto, donde una única señal de entrada divide su potencia entre múltiples puertos de salida.
 
 \section{Fundamentos de Acopladores Direccionales}
 \subsection{Definiciones}
-Un acoplador direccional es la red única que resulta cuando una red de cuatro puertos es simultáneamente \cite{Pozar2011}:
+Un acoplador direccional es la red única que resulta cuando una red de cuatro puertos es simultáneamente \cite{pozar2011}
+
 \begin{itemize}
     \item \textbf{Recíproca}: $S_{ij} = S_{ji}$
     \item \textbf{Sin pérdidas}: $[S]$ es unitaria
@@ -17,35 +15,36 @@ Un acoplador direccional es la red única que resulta cuando una red de cuatro p
 Estas tres restricciones reducen la matriz $S$ de $4 \times 4$ genérica a un solo grado de libertad real. Con las referencias de fase apropiadas, las dos formas prácticas son:
 
 \begin{table}[H]
-\centering
-\begin{tabular}{cc}
-\begin{minipage}{0.4\textwidth}
-\begin{equation}
-[S] = \begin{bmatrix}
-0 & \alpha & j\beta & 0 \\
-\alpha & 0 & 0 & j\beta \\
-j\beta & 0 & 0 & \alpha \\
-0 & j\beta & \alpha & 0
-\end{bmatrix}
-\end{equation}
-\vspace{0.5cm}
-\centering
-\textbf{Acoplador simétrico (90º)}
-\end{minipage} &
-\begin{minipage}{0.4\textwidth}
-\begin{equation}
-[S] = \begin{bmatrix}
-0 & \alpha & \beta & 0 \\
-\alpha & 0 & 0 & -\beta \\
-\beta & 0 & 0 & \alpha \\
-0 & -\beta & \alpha & 0
-\end{bmatrix}
-\end{equation}
-\vspace{0.5cm}
-\centering
-\textbf{Acoplador antisimétrico (180°)}
-\end{minipage}
-\end{tabular}
+    \centering
+    \begin{tabular}{cc}
+        \begin{minipage}{0.4\textwidth}
+            \begin{equation}
+            [S] = \begin{bmatrix}
+            0      & \alpha & j\beta & 0      \\
+            \alpha & 0      & 0      & j\beta \\
+            j\beta & 0      & 0      & \alpha \\
+            0      & j\beta & \alpha & 0
+            \end{bmatrix}
+            \end{equation}
+        \vspace{0.5cm}
+        \centering
+        \textbf{Acoplador simétrico (90º)}
+        \end{minipage} &
+        
+        \begin{minipage}{0.4\textwidth}
+            \begin{equation}
+            [S] = \begin{bmatrix}
+            0      & \alpha & \beta  & 0      \\
+            \alpha & 0      & 0      & -\beta \\
+            \beta  & 0      & 0      & \alpha \\
+            0      & -\beta & \alpha & 0
+            \end{bmatrix}
+            \end{equation}
+        \vspace{0.5cm}
+        \centering
+        \textbf{Acoplador antisimétrico (180°)}
+        \end{minipage}
+    \end{tabular}
 \end{table}
 
 \vspace{-0.5cm}
@@ -56,7 +55,6 @@ Donde:
     \item $\beta$ es el coeficiente de \textit{acoplamiento} de tensión
     \item $\alpha^2 + \beta^2 = 1$ (por conservación de energía)
 \end{itemize}
-
 
 
 \begin{figure}[b!]
@@ -217,4 +215,3 @@ B_4 &= 0 && \text{(no hay potencia al puerto 4).}
 Estos resultados concuerdan con la primera fila y columna de la matriz de dispersión dada en la ecuación~\eqref{eq:quadrature_scattering}; los elementos restantes pueden encontrarse fácilmente por transposición.
 
 En la práctica, debido al requisito de longitud de cuarto de onda, el ancho de banda de un híbrido de línea ramificada está limitado al 10\%--20\%. Sin embargo, al igual que con los transformadores de adaptación multisección y los acopladores direccionales multiorificio, el ancho de banda de un híbrido de línea ramificada puede aumentarse a una década o más usando múltiples secciones en cascada. Además, el diseño básico puede modificarse para división de potencia desigual y/o diferentes impedancias características en los puertos de salida. Otro punto práctico a tener en cuenta es el hecho de que los efectos de discontinuidad en las uniones del acoplador de línea ramificada pueden requerir que los brazos en derivación se alarguen en 10°--20°.
-}
