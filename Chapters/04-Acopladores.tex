@@ -158,7 +158,9 @@ El factor de acoplamiento indica la fracción de la potencia de entrada que se a
 Las pérdidas de inserción representan la potencia de entrada entregada al puerto de paso, disminuida por la potencia entregada a los puertos acoplado y aislado. El acoplador ideal tiene directividad y aislación infinitas ($S_{14} = 0$). Entonces, tanto $\alpha$ como $\beta$ pueden determinarse a partir del factor de acoplamiento, $C$.
 
 \section{Acopladores híbridos}
-Los acopladores híbridos son casos especiales de acopladores direccionales, donde el factor de acoplamiento es de 3 dB, lo que implica que $\alpha = \beta = 1/\sqrt{2}$. Existen dos tipos de híbridos. El \textit{híbrido en cuadratura} tiene un desfase de 90° entre los puertos 2 y 3 ($\theta = \phi = \pi/2$) cuando se alimenta por el puerto 1, y es un ejemplo de acoplador simétrico. Su matriz de dispersión tiene la siguiente forma:
+Los acopladores híbridos son casos especiales de acopladores direccionales, donde el factor de acoplamiento es de 3 dB, es decir que la potencia de entrada por el puerto 1 se divide equitativamente entre los puertos 2 y 3. De esta igualdad se plantea la condición: $\alpha = \beta = 1/\sqrt{2}$. 
+
+Existen dos tipos de híbridos. El \textit{híbrido en cuadratura}, el cual presenta una diferencia de fase de 90° entre los puertos 2 y 3 ($\theta = \phi = \pi/2$) cuando se alimenta por el puerto 1, y es un ejemplo de acoplador simétrico. Su matriz de dispersión tiene la siguiente forma
 
 \begin{equation}
     [S] = \frac{1}{\sqrt{2}} 
@@ -171,7 +173,7 @@ Los acopladores híbridos son casos especiales de acopladores direccionales, don
     \label{eq:quadrature_hybrid}
 \end{equation}
 
-El \textit{híbrido magic-T} y el \textit{híbrido rat-race} tienen una diferencia de fase de 180° entre los puertos 2 y 3 cuando se alimentan por el puerto 4, y son ejemplos de acoplador antisimétrico. Su matriz de dispersión tiene la siguiente forma:
+El \textit{híbrido magic-T} y el \textit{híbrido rat-race} poseen una diferencia de fase de 180° entre los puertos de salida, 2 y 3, cuando se alimentan por el puerto 4, y son ejemplos de acoplador antisimétrico. Su matriz de dispersión tiene la siguiente forma
 
 \begin{equation}
     [S] = \frac{1}{\sqrt{2}} 
@@ -185,9 +187,9 @@ El \textit{híbrido magic-T} y el \textit{híbrido rat-race} tienen una diferenc
 \end{equation}
 
 \section{Híbrido en Cuadratura (90°)}
-Los híbridos en cuadratura son acopladores direccionales de 3~dB con una diferencia de fase de 90° en las salidas de los brazos de paso y acoplado. Este tipo de híbrido se fabrica a menudo en forma de línea microstrip o stripline como se muestra en la Figura~\ref{fig:branch_line_geometry} y también se conoce como \textit{híbrido de línea ramificada}. Otros acopladores de 3~dB, como los acopladores de líneas acopladas o los acopladores Lange, también pueden usarse como acopladores en cuadratura; estos componentes se discutirán en secciones posteriores. Aquí analizaremos la operación del híbrido en cuadratura usando una técnica de descomposición de modo par-impar similar a la utilizada para el divisor de potencia Wilkinson.
+Una de las implementaciones más habituales del híbrido en cuadratura es el \textit{híbrido de línea ramificada}, fabricado a menudo en tecnología microstrip o stripline, como se muestra en la Figura~\ref{fig:branch_line_geometry}.
 
-Con referencia a la Figura~\ref{fig:branch_line_geometry}, la operación básica del acoplador de línea ramificada es la siguiente. Con todos los puertos adaptados, la potencia que entra al puerto 1 se divide uniformemente entre los puertos 2 y 3, con un desfase de 90° entre estas salidas. No se acopla potencia al puerto 4 (el puerto aislado). La matriz de dispersión tiene la siguiente forma
+Con referencia a dicha figura, la operación básica del acoplador de línea ramificada consiste en distribuir equitativamente la potencia de entrada entre los puertos 2 y 3, con un desfase de 90° entre estas salidas, sin acoplar potencia al puerto 4 (el puerto aislado). La matriz de dispersión tiene la siguiente forma.
 
 \begin{equation}
     [S] = \frac{-1}{\sqrt{2}} 
@@ -207,12 +209,15 @@ Con referencia a la Figura~\ref{fig:branch_line_geometry}, la operación básica
     \label{fig:branch_line_geometry}
 \end{figure}
 
-Obsérvese que el híbrido de línea ramificada tiene un alto grado de simetría, ya que cualquier puerto puede usarse como puerto de entrada. Los puertos de salida siempre estarán en el lado opuesto de la unión respecto al puerto de entrada, y el puerto aislado será el puerto restante del mismo lado que el puerto de entrada. Esta simetría se refleja en la matriz de dispersión, ya que cada fila puede obtenerse como una transposición de la primera fila.
+Puede observarse en dicha matriz que el híbrido de línea ramificada tiene un alto grado de simetría. Como se mencionó previamente, cualquiera de sus puertos puede actuar como puerto de entrada, puerto de salida o puerto aislado, según cuál de ellos se emplee como entrada. Los puertos de salida siempre estarán en el lado opuesto de la unión respecto al puerto de entrada, y el puerto aislado será el puerto restante del mismo lado que el puerto de entrada.
 
 \subsection{Análisis de Modo Par-Impar}
-Primero dibujamos el circuito esquemático del acoplador de línea ramificada en forma normalizada, como en la Figura~\ref{fig:branch_line_circuit}, donde se entiende que cada línea representa una línea de transmisión con la impedancia característica indicada normalizada a $Z_0$. El retorno común de tierra para cada línea de transmisión no se muestra. Asumimos que una onda de amplitud unitaria $A_1 = 1$ incide en el puerto 1.
 
-El circuito de la Figura~\ref{fig:branch_line_circuit} puede descomponerse en la superposición de una excitación de modo par y una excitación de modo impar, como se muestra en la Figura~\ref{fig:even_odd_decomposition}. Nótese que la superposición de los dos conjuntos de excitaciones produce la excitación original de la Figura~\ref{fig:branch_line_circuit}, y dado que el circuito es lineal, la respuesta actual (las ondas dispersadas) puede obtenerse de la suma de las respuestas a las excitaciones par e impar.
+Aprovechando la linealidad del sistema, resulta más sencillo dividir el análisis de su comportamiento en circuitos más simples para luego, por el principio de superposición, obtener una caracterización completa del acoplador \cite[Cap.~7]{pozar2011}.
+
+El primer paso es dibujar el circuito esquemático del acoplador en forma normalizada, como en la Figura~\ref{fig:branch_line_circuit}. Aquí cada línea representa una línea de transmisión con su respectiva impedancia característica indicada normalizada a $Z_o$. Se asume que una onda de amplitud unitaria $A_1 = 1$ incide en el puerto 1.
+
+El circuito de la Figura~\ref{fig:branch_line_circuit} puede descomponerse en la superposición de una excitación de \textit{modo par} y una excitación de \textit{modo impar}, como se muestra en la Figura~\ref{fig:even_odd_decomposition}. Para el modo par, se considera una señal $A_{1e}=1/2$ en el puerto 1 y $A_{4e}=1/2$ en el puerto 4. Por otra parte, el modo impar presenta una señal entrante al puerto 1 idéntica a la del modo par $A_{1o}=A_{1e}$, mientras que en el puerto 4 la señal es $A_{4o}=-1/2$. Al llevar a cabo la superposición de los dos conjuntos de excitaciones, se recupera la excitación original de la Figura~\ref{fig:branch_line_circuit}, dado que $A_1 = A_{1e}+A_{1o}=1$ y $A_4 = A_{4e}+A_{4o}=0$.
 
 \begin{figure}[h!]
     \centering
@@ -221,22 +226,37 @@ El circuito de la Figura~\ref{fig:branch_line_circuit} puede descomponerse en la
     \label{fig:branch_line_circuit}
 \end{figure}
 
-Debido a la simetría o antisimetría de la excitación, la red de cuatro puertos puede descomponerse en un conjunto de dos redes desacopladas de dos puertos, como se muestra en la Figura~\ref{fig:even_odd_decomposition}. Debido a que las amplitudes de las ondas incidentes para estos dos puertos son $\pm 1/2$, las amplitudes de la onda emergente en cada puerto del híbrido de línea ramificada pueden expresarse como
+Debido a la simetría o antisimetría de la excitación, la red de cuatro puertos puede descomponerse en un conjunto de dos redes desacopladas de dos puertos, como se muestra en la Figura~\ref{fig:even_odd_decomposition}. Para el modo par, al ser iguales las tensiones aplicadas a cada lado de las ramas en derivación, no circula corriente por ellas y pueden ser modeladas como stubs con la mitad del largo de la línea, en este caso $\lambda/8$, cargados con un circuito abierto. Para el modo impar sucede lo contrario: en cada nodo está presente una tensión de igual magnitud pero distinto signo, por lo que la tensión en el punto medio de la línea es nula. Debido a esto, las líneas en derivación del modo impar se describen como un stub de longitud $\lambda/8$ cargado con un cortocircuito.
+
+Debido a que las amplitudes de las ondas incidentes para estos dos puertos son $\pm 1/2$, las amplitudes de las ondas emergentes en cada puerto del híbrido de línea ramificada pueden expresarse como
 
 \begin{subequations}
     \begin{align}
         B_1 &= \frac{1}{2}\Gamma_e + \frac{1}{2}\Gamma_o, \\
-        B_2 &= \frac{1}{2}T_e + \frac{1}{2}T_o, \\
-        B_3 &= \frac{1}{2}T_e - \frac{1}{2}T_o, \\
+        B_2 &= \frac{1}{2}T_e + \frac{1}{2}T_o,           \\
+        B_3 &= \frac{1}{2}T_e - \frac{1}{2}T_o,           \\
         B_4 &= \frac{1}{2}\Gamma_e - \frac{1}{2}\Gamma_o,
     \end{align}
     \label{eq:scattered_waves}
 \end{subequations}
 
-
 donde $\Gamma_{e,o}$ y $T_{e,o}$ son los coeficientes de reflexión y transmisión de modo par e impar para las redes de dos puertos de la Figura~\ref{fig:even_odd_decomposition}. 
 
-Primero consideremos el cálculo de $\Gamma_e$ y $T_e$ para el circuito de dos puertos de modo par. Esto puede hacerse mejor multiplicando las matrices $ABCD$ de cada componente en cascada en ese circuito, para dar
+Es pertinente ahora llevar a cabo el cálculo de $\Gamma_e$ y $T_e$ para el circuito de dos puertos de modo par. La manera más sencilla de obtener estos valores es mediante los parámetros $ABCD$, que permiten obtener la matriz equivalente del circuito completo a partir de la multiplicación en cascada de las matrices $ABCD$ de cada componente individual. Para determinar las matrices $ABCD$ de los stubs debe obtenerse en primera instancia su admitancia. A partir de la ecuación de impedancia para una línea de impedancia característica $Z_o$ cargada con una impedancia $Z_L$
+
+\begin{equation}
+    Z = Z_o \left(\frac{Z_L + jZ_o\tan(\beta\ell)}{Z_o + jZ_L\tan(\beta\ell)}\right)
+    \label{eq:stub_z}
+\end{equation}
+
+y dado que $\tan(\beta \ell) = 1$ para $\lambda/8$, la ecuación se reduce a
+
+\begin{equation}
+    Z = Z_o \left(\frac{Z_L + jZ_o}{Z_o + jZ_L}\right)
+    \label{eq:stub_z_simplified}
+\end{equation}
+
+Para el caso del modo par, $Z_L\to\infty$, por lo que $Z=-jZ_o$ y $Y=j/Z_o$. Analizando ahora el modo impar, donde $Z_L=0$, se obtiene $Z=jZ_o$ y $Y=-j/Z_o$. Habiendo obtenido estos valores, se procede a plantear el producto de matrices en cascada $ABCD$
 
 \begin{equation}
     \begin{bmatrix} 
@@ -268,8 +288,6 @@ Primero consideremos el cálculo de $\Gamma_e$ y $T_e$ para el circuito de dos p
     \label{eq:abcd_even}
 \end{equation}
 
-\clearpage
-
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.9\textwidth]{Figures/Figura_7_23.pdf}
@@ -277,7 +295,7 @@ Primero consideremos el cálculo de $\Gamma_e$ y $T_e$ para el circuito de dos p
     \label{fig:even_odd_decomposition}
 \end{figure}
 
-donde las matrices individuales pueden encontrarse en tablas estándar, y la admitancia de los stubs en derivación de circuito abierto de $\lambda/8$ es $Y = j \tan \beta\ell = j$. Entonces se pueden usar tablas de conversión para convertir de parámetros $ABCD$ (definidos aquí con $Z_o = 1$) a parámetros $S$, que son equivalentes a los coeficientes de reflexión y transmisión. Así
+donde las matrices individuales de cada componente pueden encontrarse en tablas estándar \cite{pozar2011}. A partir de las tablas de conversión que vinculan los parámetros $ABCD$ (definidos aquí con $Z_o = 1$) con los parámetros $S$, equivalentes a los coeficientes de reflexión y transmisión, se obtiene:
 
 \begin{subequations}
     \begin{align}
@@ -324,6 +342,6 @@ Usando las ecuaciones~\eqref{eq:even_coefficients} y~\eqref{eq:odd_coefficients}
     \label{eq:final_results}
 \end{subequations}
 
-Estos resultados concuerdan con la primera fila y columna de la matriz de dispersión dada en la ecuación~\eqref{eq:quadrature_scattering}; los elementos restantes pueden encontrarse fácilmente por transposición.
+Estos resultados concuerdan con la primera fila y columna de la matriz de dispersión dada en la ecuación~\eqref{eq:quadrature_scattering}. Los elementos restantes pueden encontrarse fácilmente por transposición.
 
-En la práctica, debido al requisito de longitud de cuarto de onda, el ancho de banda de un híbrido de línea ramificada está limitado al 10\%--20\%. Sin embargo, al igual que con los transformadores de adaptación multisección y los acopladores direccionales multiorificio, el ancho de banda de un híbrido de línea ramificada puede aumentarse a una década o más usando múltiples secciones en cascada. Además, el diseño básico puede modificarse para división de potencia desigual y/o diferentes impedancias características en los puertos de salida. Otro punto práctico a tener en cuenta es el hecho de que los efectos de discontinuidad en las uniones del acoplador de línea ramificada pueden requerir que los brazos en derivación se alarguen en 10°--20°.
+A lo largo de este capítulo se desarrollaron los fundamentos que rigen el comportamiento de los acopladores direccionales, estableciendo las condiciones de reciprocidad, adaptación y ausencia de pérdidas que determinan la forma general de su matriz de dispersión, y particularizando dicho desarrollo al caso del híbrido en cuadratura implementado mediante la topología de línea ramificada. Este tipo de acoplador resulta de particular interés para el presente trabajo, dado que constituye un elemento habitual en la red de entrada de un amplificador Doherty, donde su función consiste en dividir equitativamente la señal de excitación entre el amplificador de portadora (\textit{carrier}) y el amplificador de pico (\textit{peaking}), al mismo tiempo que introduce el desfasaje de 90° entre ambas ramas necesario para que las señales se recombinen correctamente en la red de salida de dicha topología. La disponibilidad de este marco teórico resulta, en consecuencia, un requisito previo para abordar el diseño físico del acoplador desarrollado en el presente proyecto.
