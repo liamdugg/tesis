@@ -1,0 +1,109 @@
+\section{Diseño del acoplador híbrido en cuadratura} \label{sec:diseno_acoplador}
+A partir del marco teórico desarrollado en el Capítulo~\ref{cp:introduction}, se abordó el diseño físico del acoplador híbrido en cuadratura mediante la topología de línea ramificada, con el objetivo de emplearlo como primera etapa hacia una arquitectura Doherty. El diseño se planteó en dos versiones sucesivas, denominadas a lo largo de esta sección acoplador v1 y acoplador v2, cuya evolución respondió a hallazgos obtenidos durante la etapa de verificación electromagnética del diseño, descriptos más adelante.
+
+\subsection{Restricción dimensional y topología propuesta}
+El híbrido de línea ramificada convencional, tal como se presentó en la Figura~\ref{fig:branch_line_geometry}, se compone de cuatro tramos de línea de transmisión de longitud $\lambda/4$ dispuestos en forma rectangular. Esta longitud eléctrica, que resulta despreciable frente a las dimensiones de un circuito a frecuencias de microondas más elevadas, representa una restricción dimensional significativa en la banda S y en particular para una plataforma CubeSat, donde el área de placa disponible se encuentra fuertemente acotada por el formato normalizado de la plataforma.
+
+% TODO: verificar y referenciar la ecuación de dimensionamiento inicial una vez confirmada
+A modo de ejemplo, el dimensionamiento analítico inicial de los tramos de línea que componen el acoplador, obtenido a partir de la síntesis de líneas de transmisión en microstrip sobre el sustrato empleado (permitividad relativa efectiva $\varepsilon_r = 4{,}4$ y altura $h = 0{,}2104$~mm, correspondientes a la capa superior del \textit{stackup} de la Tabla~\ref{tab:pcb_stackup}), arroja longitudes de $\lambda_g/4 \approx 18{,}7$~mm para los tramos en derivación de impedancia $Z_o = 50\,\Omega$ y de $\lambda_g/4 \approx 18{,}3$~mm para los tramos serie de impedancia $Z_o/\sqrt{2} \approx 35{,}36\,\Omega$. Estas dimensiones, dispuestas en la geometría rectangular convencional del híbrido de línea ramificada, resultan en un acoplador de aproximadamente $37 \times 37$~mm, un área que excede ampliamente la disponible en una plataforma CubeSat de formato 1U o 2U una vez descontado el espacio requerido por el resto de la carga útil y los subsistemas de la plataforma.
+
+Con el objetivo de reducir el área ocupada por el acoplador, se optó por una topología de línea ramificada plegada, en la cual cada uno de los cuatro tramos de línea se dobla sobre sí mismo mediante quiebres de 90° distribuidos a lo largo de su longitud, en lugar de disponerse como un tramo recto único. Esta decisión de diseño constituyó uno de los resultados centrales perseguidos en el desarrollo del acoplador, dado que permitió compatibilizar la longitud eléctrica requerida por la teoría de línea ramificada con las restricciones dimensionales impuestas por la plataforma.
+
+Una primera versión de esta topología plegada empleó quiebres con curvatura redondeada. Por recomendación del Ing.~Matías Hampel, dichas curvas se reemplazaron por quiebres rectos, implementados en ADS mediante el componente \texttt{MSABND} (\textit{microstrip bend}), dado que este tipo de geometría facilita el trazado posterior del layout de PCB y reduce la incertidumbre asociada al modelado electromagnético del quiebre. Se evaluaron ángulos de quiebre entre 45° y 90°, seleccionándose finalmente un ángulo de $67{,}5$° por ser el que arrojó el mejor desempeño simulado en términos de adaptación de impedancia y equilibrio entre los puertos de salida.
+
+% TODO: insertar figura con la topología plegada final (esquemático o layout con cotas)
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\linewidth]{Figures/acoplador_topologia_plegada.png}
+    \caption{Topología plegada propuesta para el acoplador de línea ramificada, con quiebres de 67,5° implementados mediante el componente MSABND.}
+    \label{fig:acoplador_topologia_plegada}
+\end{figure}
+
+\subsection{Objetivos de diseño}
+Los objetivos de diseño del acoplador se establecieron a partir del comportamiento ideal de un híbrido en cuadratura, descripto en la matriz de dispersión de la ecuación~\eqref{eq:quadrature_scattering}. La Tabla~\ref{tab:objetivos_acoplador} resume dichos objetivos.
+
+\begin{table}[H]
+    \centering
+    \caption{Especificaciones objetivo del acoplador híbrido en cuadratura.}
+    \label{tab:objetivos_acoplador}
+    \begin{tabular}{lcc}
+        \hline\hline
+        \textbf{Parámetro}                               & \textbf{Valor Objetivo} & \textbf{Unidad} \\
+        \hline
+        Frecuencia central ($f_0$)                       & 2,2                     & GHz             \\
+        BW ($S_{11} < -10$ dB)                           & XX                      & MHz             \\
+        Coeficiente de acoplamiento ($S_{21}$, $S_{31}$) & $-3$                    & dB              \\
+        Desbalance de amplitud entre puertos 2 y 3       & XX                      & dB              \\
+        Desfasaje entre puertos 2 y 3                    & 90                      & °               \\
+        Aislación ($S_{41}$)                             & mínima posible          & dB              \\
+        \hline\hline
+    \end{tabular}
+\end{table}
+
+De acuerdo con estos objetivos, el diseño buscó aproximar en la mayor medida posible el comportamiento del acoplador real al del híbrido ideal caracterizado en la Sección~\ref{cp:introduction}, es decir, entregar una fracción idéntica de la potencia de entrada a los puertos 2 y 3, con un desfasaje de 90° entre ambas señales, mientras se minimiza la potencia acoplada al puerto 4.
+
+\subsection{Diseño esquemático y simulación en ADS}
+Siguiendo la metodología de diseño y simulación descripta en la Sección~\ref{sec:metodologia_diseno_sim}, el diseño esquemático del acoplador se llevó a cabo en ADS, empleando líneas de transmisión microstrip sobre el sustrato correspondiente al \textit{stackup} de la Tabla~\ref{tab:pcb_stackup} y quiebres de 67,5° modelados mediante el componente \texttt{MSABND} en cada uno de los cuatro tramos plegados. Sobre este esquemático se ejecutaron rutinas de optimización numérica para ajustar el ancho y el largo de cada tramo de línea, partiendo de las dimensiones analíticas obtenidas en la subsección anterior, hasta alcanzar los objetivos de diseño de la Tabla~\ref{tab:objetivos_acoplador} en la frecuencia de operación.
+
+% TODO: insertar figura del esquemático ADS
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\linewidth]{Figures/acoplador_esquematico_ads.png}
+    \caption{Esquemático del acoplador híbrido en ADS.}
+    \label{fig:acoplador_esquematico_ads}
+\end{figure}
+
+% TODO: insertar figura de resultados de parámetros S simulados en ADS (esquemático)
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\linewidth]{Figures/acoplador_resultados_ads.png}
+    \caption{Parámetros de dispersión simulados del acoplador a nivel esquemático en ADS, luego de la optimización.}
+    \label{fig:acoplador_resultados_ads}
+\end{figure}
+
+Los resultados obtenidos a nivel de esquemático se consideraron satisfactorios respecto de los objetivos de diseño planteados, lo que habilitó el avance hacia la etapa de diseño físico del circuito impreso.
+
+\subsection{Diseño de PCB}
+Siguiendo la metodología de diseño de PCB descripta en la Sección~\ref{sec:metodologia_pcb}, el layout del acoplador se exportó desde el entorno de layout de ADS en formato DXF. Dado que la importación directa de este archivo en Altium Designer presentó inconsistencias en algunos segmentos del dibujo, que desaparecían durante el proceso de importación, se adoptó una ruta de conversión alternativa consistente en importar el archivo DXF a Ansys CST, reexportarlo desde dicho entorno y finalmente importarlo a Altium, lo que resolvió el inconveniente.
+
+Sobre el layout resultante se aplicaron, además de los criterios generales descriptos en la Sección~\ref{sec:metodologia_pcb}, las siguientes consideraciones específicas del diseño del acoplador:
+
+\begin{itemize}
+    \item Los \textit{pads} de masa de los conectores SMA se ubicaron lo más próximos posible al borde de la placa, con el objetivo de minimizar la longitud de la transición entre el conector y la línea microstrip.
+    \item Se aplicó un mallado de vías (\textit{via stitching}) sobre el plano de masa de la capa superior, en el contorno de la geometría del acoplador, con el fin de reforzar la continuidad de la referencia de masa en la vecindad de las líneas plegadas.
+    \item Las vías se configuraron con tapado de máscara de soldadura (\textit{tented vias}), con el objetivo de evitar dejar cobre expuesto en los puntos de conexión a masa.
+    \item Dado que la simulación electromagnética del acoplador asumió que las líneas microstrip se encontraban expuestas al aire, sin cobertura dieléctrica adicional, se removió la máscara de soldadura sobre la totalidad del trazado del acoplador, con el fin de que la placa fabricada se correspondiera con la condición asumida en la simulación.
+\end{itemize}
+
+% TODO: insertar figura del layout final de PCB (v1)
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\linewidth]{Figures/acoplador_pcb_v1.png}
+    \caption{Layout de PCB de la primera versión del acoplador híbrido.}
+    \label{fig:acoplador_pcb_v1}
+\end{figure}
+
+\subsection{Verificación electromagnética y segunda iteración de diseño}
+Con el objetivo de validar el comportamiento del acoplador considerando los efectos electromagnéticos no capturados por el modelo de líneas de transmisión analíticas empleado en ADS, se realizó una simulación de onda completa del layout de PCB en Ansys HFSS. Esta verificación reveló que la frecuencia central efectiva del acoplador se encontraba corrida hacia abajo de manera considerable respecto de la frecuencia de diseño de 2,2~GHz, ubicándose entre 1,8~GHz y 1,9~GHz. No obstante, los valores de desfasaje y de atenuación obtenidos en dicha frecuencia central corrida resultaron similares a los previstos por la simulación en ADS, lo que indicó que el corrimiento afectaba principalmente a la frecuencia de operación del circuito y no a su comportamiento cualitativo como híbrido en cuadratura.
+
+Al analizar el origen de esta discrepancia, se determinó que el esquemático de ADS empleado para el diseño y la optimización no incluía la contribución de la transición entre la línea microstrip y el conector SMA, cuyo pad de conexión introduce una longitud de línea adicional no considerada en el dimensionamiento original. Para verificar esta hipótesis, se agregó en ADS, a la entrada de cada uno de los cuatro puertos del acoplador, un tramo de línea adicional de $3{,}6 \times 1{,}27$~mm² destinado a modelar dicho \textit{pad} de conexión. Al incorporar estos tramos, el corrimiento de la frecuencia central observado en la simulación esquemática reprodujo el mismo comportamiento identificado en la simulación electromagnética del layout, confirmando la causa del corrimiento.
+
+A partir de este hallazgo, se definió una segunda versión del acoplador (acoplador v2), en la cual se repitió la rutina de optimización sobre el esquemático de ADS incluyendo los tramos adicionales que modelan la conexión con el SMA, con el objetivo de compensar el corrimiento de frecuencia identificado. El layout de PCB correspondiente a esta segunda versión se rediseñó siguiendo las mismas consideraciones descriptas en la subsección anterior.
+
+% TODO: insertar figura de resultados ADS v2 (con pad SMA modelado)
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\linewidth]{Figures/acoplador_resultados_ads_v2.png}
+    \caption{Parámetros de dispersión simulados del acoplador v2, incluyendo el modelado del pad de conexión SMA, luego de la reoptimización.}
+    \label{fig:acoplador_resultados_ads_v2}
+\end{figure}
+
+% TODO: insertar figura del layout final de PCB (v2)
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\linewidth]{Figures/acoplador_pcb_v2.png}
+    \caption{Layout de PCB de la segunda versión del acoplador híbrido.}
+    \label{fig:acoplador_pcb_v2}
+\end{figure}
+
+La medición de parámetros de dispersión del prototipo fabricado, empleada para validar experimentalmente este diseño, se realizó siguiendo la metodología descripta en la Sección~\ref{sec:metodologia_medicion}, y sus resultados se presentan en el Capítulo~\ref{sec:4_resmedver}.
