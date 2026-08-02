@@ -1,4 +1,4 @@
-\section{Cálculo de Radioenlace Satelital} \label{sec:radioenlace}
+\section{Cálculo de radioenlace satelital} \label{sec:radioenlace}
 El análisis y diseño del sistema de comunicaciones para la misión CubeSat requiere la formulación de un calculo de radioenlace o \textit{link budget}, herramienta analítica que permite cuantificar la potencia de la señal a lo largo de todo el trayecto de transmisión y comparar el nivel de señal recibido contra el umbral mínimo necesario para satisfacer la tasa de error de bit (\textit{bit error rate}, BER) requerida por la misión.
 
 El análisis se fundamenta en la evaluación de la densidad de flujo de potencia y las propiedades del medio físico de propagación, como fue propuesto for Friis \textbf{[REF. FRIIS]}: una antena transmisora que radia una potencia $P_t$ con una ganancia de directividad $G_t$ produce, a una distancia $d$, una densidad de flujo de potencia $S$ dada por:
@@ -74,7 +74,7 @@ Consecuentemente, el nivel de señal recibida (\textit{received signal level}, R
 \end{equation}
 
 % ------------------------------------------------------------------------ %
-\subsection{Modelado del Ruido y Calidad del Enlace}
+\subsection{Modelado del ruido y calidad del enlace}
 La viabilidad del enlace digital no se limita a la amplitud de la portadora recibida, sino a su relación respecto a la densidad espectral de potencia de ruido térmico presente en el sistema ($N_0$), modelado como ruido blanco gaussiano aditivo. En sistemas terrestres, este ruido suele caracterizarse mediante la figura de ruido del receptor referida a una temperatura estándar de 290\,K, sin embargo, en estaciones terrenas de comunicaciones satelitales la antena recibe directamente el ruido de cielo, sustancialmente menor a 290\,K, por lo cual resulta más preciso emplear una temperatura total de sistema en lugar de una figura de ruido equivalente. Bajo este criterio, la temperatura total de ruido del sistema receptor ($T_{sys}$) se descompone aditivamente de acuerdo con el teorema de uniones en cascada, simplificado para los componentes críticos del segmento terreno:
 
 \begin{equation}
@@ -140,7 +140,7 @@ Para asegurar la robustez del enlace ante desvanecimientos repentinos o imprecis
 El cumplimiento de esta desigualdad define analíticamente el ángulo de elevación mínimo de visibilidad operativa $\epsilon_{min}$, por debajo del cual el enlace se considera no viable para la comunicación con la modulación correspondiente.
 
 % ------------------------------------------------------------------------ %
-\section{Implementación Computacional y Simulación}
+\section{Implementación computacional y simulación}
 Con el propósito de validar los rangos de operación del amplificador de potencia diseñado y determinar los límites físicos de la comunicación, se desarrollaron dos herramientas en lenguaje Python que implementan las ecuaciones~\eqref{eq:eirp_analitico} a \eqref{eq:margen}, utilizando interfaces gráficas interactivas basadas en la biblioteca \textit{Tkinter} e integración de cálculo numérico vectorizado con \textit{NumPy} y visualización mediante \textit{Matplotlib}.
 
 El primer programa desarrollado (\texttt{link\_budget.py}) evalúa la viabilidad del enlace fijando una tasa de bits (\textit{bit rate}) analítica única y configurable para todo el sistema. El \textit{script} barre el vector de ángulos de elevación $\epsilon \in [0^\circ, 90^\circ]$ y calcula, mediante la ecuación~\eqref{eq:ebn0_rb}, una única curva de $E_b/N_0$ disponible en función de la elevación; dado que la tasa de bits es común a todo el sistema, esta misma curva se contrasta simultáneamente contra los tres umbrales requeridos ($[E_b/N_0]_{req}$ de QPSK, 8-PSK y 16-PSK), determinando para cada modulación el primer índice angular que satisface el criterio de cierre de la ecuación~\eqref{eq:margen}.

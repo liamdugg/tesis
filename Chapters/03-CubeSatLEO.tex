@@ -1,4 +1,4 @@
-\chapter{CubeSats y rl entorno de órbita baja terrestre} \label{chap:cubesat_leo}
+\chapter{CubeSats y el entorno de órbita baja terrestre} \label{chap:cubesat_leo}
 El presente capítulo describe el marco tecnológico y orbital en el que se inserta el amplificador de potencia diseñado en esta tesina. La primera parte caracteriza al CubeSat como clase de nanosatélite, su origen, su clasificación por unidades y su modo de lanzamiento. La segunda parte describe la órbita terrestre baja (LEO, del inglés Low Earth Orbit), sus condiciones ambientales y las restricciones que impone sobre el subsistema de comunicaciones. Estos dos ejes justifican las especificaciones de potencia, masa y robustez consideradas en el diseño del amplificador Clase AB en banda S presentado en capítulos posteriores.
 
 \section{Origen y clasificación de los CubeSats}
@@ -10,6 +10,7 @@ La clasificación CubeSat se diferencia de la clasificación general de pequeño
     \centering
     \caption{Configuraciones estandarizadas de CubeSat según la especificación CDS Rev. 14.1 \cite{cubesatspecs}.}
     \label{tab:cubesat_units}
+    \renewcommand{\arraystretch}{1.1}
     \begin{tabular}{lcc}
         \hline\hline
         Configuración & Dimensiones nominales (cm) & Masa máxima (kg) \\
@@ -39,8 +40,7 @@ La reducción de costos y de tiempos de desarrollo explica el crecimiento sosten
 
 El lanzamiento de un CubeSat no se realiza de manera independiente, sino mediante un dispensador que actúa como interfaz mecánica entre el satélite y el vehículo lanzador. El primer dispensador desarrollado con este fin fue el Poly Picosatellite Orbital Deployer (P-POD), capaz de alojar hasta 3U. Un mismo dispensador aloja habitualmente varios CubeSats de distintos desarrolladores en una única posición de lanzamiento, y un mismo vehículo lanzador transporta a su vez varios dispensadores como carga secundaria \cite{cubesatspecs,nasa2017}. Esta modalidad de lanzamiento compartido explica la existencia de constelaciones completas de CubeSats, como las operadas por empresas dedicadas a la observación terrestre \cite{zeedan2023}. Alternativamente, un CubeSat puede desplegarse desde la Estación Espacial Internacional \cite{nasa2017}.
 
-\section{Restricciones del formato CubeSat}
-\label{sec:restricciones_cubesat}
+\section{Restricciones del formato CubeSat} \label{sec:restricciones_cubesat}
 El cumplimiento de la especificación CDS condiciona directamente los márgenes disponibles para el subsistema de comunicaciones. Entre las restricciones mecánicas se destaca la masa máxima permitida por unidad indicada en la Tabla \ref{tab:cubesat_units}, con un centro de masa acotado a pocos centímetros del centro geométrico del satélite. Entre las restricciones eléctricas, la especificación exige que el sistema de potencia permanezca completamente apagado hasta la eyección del satélite y que la transmisión de radiofrecuencia no comience antes de los 45 minutos posteriores al despliegue, requisito que obliga a incluir al menos tres inhibidores independientes de transmisión. Asimismo, la especificación fija un límite de energía cinética de reingreso inferior a 15 J por componente, en línea con las directrices de mitigación de basura espacial de la NASA (NPR 8715.6) \cite{cubesatspecs}.
 
 Estas restricciones de masa y de volumen determinan de manera directa el presupuesto de potencia disponible para el subsistema de radiofrecuencia. Dado que la potencia generada por los paneles solares de un CubeSat de reducidas dimensiones resulta limitada, el amplificador de potencia debe alcanzar la potencia de salida especificada con la máxima eficiencia posible.

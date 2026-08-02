@@ -1,17 +1,4 @@
-\chapter[Solución Propuesta]{Solución Propuesta} \label{sec:solucion_propuesta}
-
-\section{Redefinición del Alcance y Objetivos del Proyecto}
-Durante el transcurso del proyecto se identificaron una serie de restricciones de carácter económico, logístico y operativo que, en conjunto, tornaron inviable la ejecución del plan original en su totalidad. A continuación se describen los factores determinantes que motivaron la redefinición del alcance.
-
-El plan original contempló el desarrollo de tres diseños de circuito impreso distintos: el amplificador de operación permanente en Clase AB, el amplificador de cresta en Clase C y los elementos pasivos de la topología Doherty. El costo unitario del transistor empleado, sumado a los costos de fabricación, envío y ensamblado de cada iteración de placa, representó una restricción económica significativa. Si bien las demoras asociadas al proceso de fabricación y envío desde el exterior fueron contempladas en la planificación original, la acumulación de estos tiempos a lo largo de tres iteraciones de fabricación habría comprometido seriamente el cronograma del proyecto. Adicionalmente, el ensamblado del primer circuito impreso fue realizado sin costo por parte de la empresa Outsource, beneficio que no podía garantizarse para las iteraciones subsiguientes, lo que introdujo una incertidumbre adicional tanto en los costos como en los plazos.
-
-Desde el punto de vista del acceso a equipamiento de medición, el departamento de ingeniería electrónica de la facultad no contaba con el instrumental necesario para la caracterización de circuitos de radiofrecuencia a las frecuencias de trabajo consideradas en este proyecto. Para subsanar esta limitación se recurrió a la Comisión Nacional de Energía Atómica (CNEA) y a la Universidad Nacional de San Martín (UNSAM), instituciones donde se llevaron a cabo las mediciones. Sin embargo, el acceso a los equipos y a la ayuda por parte personal en dichas instituciones requirió coordinación anticipada y estuvo sujeto a la disponibilidad tanto de los integrantes del grupo como de las propias instituciones, lo que limitó no solo la frecuencia con que pudieron realizarse sesiones de medición, sino también el tiempo disponible dentro de cada sesión, dado que los equipos y los espacios de trabajo debieron compartirse con otras actividades propias de cada institución. Extender este esquema a la caracterización de tres diseños distintos habría requerido una cantidad y duración de sesiones de medición difícilmente compatible con los plazos disponibles.
-
-En relación con los ensayos de irradiación contemplados en el anteproyecto, se presentaron dificultades para identificar una instalación experimental disponible cuyo tamaño de muestra admisible fuera compatible con las dimensiones del primer circuito impreso fabricado, el cual resultó de dimensiones superiores a las previstas inicialmente. Esta incompatibilidad física, sumada a la complejidad logística asociada a la coordinación de turnos de irradiación, llevó a desestimar la realización de este ensayo dentro del alcance del presente trabajo.
-
-Frente a este conjunto de restricciones, y considerando que los resultados obtenidos en la caracterización del amplificador Clase AB, según se detalla en la Sección~\ref{sec:4_resmedver}, satisficieron en gran medida los objetivos de prestaciones establecidos en el anteproyecto, se tomó la decisión de redefinir el alcance del proyecto. El desarrollo quedó acotado al amplificador de potencia en Clase AB y al acoplador híbrido en cuadratura. El amplificador Clase AB constituyó por sí mismo un amplificador de potencia funcional que cumplió con gran parte de los requisitos de la misión, mientras que el acoplador híbrido representó una primera instancia de desarrollo que sentó las bases para una eventual continuación del trabajo hacia la implementación completa de la topología Doherty en el futuro. El ensayo de irradiación fue excluido del alcance actual, redirigiendo los esfuerzos hacia una caracterización experimental más exhaustiva de los parámetros del amplificador fabricado.
-
-\section{Objetivo}
+\chapter[Solución propuesta]{Solución Propuesta} \label{sec:solucion_propuesta}
 A partir del análisis comparativo de tecnologías semiconductoras desarrollado en la Sección~\ref{sec:gan_hemt} y de los criterios de diseño discutidos en la Sección~\ref{sec:teoria_pa}, se propuso el desarrollo de un amplificador de potencia monoetapa, basado en el transistor GaN HEMT CGH40006S, polarizado en Clase AB y destinado a operar en banda S sobre la frecuencia de portadora establecida de 2,2\,GHz para el enlace satelital de la misión CubeSat.
 
 La elección de una topología de etapa única, en contraposición a una cadena de amplificación multietapa, se fundamentó en que la ganancia de pequeña señal característica del dispositivo seleccionado resulta suficiente para alcanzar la potencia de salida objetivo de la misión a partir de un nivel de excitación de entrada moderado, evitando así la complejidad adicional, el consumo de área de placa y los riesgos de estabilidad asociados al acoplamiento entre etapas sucesivas. Esta decisión es consistente con el criterio de simplicidad de implementación discutido al introducir la Clase AB como punto de polarización, dado que una topología de etapa única reduce significativamente el número de redes de adaptación de impedancia y de puntos de polarización independientes que deben diseñarse, simularse y ajustarse experimentalmente.
@@ -42,7 +29,7 @@ El desarrollo completo del amplificador, desde la etapa de diseño asistido por 
 \end{table}
 
 % -----------------------------------------------------------------------------------------------%
-\section{Topología Propuesta}
+\section{Topología propuesta}
 La Figura~\ref{fig:diagrama_bloques} presenta el diagrama en bloques de la topología propuesta para el amplificador. La señal de entrada de radiofrecuencia ingresa a través de un filtro pasaaltos (HPF), seguido de una red bias tee que inyecta la polarización de gate ($-2{,}6$~V, $7$~mA) sin interferir con la trayectoria de la señal de RF, y de una red de estabilidad resistivo-capacitiva conectada en paralelo, dispuesta para extender la estabilidad incondicional del transistor hacia frecuencias por debajo de la banda de operación. A continuación, el transistor CGH40006S amplifica la señal, entregándola a un bloque de salida que integra de manera conjunta la adaptación de impedancia, el filtrado y la inyección de la polarización de drain ($28$~V, $100$~mA) mediante un filtro pasaaltos y una bias tee análogos a los de la entrada, antes de entregar la señal amplificada a la carga de $50\,\Omega$.
 
 \begin{figure}[H]
@@ -53,7 +40,7 @@ La Figura~\ref{fig:diagrama_bloques} presenta el diagrama en bloques de la topol
 \end{figure}
 
 % -----------------------------------------------------------------------------------------------%
-\section{Transistor Seleccionado}
+\section{Transistor seleccionado}
 El transistor seleccionado para el diseño del amplificador de potencia fue el CGH40006S, un GaN HEMT discreto fabricado originalmente por Cree y comercializado actualmente por MACOM, encapsulado en formato de montaje superficial. La selección de este dispositivo se fundamentó en los siguientes criterios:
 
 \begin{enumerate}
@@ -67,7 +54,7 @@ El transistor seleccionado para el diseño del amplificador de potencia fue el C
 \end{enumerate}
 
 % -----------------------------------------------------------------------------------------------%
-\section{Metodología de Diseño y Simulación}
+\section{Metodología de diseño y simulación}
 El diseño y la simulación del circuito se realizaron mediante el entorno Advanced Design System (ADS) de Keysight, empleando una biblioteca de modelos reales de componentes de montaje superficial (SMD) provista por los fabricantes correspondientes, en lugar de modelos ideales de elementos discretos. Sobre el esquemático de simulación se ejecutaron rutinas de optimización numérica para ajustar el ancho y el largo de las líneas de transmisión que conforman las redes de adaptación de entrada y de salida, hasta alcanzar las condiciones de adaptación de impedancia y de desempeño de gran señal requeridas en la frecuencia de operación.
 
 A partir del esquemático optimizado se llevaron a cabo las siguientes simulaciones, cada una orientada a verificar un aspecto particular del comportamiento del amplificador:
@@ -87,7 +74,7 @@ Adicionalmente, se empleó el entorno de simulación electromagnética de campos
 El barrido de impedancias se realizó dentro de ADS utilizando el modelo no lineal del CGH40006S provisto por el fabricante, obteniendo como resultado un conjunto de contornos de potencia de salida constante ($P_{out}$) y de eficiencia de potencia añadida constante (PAE) trazados sobre el diagrama de Smith. Law intersecciones de estos contornos permitieron seleccionar una impedancia de carga de diseño como un compromiso entre ambos criterios, priorizando la región del plano de Smith donde ambas magnitudes se mantienen simultáneamente próximas a sus valores máximos, en lugar de optimizar exclusivamente alguna de las dos de forma aislada.
 
 % -----------------------------------------------------------------------------------------------%
-\section{Metodología de Diseño de PCB}
+\section{Metodología de diseño de PCB}
 El diseño del circuito impreso (PCB) se realizó en el entorno Altium Designer, a partir de los modelos de las líneas de transmisión previamente dimensionadas y optimizadas en ADS, los cuales se exportaron y trasladaron al layout de la placa. Sobre dicho layout se incorporaron las vías de masa requeridas para garantizar la continuidad del plano de referencia y se configuró la estructura de capas (\textit{stackup}) de la placa de acuerdo con el proceso de fabricación JLC04161H-7628 del fabricante JLCPCB, una estructura de cuatro capas en sustrato FR4. La elección de este proceso específico se fundamentó en que ofrece impedancia controlada de $50\,\Omega$ como servicio estándar del fabricante, y en que había sido previamente empleado en proyectos previos con buenos resultados, lo cual permitió reutilizar parámetros de diseño y de fabricación ya validados experimentalmente con anterioridad. La Tabla~\ref{tab:pcb_stackup} detalla la estructura de capas resultante.
 
 \begin{table}[b]
@@ -144,15 +131,15 @@ Una vez finalizada la etapa de diseño del layout, se realizó una consulta con 
 Finalmente, se solicitó la fabricación de la placa junto con un stencil, con el objetivo de enviar el ensamblado de los componentes de montaje superficial a una empresa de servicios de soldadura.
 
 % -----------------------------------------------------------------------------------------------%
-\section{Metodología de Medición}
+\section{Metodología de medición}
 Para validar experimentalmente el diseño propuesto, se llevó a cabo un conjunto de mediciones que abarcan el comportamiento de pequeña señal, el desempeño de potencia en gran señal y la caracterización no lineal del amplificador. Debido a la falta de equipamiento disponible en la universidad para realizar mediciones de armónicos o frecuencias superiores a los 3\,GHz, no fue posible llevar a cabo la totalidad de las mediciones dentro de las instalaciones de la institución. Por este motivo, se recurrió a la colaboración de ayudantes de cátedra que se desempeñan profesionalmente en la Comisión Nacional de Energía Atómica (CNEA), quienes facilitaron el acceso a los equipos necesarios y asistieron durante las mediciones de parámetros de dispersión, potencia de salida y OIP3, principalmente mediante el uso del PNA y el sensor de potencia disponibles en dicha institución. Esta colaboración estuvo a cargo del Dr.~Manuel García Redondo y el Dr.~Matías Hampel. Las mediciones de distorsión armónica, por su parte, se realizaron en las instalaciones de la Universidad Nacional de San Martín (UNSAM), con la asistencia del Ing.~Sanca. Cada medición requirió un setup dedicado, descrito en las siguientes subsecciones.
 
 % -----------------------------------------------------------------------------------------------%
-\subsubsection{Medición de Parámetros de Dispersión}
+\subsubsection{Medición de parámetros dispersión}
 Los parámetros de dispersión se midieron con el objetivo de validar el diseño de las redes de adaptación y caracterizar el comportamiento de pequeña señal del amplificador. Se empleó un analizador de redes vectorial (VNA) Keysight N5242B PNA-X, calibrado mediante el método TOSM con un kit de calibración Keysight 85052B. En el puerto de salida se insertaron en cascada un atenuador de 20\,dB y otro de 10\,dB con el fin de proteger el receptor del VNA frente a los niveles de potencia elevados presentes a la salida del amplificador. En consecuencia, únicamente se reportan los parámetros $S_{21}$ y $S_{11}$, dado que la presencia del atenuador en el puerto de salida impide una medición confiable de los parámetros que involucran la reflexión hacia dicho puerto. El valor medido de $S_{21}$ fue corregido sumando el valor nominal del atenuador.
 
 % -----------------------------------------------------------------------------------------------%
-\subsubsection{Medición de Potencia de Salida}
+\subsubsection{Medición de potencia de salida}
 Se realizó una medición de potencia de salida con el fin de caracterizar el comportamiento de gran señal del amplificador. Dado que el dispositivo bajo prueba requiere niveles de excitación superiores a la potencia de salida que el VNA es capaz de entregar, se insertó un amplificador driver Mini-Circuits ZX60-83LN12+ entre la fuente de señal del Keysight N5242B y el amplificador de potencia bajo prueba. La potencia de salida se midió con un sensor de potencia Keysight U8485A, precedido por un atenuador de 20\,dB y un atenuador de 10\,dB. La potencia de entrada se barrió en pasos de 2,5\,dBm a la frecuencia nominal de operación de 2,2\,GHz. Los valores obtenidos mediante esta medición se emplearon para determinar la ganancia y el punto de compresión de 1\,dB del amplificador.
 
 Dado que el amplificador driver ingresa en compresión dentro del rango de medición, el punto de compresión de 1\,dB del dispositivo bajo prueba no puede obtenerse de forma directa a partir de la curva de potencia de salida medida. Por este motivo, se aplicó la expresión de compresión en cascada de la ecuación~\eqref{eq:p1db_cascada}, que refiere la compresión de cada etapa a la entrada del sistema y combina sus contribuciones ponderadas inversamente por la ganancia de las etapas precedentes
@@ -163,7 +150,7 @@ Dado que el amplificador driver ingresa en compresión dentro del rango de medic
 \end{equation}
 
 % -----------------------------------------------------------------------------------------------%
-\subsubsection{Medición de Distorsión Armónica}
+\subsubsection{Medición de distorsión armónica}
 Debido a la no linealidad intrínseca de todo dispositivo activo, sumada a la clase de operación en la que se polariza el amplificador, las etapas de potencia generan distorsión armónica que degrada la pureza espectral de la señal y puede provocar interferencia fuera de banda. Para caracterizar este comportamiento, se midieron el segundo y el tercer armónico utilizando un generador de señal Siglent SSG3032X-IQE como fuente de excitación de onda continua a 2,2\,GHz y un analizador de espectro Keysight N9322C a la salida. Se colocó un atenuador de 20\,dB en la entrada del analizador con fines de protección. La potencia de entrada se barrió desde 0\,dBm hasta 20\,dBm en pasos de 5\,dBm.
 
 % -----------------------------------------------------------------------------------------------%
