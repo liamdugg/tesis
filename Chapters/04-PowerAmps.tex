@@ -5,7 +5,7 @@ En el caso ideal, un amplificador de potencia amplifica la señal de entrada sin
 
 Sin embargo, este comportamiento no puede alcanzarse en dispositivos reales. El transistor, como elemento activo, presenta una característica de transferencia inherentemente no lineal, cuya respuesta depende tanto de las condiciones de polarización como del nivel de excitación. Como consecuencia, parte de la potencia suministrada se disipa en forma de calor y la señal de salida experimenta distintos tipos de distorsión, tales como compresión de ganancia, generación de armónicos y productos de intermodulación. Estas limitaciones impiden maximizar simultáneamente la potencia de salida, la eficiencia y la linealidad del amplificador. En consecuencia, el diseño de un amplificador de potencia consiste en encontrar un compromiso adecuado entre estas prestaciones, de acuerdo con los requerimientos de la aplicación.
 
-En este capítulo se presentan los fundamentos teóricos necesarios para el diseño de amplificadores de potencia de RF. En primer lugar se analiza el principio de funcionamiento de los amplificadores de potencia y la influencia del ángulo de conducción sobre las distintas clases de operación, estableciendo la relación entre eficiencia, potencia de salida y contenido armónico. Posteriormente se introducen los parámetros de pequeña y gran señal empleados para caracterizar el desempeño del amplificador, así como las principales métricas de linealidad utilizadas en aplicaciones de comunicaciones. Finalmente, se describen los conceptos de adaptación de impedancias y el método de \textit{load-pull}, herramienta fundamental para la determinación de la impedancia óptima de carga en el diseño de amplificadores de potencia.
+En este capítulo se presentan los fundamentos teóricos necesarios para el diseño de amplificadores de potencia de RF. En primer lugar se analiza el principio de funcionamiento de los amplificadores de potencia y la influencia del ángulo de conducción sobre las distintas clases de operación, estableciendo la relación entre eficiencia, potencia de salida y contenido armónico. Posteriormente se introducen los parámetros de pequeña y gran señal empleados para caracterizar el desempeño del amplificador, así como las principales métricas de linealidad utilizadas en aplicaciones de comunicaciones. Finalmente, se describen los conceptos de adaptación de impedancias y el método de load-pull, herramienta fundamental para la determinación de la impedancia óptima de carga en el diseño de amplificadores de potencia.
 
 % -----------------------------------------------------------------------------------------------%
 \section{Funcionamiento y clases de operación} \label{sec:funcionamiento_clases}
@@ -85,7 +85,7 @@ En la Figura~\ref{fig:id_classes} se ilustran las formas de onda de la corriente
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Figures/id_classes.png}
+    \includegraphics[width=\linewidth]{Figures/04/id_classes.png}
     \caption{Corrientes de drain para las distintas clases de operación de un amplificador suponiendo la debida polarización del circuito para cada caso.}
     \label{fig:id_classes}
 \end{figure}
@@ -117,7 +117,7 @@ La Figura~\ref{fig:armonicos_alpha} ilustra la amplitud normalizada de las prime
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Figures/pa_harmonics.png}
+    \includegraphics[width=\linewidth]{Figures/04/pa_harmonics.png}
     \caption{Amplitud normalizada de las componentes $I_{DC}$ a $I_5$ de la corriente de drain en función del ángulo de conducción $\alpha$.}
     \label{fig:armonicos_alpha}
 \end{figure}
@@ -133,7 +133,7 @@ La Figura~\ref{fig:pa_efficiency} grafica la ecuación~\eqref{eq:eficiencia_alph
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Figures/pa_efficiency.png}
+    \includegraphics[width=0.7\linewidth]{Figures/04/pa_efficiency.png}
     \caption{Eficiencia de drain teórica en función del ángulo de conducción, con las regiones correspondientes a las Clases A, AB, B y C señaladas.}
     \label{fig:pa_efficiency}
 \end{figure}
@@ -142,7 +142,7 @@ La Figura~\ref{fig:rf_power_alpha} ilustra, en función del ángulo de conducci�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Figures/rf_power.png}
+    \includegraphics[width=0.7\linewidth]{Figures/04/pa_rf_power.png}
     \caption{Potencia de RF entregada a la carga, relativa a Clase A, en función del ángulo de conducción, asumiendo carga óptima y cortocircuito en las frecuencias armónicas.}
     \label{fig:rf_power_alpha}
 \end{figure}
@@ -153,7 +153,7 @@ La caracterización de un amplificador de potencia en régimen de pequeña seña
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/TwoPortNetworkScatteringAmplitudes.png}
+    \includegraphics[width=0.8\linewidth]{Figures/04/two_port_network.png}
     \caption{Cuadripolo genérico de dos puertos con sus ondas incidentes y reflejadas \cite{TwoPortScattering}.}
     \label{fig:cuadripolo_s}
 \end{figure}
@@ -229,7 +229,7 @@ Un valor de P1dB elevado indica que el amplificador puede entregar una mayor pot
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/p1dB_theory.png}
+    \includegraphics[width=0.8\linewidth]{Figures/04/theory_p1dB.png}
     \caption{Curva teórica del punto de compresión de 1\,dB \cite{taranto2020}.}
     \label{fig:p1db_theory}
 \end{figure}
@@ -252,7 +252,7 @@ Como ya se ha mencionado, el diseñador enfrenta un compromiso directo entre pot
 \subsection{Distorsión armónica}
 Una primera manifestación de la no linealidad del amplificador es la distorsión armónica, ya introducida en la Sección~\ref{sec:funcionamiento_clases} al analizar la corriente de drain en función del ángulo de conducción. Dado que la relación entre la tensión aplicada en el gate y la corriente resultante en el drain no es lineal, una excitación de entrada puramente senoidal da origen, a la salida, a componentes en frecuencias múltiplos de la fundamental, según se desprende del desarrollo en serie de Fourier de la ecuación~\eqref{eq:fourier}. La magnitud relativa de estas componentes armónicas, ya cuantificada en la Figura~\ref{fig:armonicos_alpha} en función del ángulo de conducción, constituye una primera medida de la linealidad del dispositivo, aunque resulta insuficiente para caracterizar el comportamiento del amplificador frente a señales moduladas, dado que estas ocupan una banda de frecuencias en torno a la portadora en lugar de un único tono.
 
-\subsection{Productos de intermodulación y prueba de dos tonos}
+\subsection{Productos de intermodulación y prueba de dos tonos} \label{sec:dos_tonos}
 Cuando la señal de entrada del amplificador contiene más de una componente frecuencial, la no linealidad del dispositivo no solo genera armónicos de cada componente individual, sino también productos de intermodulación, es decir, componentes espectrales adicionales ubicadas en combinaciones lineales de las frecuencias originales. Este comportamiento resulta de particular relevancia, por ejemplo, para señales moduladas digitalmente, que ocupan una banda de frecuencias en torno a la portadora, por lo que las distintas componentes frecuenciales interactúan entre sí, generando productos de intermodulación que caen dentro o en las proximidades de la banda de interés y que no pueden eliminarse mediante filtrado posterior.
 
 Para analizar el origen de estos productos, la característica de transferencia no lineal del amplificador puede aproximarse mediante un desarrollo en serie de potencias de la tensión de entrada $v_{in}(t)$, truncado hasta el tercer orden \cite[pp.~233--240]{cripps2006}
@@ -287,7 +287,7 @@ donde la aproximación es válida en la región de operación de interés, en la
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\linewidth]{Figures/im_spectrum.png}
+    \includegraphics[width=0.65\linewidth]{Figures/04/im_spectrum.png}
     \caption{Productos de intermodulación cercanos a las frecuencias de los tonos de la señal de entrada.}
     \label{fig:im_spectrum}
 \end{figure}
@@ -296,7 +296,7 @@ De las ecuaciones~\eqref{eq:amplitud_im3} y \eqref{eq:amplitud_fund} se desprend
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/oip3_theory.png}
+    \includegraphics[width=0.8\linewidth]{Figures/04/theory_oip3.png}
     \caption{Curva teórica del punto de intercepción de tercer orden referido a la salida y del punto de compresión de 1\,dB \cite{taranto2020}.}
     \label{fig:oip3_theory}
 \end{figure}
@@ -351,7 +351,7 @@ El resultado de un barrido de load-pull se representa habitualmente mediante con
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.65\linewidth]{Figures/load_pull_theory.png}
+    \includegraphics[width=0.65\linewidth]{Figures/04/theory_load_pull.png}
     \caption{Diagrama de Smith con contornos de impedancias para distintos valores de potencia de salida constante en un transistor de potencia\cite[p.~598]{pozar2011}.}
     \label{fig:load_pull_theory}
 \end{figure}

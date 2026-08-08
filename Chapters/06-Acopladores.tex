@@ -1,12 +1,11 @@
 \chapter[Teoría de acopladores direccionales]{Teoría de Acopladores Direccionales} \label{cp:introduction}
-
 Los acopladores direccionales son componentes pasivos de microondas de cuatro puertos utilizados para la división o combinación de potencia entre distintas ramas de un sistema de radiofrecuencia. A diferencia de un divisor de potencia convencional, un acoplador direccional distribuye la señal de entrada de manera desigual y direccional entre sus puertos de salida, propiedad que resulta de particular utilidad para muestrear una fracción controlada de la potencia de una señal sin interrumpir su trayectoria principal.
 
 La Figura~\ref{fig:directional_coupler} muestra los dos símbolos comúnmente utilizados para representar un acoplador direccional, junto con la convención de numeración de puertos empleada a lo largo de este capítulo. Tomando al puerto 1 como puerto de entrada, la mayor parte de la potencia incidente se transmite hacia el puerto 2, denominado \textit{puerto de paso} (\textit{through port}), mientras que una fracción menor y controlada de dicha potencia se transfiere al puerto 3, denominado \textit{puerto acoplado} (\textit{coupled port}). El puerto 4, denominado \textit{puerto aislado} (\textit{isolated port}), no recibe potencia alguna en un acoplador ideal.
 
 \begin{figure}[b!]
     \centering
-    \includegraphics[width=0.7\textwidth]{Figures/Figura_7_4.pdf}
+    \includegraphics[width=0.7\textwidth]{Figures/06/coupler_symbols.pdf}
     \caption{Dos símbolos comúnmente utilizados para acopladores direccionales.}
     \label{fig:directional_coupler}
 \end{figure}
@@ -14,7 +13,6 @@ La Figura~\ref{fig:directional_coupler} muestra los dos símbolos comúnmente ut
 Esta asignación de puertos, sin embargo, no es fija, sino que depende de cuál de los cuatro puertos se utilice como entrada. Si en cambio la señal se inyecta por el puerto 4, la potencia se reparte entre los mismos puertos 2 y 3, mientras que el puerto que queda aislado es el puerto 1. Es decir, los puertos 1 y 4 resultan mutuamente aislados entre sí, cualquiera sea cuál de los dos se emplee como entrada, mientras que ambos entregan potencia a los puertos 2 y 3, si bien el rol de puerto de paso y puerto acoplado se intercambia entre estos según cuál de los dos primeros se haya excitado. De manera análoga, si la señal se inyecta por el puerto 2 o por el puerto 3, la potencia se reparte entre los puertos 1 y 4, resultando el puerto 3 o el puerto 2, respectivamente, el puerto aislado en cada caso. Esta simetría, presente en todo acoplador direccional ideal, no es una propiedad incidental del dispositivo, sino que constituye la única solución posible cuando una red de cuatro puertos satisface simultáneamente tres condiciones: que sea recíproca, que se encuentre adaptada en cada uno de sus puertos y que no presente pérdidas. La sección siguiente formaliza estas tres condiciones en términos de la matriz de parámetros $S$ de la red, y deriva a partir de ellas la forma general que debe adoptar dicha matriz para dar lugar al comportamiento descripto.
 
 \section{Fundamentos de acopladores direccionales}
-
 Por recíproca se entiende una red donde $S_{ij} = S_{ji}$, siendo $i \neq j$. Adicionalmente, si la red se encuentra adaptada en cada puerto, sus coeficientes de reflexión propios son nulos, es decir $S_{11} = S_{22} = S_{33} = S_{44} = 0$, por lo que la matriz de parámetros $S$ puede expresarse como
 
 \begin{equation}
@@ -204,7 +202,7 @@ Con referencia a dicha figura, la operación básica del acoplador de línea ram
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Figures/Figura_7_21.pdf}
+    \includegraphics[width=0.9\textwidth]{Figures/06/coupler_scheme.pdf}
     \caption{Geometría de un acoplador de línea ramificada.}
     \label{fig:branch_line_geometry}
 \end{figure}
@@ -221,7 +219,7 @@ El circuito de la Figura~\ref{fig:branch_line_circuit} puede descomponerse en la
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.6\textwidth]{Figures/Figura_7_22.pdf}
+    \includegraphics[width=0.6\textwidth]{Figures/06/coupler_circuit.pdf}
     \caption{Circuito del acoplador híbrido de línea ramificada en forma normalizada.}
     \label{fig:branch_line_circuit}
 \end{figure}
@@ -290,7 +288,7 @@ Para el caso del modo par, $Z_L\to\infty$, por lo que $Z=-jZ_o$ y $Y=j/Z_o$. Ana
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.9\textwidth]{Figures/Figura_7_23.pdf}
+    \includegraphics[width=0.9\textwidth]{Figures/06/coupler_odd_even.pdf}
     \caption{Descomposición del acoplador de línea ramificada en excitaciones de modo par e impar. (a) Modo par ($e$). (b) Modo impar ($o$).}
     \label{fig:even_odd_decomposition}
 \end{figure}

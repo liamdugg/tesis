@@ -56,17 +56,17 @@ Respecto del montaje de los componentes sobre la placa fabricada, los componente
 Para validar experimentalmente el diseño propuesto, se llevó a cabo un conjunto de mediciones sobre ambos prototipos fabricados. Estas mediciones se realizaron con la colaboración del Dr.~Ing.~Manuel García, en la Comisión Nacional de Energía Atómica (CNEA), y del Ing.~Sanca, en la Universidad Nacional de San Martín (UNSAM). Cada medición requirió un setup dedicado, descrito en las subsecciones siguientes, agrupadas de acuerdo con el circuito bajo prueba.
 
 \subsection{Mediciones del acoplador}
-Dado su comportamiento pasivo y lineal, la caracterización experimental del acoplador se limitó a la medición de sus parámetros de dispersión. Al tratarse de un circuito pasivo, no fue necesario incorporar atenuadores de protección a la salida, a diferencia de la medición equivalente realizada sobre el amplificador.
+Dado su comportamiento pasivo y lineal, la caracterización experimental del acoplador se limitó a la medición de sus parámetros de dispersión. Al tratarse de un circuito pasivo, no fue necesario incorporar atenuadores de protección a la salida.
 
-Esta caracterización se llevó a cabo en dos instancias. En una primera instancia, se realizó una medición preliminar en la facultad, con un VNA FieldFox deKeysight y la asistencia del Dr.~Ing.~Matías Hampel, con el único objetivo de corroborar el funcionamiento correcto del prototipo antes de proceder a su caracterización definitiva. En una segunda instancia, se realizó la medición definitiva en CNEA, empleando el mismo VNA PNA-X utilizado para la caracterización del amplificador. Si bien dicho instrumento dispone de cuatro puertos, la calibración se realizó únicamente a dos puertos mediante el método TOSM, dado que la calibración a cuatro puertos requiere un tiempo considerablemente mayor que no resultaba compatible con la disponibilidad horaria de uso del equipo. En consecuencia, la matriz de dispersión completa del acoplador se obtuvo iterando las conexiones de los puertos de entrada y salida del dispositivo bajo prueba entre las dos calibraciones de puerto disponibles del instrumento.
+Esta caracterización se llevó a cabo en dos instancias. En una primera instancia, se realizó una medición preliminar en la facultad, con un VNA FieldFox de Keysight y la asistencia del Dr.~Ing.~Matías Hampel, con el único objetivo de corroborar el funcionamiento correcto del prototipo antes de proceder a su caracterización definitiva. En una segunda instancia, se realizó la medición definitiva en CNEA, empleando un analizador de redes vectorial (VNA) Keysight N5242B PNA-X. Si bien dicho instrumento dispone de cuatro puertos, la calibración se realizó únicamente a dos puertos mediante el método TOSM, dado que la calibración a cuatro puertos requiere un tiempo considerablemente mayor que no resultaba compatible con la disponibilidad horaria de uso del equipo. En consecuencia, la matriz de dispersión completa del acoplador se obtuvo iterando las conexiones de los puertos de entrada y salida del dispositivo bajo prueba entre las dos calibraciones de puerto disponibles del instrumento.
 
 % TODO: confirmar rango de frecuencias efectivamente barrido y nivel de potencia empleado en ambas mediciones.
 
-% TODO: insertar figura del diagrama en bloques del setup de medición del acoplador
+% TODO insertar figura del diagrama en bloques del setup de medición del acoplador
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.7\linewidth]{Figures/setup_medicion_acoplador.png}
-    \caption{Diagrama en bloques del setup de medición de parámetros de dispersión del acoplador.}
+    \includegraphics[width=0.5\linewidth]{Figures/07/blocks_coupler.png}
+    \caption{Diagrama en bloques del setup de medición de parámetros dispersión del acoplador.}
     \label{fig:setup_medicion_acoplador}
 \end{figure}
 
@@ -75,13 +75,13 @@ Para validar experimentalmente el diseño propuesto del amplificador, se llevó 
 
 % -----------------------------------------------------------------------------------------------%
 \subsubsection{Medición de parámetros dispersión}
-Los parámetros de dispersión se midieron con el objetivo de validar el diseño de las redes de adaptación y caracterizar el comportamiento de pequeña señal del amplificador. Se empleó un analizador de redes vectorial (VNA) Keysight N5242B PNA-X, calibrado mediante el método TOSM con un kit de calibración Keysight 85052B. En el puerto de salida se insertaron en cascada un atenuador de 20\,dB y otro de 10\,dB con el fin de proteger el receptor del VNA frente a los niveles de potencia elevados presentes a la salida del amplificador. En consecuencia, únicamente se reportan los parámetros $S_{21}$ y $S_{11}$, dado que la presencia del atenuador en el puerto de salida impide una medición confiable de los parámetros que involucran la reflexión hacia dicho puerto. El valor medido de $S_{21}$ fue corregido sumando el valor nominal del atenuador.
+Los parámetros de dispersión se midieron con el objetivo de validar el diseño de las redes de adaptación y caracterizar el comportamiento de pequeña señal del amplificador. Se empleó el mismo PNA-X que para las mediciones del acoplador, calibrado mediante el método TOSM con un kit de calibración Keysight 85052B. En el puerto de salida se insertaron en cascada un atenuador de 20\,dB y otro de 10\,dB con el fin de proteger el receptor del VNA frente a los niveles de potencia elevados presentes a la salida del amplificador. En consecuencia, únicamente se reportan los parámetros $S_{21}$ y $S_{11}$, dado que la presencia del atenuador en el puerto de salida impide una medición confiable de los parámetros que involucran la reflexión hacia dicho puerto. El valor medido de $S_{21}$ fue corregido sumando el valor nominal del atenuador.
 
 % TODO: insertar figura del diagrama en bloques del setup de medición de parámetros S
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.7\linewidth]{Figures/setup_medicion_sparam_amp.png}
-    \caption{Diagrama en bloques del setup de medición de parámetros de dispersión del amplificador.}
+    \includegraphics[width=0.8\linewidth]{Figures/07/blocks_sparams.png}
+    \caption{Diagrama en bloques del setup de medición de parámetros dispersión del amplificador.}
     \label{fig:setup_medicion_sparam_amp}
 \end{figure}
 
@@ -89,10 +89,9 @@ Los parámetros de dispersión se midieron con el objetivo de validar el diseño
 \subsubsection{Medición de potencia de salida}
 Se realizó una medición de potencia de salida con el fin de caracterizar el comportamiento de gran señal del amplificador. Dado que el dispositivo bajo prueba requiere niveles de excitación superiores a la potencia de salida que el VNA es capaz de entregar, se insertó un amplificador driver Mini-Circuits ZX60-83LN12+ entre la fuente de señal del Keysight N5242B y el amplificador de potencia bajo prueba. La potencia de salida se midió con un sensor de potencia Keysight U8485A, precedido por un atenuador de 20\,dB y un atenuador de 10\,dB. La potencia de entrada se barrió en pasos de 2,5\,dBm a la frecuencia nominal de operación de 2,2\,GHz. A partir de los valores de potencia de entrada y de salida obtenidos mediante este barrido, junto con la medición de la corriente de polarización de drain, se determinaron la ganancia, el punto de compresión de 1\,dB, la potencia de saturación (Psat), la eficiencia de drain y la eficiencia de agregado de potencia (PAE) del amplificador.
 
-% TODO: insertar figura del diagrama en bloques del setup de medición de potencia de salida
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Figures/p1db_blocks.png}
+    \includegraphics[width=\linewidth]{Figures/07/blocks_p1db.png}
     \caption{Diagrama en bloques del setup de medición de potencia de salida del amplificador.}
     \label{fig:setup_medicion_pout}
 \end{figure}
@@ -108,10 +107,9 @@ Dado que el amplificador driver ingresa en compresión dentro del rango de medic
 \subsubsection{Medición de distorsión armónica}
 Debido a la no linealidad intrínseca de todo dispositivo activo, sumada a la clase de operación en la que se polariza el amplificador, las etapas de potencia generan distorsión armónica que degrada la pureza espectral de la señal y puede provocar interferencia fuera de banda. Para caracterizar este comportamiento, se midieron el segundo y el tercer armónico utilizando un generador de señal Siglent SSG3032X-IQE como fuente de excitación de onda continua a 2,2\,GHz y un analizador de espectro Keysight N9322C a la salida. Se colocó un atenuador de 20\,dB en la entrada del analizador con fines de protección. La potencia de entrada se barrió desde 0\,dBm hasta 20\,dBm en pasos de 5\,dBm.
 
-% TODO: insertar figura del diagrama en bloques del setup de medición de distorsión armónica
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.7\linewidth]{Figures/setup_medicion_armonicos.png}
+    \includegraphics[width=0.7\linewidth]{Figures/07/blocks_harmonic_balance.png}
     \caption{Diagrama en bloques del setup de medición de distorsión armónica del amplificador.}
     \label{fig:setup_medicion_armonicos}
 \end{figure}
@@ -123,7 +121,7 @@ Siguiendo el principio de la prueba de dos tonos descripta en la Sección~\ref{s
 % TODO: insertar figura del diagrama en bloques del setup de medición de OIP3
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.7\linewidth]{Figures/setup_medicion_oip3.png}
+    \includegraphics[width=\linewidth]{Figures/07/blocks_oip3.png}
     \caption{Diagrama en bloques del setup de medición de OIP3 del amplificador.}
     \label{fig:setup_medicion_oip3}
 \end{figure}
