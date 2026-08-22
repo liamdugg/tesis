@@ -17,7 +17,8 @@ Finalmente, la red resonante formada por el inductor y el capacitor en derivaci√
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}[transform shape]
+    \ctikzset{bipoles/thickness=2}
+    \begin{tikzpicture}[line width=1pt]
         % Paths, nodes and wires:
         \node[nigfete] at (7, 4.27){};
         \draw (3.25, 4) to[capacitor, l={$DC \, Block$}] (4.5, 4);
