@@ -332,10 +332,10 @@ Usando las ecuaciones~\eqref{eq:even_coefficients} y~\eqref{eq:odd_coefficients}
 
 \begin{subequations}
     \begin{align}
-        B_1 &= 0 && \text{(el puerto 1 está adaptado),} \\
-        B_2 &= -\frac{j}{\sqrt{2}} && \text{(media potencia, desfase de $-90^{\circ}$ del puerto 1 al 2),} \\
-        B_3 &= -\frac{1}{\sqrt{2}} && \text{(media potencia, desfase de $-180^{\circ}$ del puerto 1 al 3),} \\
-        B_4 &= 0 && \text{(no hay potencia al puerto 4).}
+        B_1 &= 0                   && \text{\normalsize(el puerto 1 está adaptado),} \\
+        B_2 &= -\frac{j}{\sqrt{2}} && \text{\normalsize(media potencia, desfase de $-90^{\circ}$ del puerto 1 al 2),} \\
+        B_3 &= -\frac{1}{\sqrt{2}} && \text{\normalsize(media potencia, desfase de $-180^{\circ}$ del puerto 1 al 3),} \\
+        B_4 &= 0                   && \text{\normalsize(no hay potencia al puerto 4).}
     \end{align}
     \label{eq:final_results}
 \end{subequations}
@@ -343,5 +343,3 @@ Usando las ecuaciones~\eqref{eq:even_coefficients} y~\eqref{eq:odd_coefficients}
 Estos resultados concuerdan con la primera fila y columna de la matriz de dispersión dada en la ecuación~\eqref{eq:quadrature_scattering}. Los elementos restantes pueden encontrarse fácilmente por transposición.
 
 A lo largo de este capítulo se desarrollaron los fundamentos que rigen el comportamiento de los acopladores direccionales, estableciendo las condiciones de reciprocidad, adaptación y ausencia de pérdidas que determinan la forma general de su matriz de dispersión, y particularizando dicho desarrollo al caso del híbrido en cuadratura implementado mediante la topología de línea ramificada. Este tipo de acoplador resulta de particular interés para el presente trabajo, dado que constituye un elemento habitual en la red de entrada de un amplificador Doherty, donde su función consiste en dividir equitativamente la señal de excitación entre el amplificador de portadora (\textit{carrier}) y el amplificador de pico (\textit{peaking}), al mismo tiempo que introduce el desfasaje de 90° entre ambas ramas necesario para que las señales se recombinen correctamente en la red de salida de dicha topología. La disponibilidad de este marco teórico resulta, en consecuencia, un requisito previo para abordar el diseño físico del acoplador desarrollado en el presente proyecto.
-
-%TODO: agregar citas a las imágenes.

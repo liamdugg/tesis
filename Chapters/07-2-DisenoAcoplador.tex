@@ -18,7 +18,6 @@ Una primera versión de esta topología plegada empleó quiebres con curvatura r
 \subsection{Objetivos de diseño}
 Los objetivos de diseño del acoplador se establecieron a partir del comportamiento ideal de un híbrido en cuadratura, descripto en la matriz de dispersión de la ecuación~\eqref{eq:quadrature_scattering}, según la cual el dispositivo entrega una fracción idéntica de la potencia de entrada a los puertos 2 y 3, con un desfasaje de 90° entre ambas señales, sin acoplar potencia alguna al puerto 4. El Cuadro~\ref{tab:objetivos_acoplador} resume los objetivos de diseño adoptados a partir de este comportamiento ideal.
 
-% TODO: completar valores
 \begin{table}[H]
     \centering
     \caption{Especificaciones objetivo del acoplador híbrido en cuadratura.}
@@ -28,7 +27,7 @@ Los objetivos de diseño del acoplador se establecieron a partir del comportamie
         \textbf{Parámetro}                      & \textbf{Valor Objetivo} & \textbf{Unidad} \\
         \hline
         Frecuencia central ($f_0$)              & 2,2                     & GHz             \\
-        Coef. acoplamiento ($S_{21}$, $S_{31}$) & $-3$                    & dB              \\
+        Coef. acoplamiento ($S_{21}$, $S_{31}$) & -3                      & dB              \\
         Desfasaje entre puertos 2 y 3           & 90                      & °               \\
         \hline\hline
     \end{tabular}
@@ -54,7 +53,7 @@ Siguiendo la metodología de diseño y simulación descripta en la Sección~\ref
 Los resultados obtenidos se consideraron satisfactorios respecto de los objetivos planteados, por lo que se procedió hacia la etapa de diseño físico del circuito impreso.
 
 \subsection{Diseño de PCB}
-El layout del acoplador se exportó desde el entorno de layout de ADS en formato DXF. Dado que la importación directa de este archivo en Altium Designer presentó inconsistencias en algunas líneas del diseño, que desaparecían durante el proceso de importación, se adoptó una ruta de conversión alternativa consistente en importar el archivo DXF a Ansys CST, reexportarlo desde dicho entorno y finalmente importarlo a Altium.
+El layout del acoplador se exportó desde el entorno de layout de ADS en formato DXF. Dado que la importación directa de este archivo en Altium Designer presentó inconsistencias en algunas líneas del diseño, que desaparecían durante el proceso de importación, se adoptó una ruta de conversión alternativa consistente en importar el archivo DXF a CST, reexportarlo desde dicho entorno y finalmente importarlo a Altium.
 
 Sobre el layout resultante se aplicaron, además de los criterios generales descriptos en la Sección~\ref{sec:metodologia_pcb}, las siguientes consideraciones específicas del diseño del acoplador:
 
@@ -66,7 +65,7 @@ Sobre el layout resultante se aplicaron, además de los criterios generales desc
 \end{itemize}
 
 \subsection{Verificación electromagnética y segunda iteración de diseño}
-Con el objetivo de validar el comportamiento del acoplador considerando los efectos electromagnéticos no capturados por el modelo de líneas de transmisión analíticas empleado en ADS, se realizó una simulación de onda completa del layout de PCB en Ansys HFSS. Esta verificación reveló que la frecuencia central efectiva del acoplador se encontraba corrida hacia abajo respecto de la frecuencia de diseño de 2,2~GHz, ubicándose entre 1,8~GHz y 1,9~GHz como se muestra en la Figura~\ref{fig:coupler_freq_shift}. No obstante, los valores de desfasaje y de atenuación obtenidos en dicha frecuencia central corrida resultaron cercanos a los previstos por la simulación de ADS, lo que indicó que el corrimiento afectaba principalmente a la frecuencia de operación del circuito y no a su comportamiento cualitativo como híbrido en cuadratura.
+Con el objetivo de validar el comportamiento del acoplador considerando los efectos electromagnéticos no capturados por el modelo de líneas de transmisión analíticas empleado en ADS, se realizó una simulación de onda completa del layout de PCB en Ansys HFSS. Esta verificación reveló que la frecuencia central efectiva del acoplador se encontraba corrida hacia abajo respecto de la frecuencia de diseño de 2,2~GHz, ubicándose entre 1,8~GHz y 1,9~GHz como se muestra en la Figura~\ref{fig:coupler_freq_shift}. No obstante, los valores de desfasaje y de atenuación obtenidos en dicha frecuencia central corrida resultaron cercanos a los previstos por la simulación de ADS, lo que indicó que el corrimiento afectaba principalmente a la frecuencia de operación del circuito y no a su comportamiento cualitativo como híbrido en cuadratura. Un proceso de verificación electromagnética equivalente se llevó a cabo en CST Studio Suite.
 
 \begin{figure}[H]
     \centering

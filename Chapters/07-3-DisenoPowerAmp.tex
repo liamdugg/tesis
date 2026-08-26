@@ -32,7 +32,7 @@ Los objetivos de diseño del amplificador coinciden con los requisitos mandatori
 El transistor seleccionado para el diseño del amplificador de potencia fue el CGH40006S, un GaN HEMT discreto fabricado originalmente por Cree y comercializado actualmente por MACOM, encapsulado en formato de montaje superficial. La selección de este dispositivo se fundamentó en los siguientes criterios:
 
 \begin{enumerate}
-    \item \textbf{Especificaciones eléctricas adecuadas a la aplicación:} el dispositivo entrega una potencia de salida en el punto de compresión de 1~dB de aproximadamente 37,5~dBm a 2~GHz, con una ganancia de pequeña señal del orden de 20~dB y una PAE cercana al 60\,\%, valores que exceden ampliamente el requisito de 1~W (30~dBm) de salida establecido para la misión, lo que otorga margen de diseño respecto del punto de compresión \cite{Macom}.
+    \item \textbf{Especificaciones eléctricas adecuadas a la aplicación:} el dispositivo entrega una potencia de salida en el punto de compresión de 1~dB de aproximadamente 37,5~dBm a 2~GHz, con una ganancia de pequeña señal del orden de 20~dB y una PAE cercana al 60\,\%, valores que exceden ampliamente el requisito de 1~W (30~dBm) de salida establecido para la misión, lo que otorga margen de diseño respecto del punto de compresión.
 
     \item \textbf{Disponibilidad de modelo no lineal del fabricante:} MACOM provee un modelo no lineal del CGH40006S compatible con entornos de simulación de circuitos de microondas, lo que permitió realizar simulaciones de gran señal del amplificador previas a la fabricación del prototipo físico, reduciendo el riesgo de iteraciones costosas en hardware. Otros fabricantes de transistores GaN HEMT discretos no facilitan de manera igualmente sencilla el acceso a estos modelos no lineales, condición que en la práctica acotó considerablemente el catálogo de dispositivos considerado viable para el proyecto, y motivó priorizar la selección de un transistor de MACOM.
     
@@ -184,7 +184,7 @@ lo que arroja $P_{fuente}(P_{out}=3~\,W) \approx 6,81~\,W$ frente a $P_{fuente}(
 
 \textbf{Selección de componentes reales y resonancias parásitas.} Sobre la base del diseño obtenido con componentes ideales, se reemplazaron los capacitores e inductores discretos por sus modelos reales de montaje superficial, provenientes de la biblioteca del fabricante muRata, empleando la biblioteca dinámica para los capacitores y la biblioteca estática para los inductores. Este reemplazo reveló que el comportamiento de dichos componentes se veía afectado por sus inductancias parásitas, las cuales provocaban resonancias en frecuencias cercanas a la de operación, e incluso por debajo de esta, con impacto directo sobre la confiabilidad del circuito: los parámetros resultantes eran muy sensibles a pequeñas variaciones tanto en la longitud de las líneas de transmisión como en los valores de los componentes, además de degradar la estabilidad y la ganancia del amplificador.
 
-Para resolver este problema se buscaron componentes pasivos reales mediante la herramienta SimSurfing del fabricante muRata, seleccionando capacitores e inductores cuya frecuencia de autorresonancia no se encontrara próxima a la banda de operación de interés, y verificando adicionalmente su disponibilidad en stock en los proveedores Digikey y JLCPCB. Los criterios adoptados para la selección de cada componente fueron el tamaño del encapsulado (0603 o 0805), el valor nominal, la tolerancia y los valores máximos admisibles de tensión, en el caso de los capacitores, y de corriente, en el caso de los inductores.
+Para resolver este problema se buscaron componentes pasivos reales mediante la herramienta SimSurfing~\cite{simsurfing} del fabricante muRata, seleccionando capacitores e inductores cuya frecuencia de autorresonancia no se encontrara próxima a la banda de operación de interés, y verificando adicionalmente su disponibilidad en stock en los proveedores Digikey y JLCPCB. Los criterios adoptados para la selección de cada componente fueron el tamaño del encapsulado (0603 o 0805), el valor nominal, la tolerancia y los valores máximos admisibles de tensión, en el caso de los capacitores, y de corriente, en el caso de los inductores.
 
 Una vez incorporados los componentes reales seleccionados de esta manera, el circuito resultó considerablemente más robusto frente a variaciones. Durante las pruebas en el segundo diseño de la red de estabilidad, la resimulación del circuito con componentes reales resultó en una perdida de 0.4\,W respecto del diseño ideal, mientras que la eficiencia se mantuvo en un nivel similar. Adicionalmente, se observó que para un mismo tipo de componente, cuanto mayor es el encapsulado, mayores resultan los valores de sus elementos parásitos. La utilización de componentes reales puede observarse en la Figura~\ref{fig:pa_ads_final}, donde inductores y capacitores reales tienen asignado su respectivo número de parte.
 
@@ -241,8 +241,32 @@ Una vez incorporados los componentes reales seleccionados de esta manera, el cir
 Los resultados obtenidos a nivel esquemático se consideraron satisfactorios respecto de los objetivos de diseño del Cuadro~\ref{tab:objetivos_diseno}, por lo que se procedió hacia la etapa de diseño físico del circuito impreso.
 
 \subsection{Diseño de PCB}
+Bajo los mismos criterios de diseño considerados para el diseño del PCB del acoplador híbrido en cuadratura se diseño el PCB para el amplificador de potencia. El esquemático optimizado del amplificador, con los componentes reales y las redes de adaptación y de estabilidad ya definidas, se trasladó al entorno Altium Designer para el diseño del layout físico. La Figura~\ref{fig:pcb_3d_front} muestra una vista tridimensional del resultado de este proceso, en el cual cada componente conserva la referencia asignada en el esquemático de ADS.
 
-\subsection{Verificación electromagnética}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/07/pcb_3d_front.png}
+    \caption{Vista 3D de la cara superior del PCB del amplificador de potencia.}
+    \label{fig:pcb_3d_front}
+\end{figure}
+
+Dado que el diseño correspondía a una primera versión de desarrollo, y considerando la disponibilidad limitada de únicamente dos unidades del transistor para la totalidad del proyecto, el layout se concibió con el objetivo de habilitar la mayor cantidad posible de mediciones y ajustes experimentales sobre la misma placa fabricada. Con este fin, se incorporaron pads adicionales sin conexión eléctrica que permiten, en caso de ser necesario, extender la longitud de los stubs de las redes de adaptación (Figura~\ref{fig:pcb_stub_ajustable}) o modificar el ancho de las líneas de transmisión (Figura~\ref{fig:pcb_txline_ajustable}) mediante la incorporación manual de puentes de soldadura, sin requerir una nueva iteración completa de fabricación de la placa.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/07/pcb_stubs_extra.png}
+    \caption{Pads adicionales incorporados para permitir la extensión de la longitud de los stubs de adaptación, en caso de requerirse ajuste experimental.}
+    \label{fig:pcb_stub_ajustable}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/07/pcb_ltx_extra.png}
+    \caption{Pads adicionales incorporados para permitir la modificación del ancho de las líneas de transmisión, en caso de requerirse ajuste experimental.}
+    \label{fig:pcb_txline_ajustable}
+\end{figure}
+
+Una vez finalizada la etapa de diseño del layout, se realizó una consulta con el docente Carlos Navarro con el objetivo de obtener una revisión externa del diseño. Si bien dicha revisión no constituyó un análisis exhaustivo del circuito, permitió confirmar que los criterios de diseño adoptados, así como los valores de tolerancia de tensión considerados, se encontraban dentro de las prácticas recomendadas para este tipo de circuitos de radiofrecuencia, y resultó de utilidad para resolver dudas puntuales surgidas durante el proceso de diseño.
 
 % -----------------------------------------------------------------------------------------------%
 \subsection{Radioenlace satelital} \label{sec:radioenlace}
@@ -383,11 +407,11 @@ El cumplimiento de esta desigualdad define analíticamente el ángulo de elevaci
 
 % ------------------------------------------------------------------------ %
 \subsubsection{Implementación computacional y simulación}
-Con el propósito de validar los rangos de operación del amplificador de potencia diseñado y determinar los límites físicos de la comunicación, se desarrollaron dos herramientas en lenguaje Python que implementan las ecuaciones~\eqref{eq:eirp_analitico} a \eqref{eq:margen}, utilizando interfaces gráficas interactivas basadas en la biblioteca \textit{Tkinter} e integración de cálculo numérico vectorizado con \textit{NumPy} y visualización mediante \textit{Matplotlib}.
+Con el propósito de validar los rangos de operación del amplificador de potencia diseñado y determinar los límites físicos de la comunicación, se desarrollaron dos herramientas en lenguaje Python~\cite{python} que implementan las ecuaciones~\eqref{eq:eirp_analitico} a \eqref{eq:margen}, utilizando interfaces gráficas interactivas basadas en la biblioteca Tkinter~\cite{tkinter} e integración de cálculo numérico vectorizado con NumPy~\cite{numpy} y visualización mediante Matplotlib~\cite{matplotlib}.
 
-El primer programa desarrollado (\texttt{link\_budget.py}) evalúa la viabilidad del enlace fijando una tasa de bits (\textit{bit rate}) analítica única y configurable para todo el sistema. El \textit{script} barre el vector de ángulos de elevación $\epsilon \in [0^\circ, 90^\circ]$ y calcula una única curva de $E_b/N_0$ disponible en función de la elevación. Dado que la tasa de bits es común a todo el sistema, esta misma curva se contrasta simultáneamente contra los tres umbrales requeridos ($[E_b/N_0]_{req}$ de QPSK, 8-PSK y 16-PSK), determinando para cada modulación el primer índice angular que satisface el criterio de cierre de la ecuación~\eqref{eq:margen}.
+El primer programa desarrollado (\texttt{link\_budget.py}) evalúa la viabilidad del enlace fijando una tasa de bits (bit rate) analítica única y configurable para todo el sistema. El script barre el vector de ángulos de elevación $\epsilon \in [0^\circ, 90^\circ]$ y calcula una única curva de $E_b/N_0$ disponible en función de la elevación. Dado que la tasa de bits es común a todo el sistema, esta misma curva se contrasta simultáneamente contra los tres umbrales requeridos ($[E_b/N_0]_{req}$ de QPSK, 8-PSK y 16-PSK), determinando para cada modulación el primer índice angular que satisface el criterio de cierre de la ecuación~\eqref{eq:margen}.
 
-El segundo programa (\texttt{link\_budget\_bw.py}) refina el análisis adaptándolo a las limitaciones físicas de canalización del transceptor. Este algoritmo toma como variables de entrada el ancho de banda ocupado en radiofrecuencia ($BW$) y el factor de roll-off del filtro ($\alpha$), a partir de los cuales calcula una tasa de símbolos común mediante la ecuación~\eqref{eq:rs_bw} y, posteriormente, deriva una tasa de bits específica para cada esquema de modulación multiplicando dicha tasa de símbolos por la cantidad de bits por símbolo correspondiente (2 para QPSK, 3 para 8-PSK y 4 para 16-PSK), de acuerdo con la ecuación~\eqref{eq:rb_deducido}. A diferencia del primer \textit{script}, en este caso cada modulación posee su propia tasa de bits efectiva y, en consecuencia, su propia curva de $E_b/N_0$ disponible en función de la elevación, calculada de forma independiente; el resultado son tres curvas diferenciadas, y no una curva única contrastada contra tres umbrales, lo cual modela fielmente el compromiso entre el orden de la modulación, la velocidad de transmisión resultante y la degradación del margen disponible frente al ruido térmico.
+El segundo programa (\texttt{link\_budget\_bw.py}) refina el análisis adaptándolo a las limitaciones físicas de canalización del transceptor. Este algoritmo toma como variables de entrada el ancho de banda ocupado en radiofrecuencia (BW) y el factor de roll-off del filtro ($\alpha$), a partir de los cuales calcula una tasa de símbolos común mediante la ecuación~\eqref{eq:rs_bw} y, posteriormente, deriva una tasa de bits específica para cada esquema de modulación multiplicando dicha tasa de símbolos por la cantidad de bits por símbolo correspondiente (2 para QPSK, 3 para 8-PSK y 4 para 16-PSK), de acuerdo con la ecuación~\eqref{eq:rb_deducido}. A diferencia del primer script, en este caso cada modulación posee su propia tasa de bits efectiva y, en consecuencia, su propia curva de $E_b/N_0$ disponible en función de la elevación, calculada de forma independiente; el resultado son tres curvas diferenciadas, y no una curva única contrastada contra tres umbrales, lo cual modela fielmente el compromiso entre el orden de la modulación, la velocidad de transmisión resultante y la degradación del margen disponible frente al ruido térmico.
 
 Los parámetros de simulación nominales cargados por defecto en ambas herramientas informáticas, representativos de la arquitectura física del CubeSat y el segmento terreno en banda S, se consolidan en el Cuadro~\ref{tab:parametros_scripts}.
 
