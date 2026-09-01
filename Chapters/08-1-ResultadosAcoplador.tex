@@ -1,0 +1,112 @@
+\section{Resultados del acoplador híbrido en cuadratura} \label{sec:resultados_acoplador}
+Siguiendo la metodología de medición descripta en la Sección~\ref{sec:metodologia_medicion}, se presentan a continuación los resultados de la caracterización experimental de ambas versiones del acoplador híbrido en cuadratura, medido en CNEA (Figura~\ref{fig:coupler_cnea_setup}) y en UTN, junto con la comparación frente a los resultados de simulación electromagnética en ADS y en CST.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Figures/08/coupler_cnea_setup.png}
+    \caption{Medición del acoplador con el VNA N5242B PNA-X en CNEA.}
+    \label{fig:coupler_cnea_setup}
+\end{figure}
+
+\subsection{Comparación entre acoplador v1 y v2}
+Se midieron ambas versiones fabricadas del acoplador. Las Figuras~\ref{fig:coupler_reflexion_v1} y~\ref{fig:coupler_reflexion_v2} muestran los parámetros de reflexión medidos en los puertos 1, 2 y 3 para ambas versiones del acoplador (versión 1 y versión 2, respectivamente), donde se observa claramente el corrimiento de la frecuencia de adaptación entre ambas versiones, corroborando las simulaciones que se llevaron a cabo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_reflexion_v1.png}
+    \caption{Parámetros de reflexión medidos en la primera versión del acoplador.}
+    \label{fig:coupler_reflexion_v1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_reflexion_v2.png}
+    \caption{Parámetros de reflexión medidos en la segunda versión del acoplador.}
+    \label{fig:coupler_reflexion_v2}
+\end{figure}
+
+Para cuantificar esta comparación, el Cuadro~\ref{tab:coupler_v1_v2} resume los valores de frecuencia central efectiva y magnitud de los parámetros de transmisión, junto con la diferencia de fase entre los puertos de salida a 2,2\,GHz, obtenidos para cada versión.
+
+% TODO: los valores de magnitud de S21 y S31 (columna "Magnitud") fueron leídos
+% aproximadamente de las curvas de las figuras originales, dado que no contaban con
+% marcador numérico explícito. Verificar contra los datos crudos de la medición.
+\begin{table}[H]
+    \centering
+    \caption{Comparación de resultados medidos entre el acoplador v1 y v2.}
+    \label{tab:coupler_v1_v2}
+    \begin{tabular}{lcc}
+        \hline\hline
+        \textbf{Parámetro} & \textbf{Acoplador v1} & \textbf{Acoplador v2} \\
+        \hline
+        Frecuencia central $S_{21}$ ($f_c$)          & 1,701~GHz & 2,019~GHz \\
+        Frecuencia central $S_{31}$ ($f_c$)          & 1,542~GHz & 2,117~GHz \\
+        Magnitud $S_{21}$ en $f_c$ (aprox.)          & $-3,55$~dB & $-3,6$~dB \\
+        Magnitud $S_{31}$ en $f_c$ (aprox.)          & $-4,15$~dB & $-4,15$~dB \\
+        Fase $\phi_{21}$ a 2,2~GHz                   & $-87,90°$ & $-64,01°$ \\
+        Fase $\phi_{31}$ a 2,2~GHz                   & $163,37°$ & $-156,58°$ \\
+        Diferencia de fase ($\phi_{21}-\phi_{31}$) a 2,2~GHz & $108,73°$ & $92,57°$ \\
+        \hline\hline
+    \end{tabular}
+\end{table}
+
+Si bien las magnitudes de los parámetros de transmisión resultan similares entre ambas versiones, la frecuencia central de la versión 2 se encuentra próxima a los 2,2\,GHz de diseño que la de la versión 1, consistente con el corrimiento identificado durante la verificación electromagnética. De manera análoga, la diferencia de fase de la versión 2 a la frecuencia de interés resulta considerablemente más próxima al valor ideal de $90°$ que la de la versión 1.
+
+\subsection{Comparación entre laboratorios}
+Con el objetivo de evaluar la consistencia y repetibilidad de las mediciones, se compararon los resultados de parámetros de transmisión de la versión 2 obtenidos en la UTN (medición preliminar, con el VNA FieldFox) contra los obtenidos en CNEA (medición definitiva, con el PNA-X), presentados en la Figura~\ref{fig:coupler_utn_vs_cnea}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_utn_vs_cnea.png}
+    \caption{Comparación de los parámetros de transmisión del acoplador v2 medidos en UTN y en CNEA.}
+    \label{fig:coupler_utn_vs_cnea}
+\end{figure}
+
+Ambos conjuntos de datos presentan una forma general similar, aunque la medición realizada en UTN exhibe un ripple considerable que no está presente en la medición de CNEA. Este ripple se atribuye a dos posibles causas. En primer lugar, a una manipulación poco cuidadosa de los cables durante la medición, dado que las numerosas conexiones y desconexiones realizadas para medir en los distintos puertos implicaron correr y doblar los cables, apartándolos de la posición en la que se realizó la calibración. En segundo lugar, a un posible inconveniente durante el proceso de calibración del instrumento, dado que en una de las calibraciones intentadas el equipo se bloqueó y debió reiniciarse, lo que podría indicar que no estaba operando en condiciones óptimas.
+
+\subsection{Comparación entre mediciones y simulaciones}
+Finalmente, se comparan los resultados medidos sobre el segundo prototipo fabricado contra los resultados de las simulaciones electromagnéticas realizadas en ADS y en CST. La Figura~\ref{fig:coupler_fase_comp} compara la diferencia de fase entre los puertos de salida, mientras que las Figuras~\ref{fig:coupler_s21_comp} y~\ref{fig:coupler_s31_comp} comparan los módulos de $S_{21}$ y $S_{31}$ respectivamente.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_fase_lab_ads_cst.png}
+    \caption{Comparación de la diferencia de fase entre los puertos de salida medida en laboratorio y simulada en ADS y CST.}
+    \label{fig:coupler_fase_comp}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_s21_lab_ads_cst.png}
+    \caption{Comparación del módulo de $S_{21}$ medido en laboratorio y simulado en ADS y CST.}
+    \label{fig:coupler_s21_comp}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figures/08/coupler_s31_lab_ads_cst.png}
+    \caption{Comparación del módulo de $S_{31}$ medido en laboratorio y simulado en ADS y CST.}
+    \label{fig:coupler_s31_comp}
+\end{figure}
+
+El Cuadro~\ref{tab:coupler_lab_ads_cst} resume la diferencia de fase obtenida en cada caso a la frecuencia de interés de 2,2\,GHz.
+
+\begin{table}[H]
+    \centering
+    \caption{Diferencia de fase entre los puertos de salida a 2,2\,GHz, medida y simulada.}
+    \label{tab:coupler_lab_ads_cst}
+    \begin{tabular}{lc}
+        \hline\hline
+        \textbf{Origen} & \textbf{Diferencia de fase ($\phi_{21}-\phi_{31}$)} \\
+        \hline
+        Medición (LAB) & $92,57°$ \\
+        Simulación ADS & $89,948°$ \\
+        Simulación CST & $90,44°$ \\
+        \hline\hline
+    \end{tabular}
+\end{table}
+
+Los tres resultados se encuentran razonablemente próximos entre sí y al valor ideal de $90°$, siendo la simulación en CST la que mejor se aproxima al valor medido. En cuanto a los módulos de $S_{21}$ y $S_{31}$, la curva medida en laboratorio se encuentra corrida levemente hacia frecuencias más bajas respecto de las curvas simuladas, mientras que las simulaciones en ADS y en CST resultan más próximas entre sí que respecto de la medición.
+
+% TODO: desarrollar un párrafo de cierre/discusión que interprete estas diferencias entre
+% medición y simulación (por ejemplo, tolerancias de fabricación, variabilidad del sustrato,
+% o efectos no capturados por el modelo electromagnético), a partir de lo que Liam determine
+% como la explicación más adecuada para su caso.
