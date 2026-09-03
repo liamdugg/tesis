@@ -127,7 +127,7 @@ y = (1.0 + content_height) / 2.0
 # Título Power
 ax_leg.text(
     0.0, y,
-    "Power contour levels",
+    r"Contornos de $\mathrm{P_{OUT}}$",
     color=c_pwr,
     transform=ax_leg.transAxes,
     fontsize=12,
@@ -158,7 +158,7 @@ y -= gap
 # Título PAE
 ax_leg.text(
     0.0, y,
-    "PAE contour levels",
+    "Contornos de PAE",
     color=c_pae,
     transform=ax_leg.transAxes,
     fontsize=12,

@@ -88,7 +88,7 @@ def make_s11_plot(freq_meas, s11_meas, freq_sim, s11_sim, filename):
 	add_marker(ax, freq_sim,  s11_sim,  'black', text_offset=(0.35, -1.0), alpha=0.85)
 
 	ax.set_xlabel(r"Frecuencia (GHz)", labelpad=3)
-	ax.set_ylabel(r"S11 (dB)", labelpad=3)
+	ax.set_ylabel(r"$\mathrm{|S_{11}|}$ (dB)", labelpad=3)
 	ax.set_xlim(freq_meas.min(), freq_meas.max())
 	ax.grid(True, linestyle='--', alpha=0.3)
 	ax.legend(loc='lower left')
@@ -103,11 +103,11 @@ def make_s21_plot(freq_meas, s21_meas, freq_sim, s21_sim, filename):
 	fig, ax = plt.subplots()
 
 	# S21 plot
-	ax.plot(freq_meas, s21_meas, linestyle='-' , color=palette[0], label=r"S21 Medido")
-	ax.plot(freq_sim,  s21_sim,  linestyle='--', color=palette[0], alpha=0.85, label=r"S21 Simulado")
+	ax.plot(freq_meas, s21_meas, ls='-' , c=palette[0], label=r"S21 Medido")
+	ax.plot(freq_sim,  s21_sim,  ls='--', c=palette[0], alpha=0.85, label=r"S21 Simulado")
 
 	# Add vertical dashed line at FREQ_MARK
-	ax.axvline(x=FREQ_MARK, color=c_grid, linestyle='--', linewidth=1.0, alpha=0.5, zorder=1)
+	ax.axvline(x=FREQ_MARK, c=c_grid, ls='--', lw=1.0, alpha=0.5, zorder=1)
 	t_s21 = blended_transform_factory(ax.transData, ax.transAxes)
 	
 	ax.text(FREQ_MARK + 0.17, 0.275, "2.2 GHz", transform=t_s21, rotation=270, va='top', ha='right', color=c_grid, fontsize=12)
@@ -117,7 +117,7 @@ def make_s21_plot(freq_meas, s21_meas, freq_sim, s21_sim, filename):
 	add_marker(ax, freq_sim,  s21_sim,  'black', text_offset=(0.35, 1.0), alpha=0.85)
 
 	ax.set_xlabel(r"Frecuencia (GHz)", labelpad=3)
-	ax.set_ylabel(r"S21 (dB)", labelpad=3)
+	ax.set_ylabel(r"$\mathrm{|S_{21}|}$ (dB)", labelpad=3)
 	ax.set_xlim(freq_meas.min(), freq_meas.max())
 	ax.grid(True, linestyle='--', alpha=0.3)
 
