@@ -17,7 +17,7 @@ def eficiencia(alpha):
 # evitar division por cero exacta en alpha = 0 y alpha = 2*pi
 eps   = 1e-6
 alpha = np.linspace(2 * np.pi - eps, eps, 1000)  # de 2pi a 0 (izquierda a derecha)
-eta   = eficiencia(alpha) * 100  # en porcentaje
+eta   = eficiencia(alpha) * 100                  # en porcentaje
 
 fig, ax = plt.subplots()
 ax.plot(alpha, eta)
