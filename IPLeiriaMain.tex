@@ -9,10 +9,10 @@
     coverstyle=classic
 ]{IPLeiriaThesis} % Refer to the Wiki for a list of available options.
 
-%%% Document Version %%%
+% Document Version %
 \DocumentVersion{1.0.0}
 
-%%% Document Metadata %%%
+% Document Metadata %
 \input{Metadata/Metadata}
 
 \usepackage{float}
@@ -45,42 +45,42 @@
 \usepackage{circuitikz}
 \usetikzlibrary{external}
 \usetikzlibrary{intersections}
+
 \usepackage{pgfplots}
 \usepgfplotslibrary{colorbrewer}
 \usepgfplotslibrary{fillbetween}
 \pgfplotsset{compat=1.18}
 \tikzexternalize[prefix=tikz/]
 
-% --- Colores personalizados ---
+% Colores personalizados
 \definecolor{coppercolor}{RGB}{229, 179, 58}
 \definecolor{dielectriccolor}{RGB}{112, 173, 104}
 
-%\setlength{\parskip}{0pt}
 \raggedbottom
 
 \overfullrule=5pt
 
 \begin{document}
 
-%%% Front Matter %%%
+% Front Matter %
 \include{Matter/00-Cover}
 \include{Matter/01-Front-Page}
 
-%%% Roman Numeration %%%
+% Roman Numeration %
 \pagenumbering{roman}
 
-%%% Abstract %%%
+% Abstract %
 \include{Chapters/00-Abstract}
 
-%%% Table of Contents, List of Figures and List of Tables %%%
+% Table of Contents, List of Figures and List of Tables %
 \bookmarktocentry\tableofcontents
 \listoffigures
 %\listoftables
 
-%%% Arabic Numeration %%%
+% Arabic Numeration %
 \pagenumbering{arabic}
 
-%%% Chapters (**Insert Yours Here**) %%%
+% Chapters %
 \include{Chapters/01-Anteproyecto}
 \include{Chapters/02-RedefinicionAlcance}
 \include{Chapters/03-CubeSatLEO}
@@ -98,17 +98,17 @@
 
 \include{Chapters/09-Conclusiones}
 
-%%% Bibliography %%%
+% Bibliography %
 \renewcommand{\refname}{Bibliografía}
 \printbibliography[title={\refname},heading=bibintoc]
 
-%%% Appendices: Work that *YOU* Developed %%%
+% Appendices: Work that *YOU* Developed %
 \appendix
 \input{Matter/06-Appendices}
 \input{Chapters/Appendices/00-AppendixA}
 \input{Chapters/Appendices/00-AppendixB}
  
-%%% Back Page %%%
+% Back Page %
 \input{Matter/08-Back-Page}
 
 \end{document}
