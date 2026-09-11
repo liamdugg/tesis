@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 matplotlib.style.use('tesis.mplstyle')
-plt.rcParams.update({'figure.dpi': '100'})
 
 SCRIPT_DIR  = Path(__file__).resolve().parent
 MEAS_DIR    = SCRIPT_DIR.parent / "Measurements"
@@ -49,7 +48,7 @@ def plot_reflection(version):
 	ax.plot(freq, s33, c=c_s33, label=r"$\mathrm{S_{33}}$")
 
 	ax.set_xlim(*X_LIMIT_GHZ)
-	ax.set_ylim(bottom=-40)
+	ax.set_ylim(top=0, bottom=-40)
 	
 	ax.set_xlabel(r"Frecuencia (GHz)", labelpad=3)
 	ax.set_ylabel(r"Magnitud (dB)"   , labelpad=3)
@@ -59,7 +58,6 @@ def plot_reflection(version):
 	ax.legend()
 
 	plt.tight_layout()
-	plt.show()
 
 	fig.savefig(OUTPUT_DIR / f"coupler_reflexion_{version.lower()}.png", format='png')
 	print(f"\nGuardado\n")
