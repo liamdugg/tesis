@@ -52,7 +52,7 @@ Para cuantificar esta comparación, el Cuadro~\ref{tab:coupler_v1_v2} resume los
     \end{tabular}
 \end{table}
 
-Si bien las magnitudes de los parámetros de transmisión resultan similares entre ambas versiones, la frecuencia central de la versión 2 se encuentra próxima a los 2,2\,GHz de diseño que la de la versión 1, consistente con el corrimiento identificado durante la verificación electromagnética. De manera análoga, la diferencia de fase de la versión 2 a la frecuencia de interés resulta considerablemente más próxima al valor ideal de $90°$ que la de la versión 1.
+Si bien las magnitudes de los parámetros de transmisión resultan similares entre ambas versiones, la frecuencia central de la versión 2 se encuentra más próxima a los 2,2\,GHz de diseño que la de la versión 1, consistente con el corrimiento identificado durante la verificación electromagnética. De manera análoga, la diferencia de fase de la versión 2 a la frecuencia de interés resulta considerablemente más próxima al valor ideal de $90°$ que la de la versión 1.
 
 \subsection{Comparación entre laboratorios}
 Con el objetivo de evaluar la consistencia y repetibilidad de las mediciones, se compararon los resultados de parámetros de transmisión de la versión 2 obtenidos en la UTN (medición preliminar, con el VNA FieldFox) contra los obtenidos en CNEA (medición definitiva, con el PNA-X), presentados en la Figura~\ref{fig:coupler_utn_vs_cnea}.
@@ -67,7 +67,7 @@ Con el objetivo de evaluar la consistencia y repetibilidad de las mediciones, se
 Ambos conjuntos de datos presentan una forma general similar, aunque la medición realizada en UTN exhibe un ripple considerable que no está presente en la medición de CNEA. Este ripple se atribuye a tres posibles causas. En primer lugar, a una manipulación poco cuidadosa de los cables durante la medición, dado que las numerosas conexiones y desconexiones realizadas para medir en los distintos puertos implicaron correr y doblar los cables, apartándolos de la posición en la que se realizó la calibración. En segundo lugar, a un posible inconveniente durante el proceso de calibración del instrumento, dado que en una de las calibraciones intentadas el equipo se bloqueó y debió reiniciarse, lo que podría indicar que no estaba operando en condiciones óptimas. Por último, el kit de calibración disponible era para cables tipo N, mientras que para la medición se utilizaron cables SMA. La falta de un kit de calibración apropiado, casi con total seguridad, actuó como fuente de errores añadidos, resultando en la degradación de la calidad de medición.
 
 \subsection{Comparación entre mediciones y simulaciones}
-Finalmente, se llevo a cabo la comparación entre los resultados medidos sobre el segundo prototipo fabricado contra los resultados de las simulaciones. La Figura~\ref{fig:coupler_fase_comp} compara la diferencia de fase entre los puertos de salida, mientras que las Figuras~\ref{fig:coupler_s21_comp} y~\ref{fig:coupler_s31_comp} comparan los módulos de $S_{21}$ y $S_{31}$ respectivamente.
+Finalmente, se llevó a cabo la comparación entre los resultados medidos sobre el segundo prototipo fabricado contra los resultados de las simulaciones. La Figura~\ref{fig:coupler_fase_comp} compara la diferencia de fase entre los puertos de salida, mientras que las Figuras~\ref{fig:coupler_s21_comp} y~\ref{fig:coupler_s31_comp} comparan los módulos de $S_{21}$ y $S_{31}$ respectivamente.
 
 \begin{figure}[H]
     \centering
@@ -101,9 +101,9 @@ El Cuadro~\ref{tab:coupler_lab_ads_cst} resume la diferencia de fase obtenida en
         \textbf{Origen} & $\mathbf{|S_{21}|}$ \textbf{(dB)} & $\mathbf{|S_{31}|}$ \textbf{(dB)} & \textbf{Dif. fase} $\mathbf{(\phi_{21}-\phi_{31}) (^\circ)}$ \\
         
         \hline
-        Medición (CNEA) & -4.032  & -4.171  & $92,57^\circ$ \\
-        Simulación ADS  & -3.227  & -3.3532 & $89,95^\circ$ \\
-        Simulación CST  & -3.992  & -3.419  & $90,44^\circ$ \\
+        Medición (CNEA) & -4,032  & -4,171  & $92,57^\circ$ \\
+        Simulación ADS  & -3,227  & -3,3532 & $89,95^\circ$ \\
+        Simulación CST  & -3,992  & -3,419  & $90,44^\circ$ \\
         \hline\hline
     \end{tabular}
 \end{table}

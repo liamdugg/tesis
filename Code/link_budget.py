@@ -1,13 +1,22 @@
-import os
+import matplotlib
 import numpy as np
 import tkinter as tk
-import matplotlib
 import matplotlib.pyplot as plt
 
 from tkinter import ttk
+from pathlib import Path
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 matplotlib.use("TkAgg")
+matplotlib.style.use("tesis.mplstyle")
+
+# dpi bajo para la vista en pantalla. se sube al guardar
+plt.rcParams.update({"figure.dpi": 100})  
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = SCRIPT_DIR.parent / "Figures"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Constants
 FREQ       = 2.2e9
@@ -21,32 +30,18 @@ ANG        = np.arange(0.0, 90.1, 0.1)
 RAD        = np.deg2rad(ANG)
 
 MOD_COLORS = {"QPSK": "#2d7dd2", "8-PSK": "#1d9e75", "16-PSK": "#d85a30"}
-MOD_REQS   = {"QPSK": EBN0_QPSK, "8-PSK": EBN0_8PSK, "16-PSK": EBN0_16PSK}
+MOD_REQS   = {"QPSK": EBN0_QPSK  , "8-PSK": EBN0_8PSK  , "16-PSK": EBN0_16PSK}
 
-BG      = "#ffffff"
-BG2     = "#f5f5f5"
-FG      = "#2c2c2a"
-FG_MUT  = "#73726c"
-ACCENT  = "#185fa5"
-FONT    = ("Helvetica", 9)
-MONO    = ("Courier", 9)
-
-PAPER_RC = {
-    "text.usetex": True,
-    "text.latex.preamble": r"\usepackage{bm} \renewcommand{\seriesdefault}{\bfdefault} \boldmath",
-    "font.family": "serif",
-    "font.serif": ["Computer Modern Roman"],
-    "font.weight": "bold",
-    "axes.labelsize": 8,
-    "axes.labelweight": "bold",
-    "font.size": 8,
-    "legend.fontsize": 7,
-    "xtick.labelsize": 7,
-    "ytick.labelsize": 7,
-}
+BG         = "#ffffff"
+BG2        = "#f5f5f5"
+FG         = "#2c2c2a"
+FG_MUT     = "#73726c"
+ACCENT     = "#185fa5"
+FONT       = ("Helvetica", 9)
+MONO       = ("Courier", 9)
 
 
-# ── Computation ───────────────────────────────────────────────────────────────
+# === calculo de radioenlace =====================================================================
 def compute(r_orb, bit_rate, power_tx, loss_tx, gain_tx, loss_point, loss_atm, gain_rx, loss_rx, t_ant, t_lna, margin_min):
     eirp      = power_tx - loss_tx + gain_tx
     
@@ -69,17 +64,20 @@ def compute(r_orb, bit_rate, power_tx, loss_tx, gain_tx, loss_point, loss_atm, g
 
     return ebn0_disp, margins, {k: min_elev(v) for k, v in margins.items()}
 
-# ── GUI ───────────────────────────────────────────────────────────────────────
+# === GUI =====================================================================
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Satellite Link Budget  —  LEO @ 2.2 GHz")
+
+        self.title("Satellite Link Budget - LEO @ 2.2 GHz")
         self.configure(bg=BG)
         self.resizable(True, True)
+
         self._last_ebn0      = None
         self._last_min_elevs = None
         self._last_r_orb     = 600
         self._last_bit_rate  = 500000
+
         self._build()
         self._update()
 
@@ -88,7 +86,7 @@ class App(tk.Tk):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
-        # ── Left column ──
+        # Left column
         left = tk.Frame(self, bg=BG)
         left.grid(row=0, column=0, sticky="nsew")
         left.rowconfigure(0, weight=1)
@@ -119,8 +117,8 @@ class App(tk.Tk):
 
         r = 0
         r = self._sep(inner, "Órbita y señal", r)
-        self.e_rorb  = self._entry(inner, "Radio de órbita", "km",  "600",    r); r += 1
-        self.e_brate = self._entry(inner, "Tasa de bits",    "bps", "500000", r); r += 1
+        self.e_rorb    = self._entry(inner, "Radio de órbita", "km",  "600",    r); r += 1
+        self.e_brate   = self._entry(inner, "Tasa de bits",    "bps", "500000", r); r += 1
 
         r = self._sep(inner, "Transmisor", r)
         self.sl_ptx    = self._slider(inner, "Potencia Tx",        "dBW", r, -10, 30, 0.0,  0.5);   r += 1
@@ -142,7 +140,7 @@ class App(tk.Tk):
         r = self._sep(inner, "Criterio de cierre", r)
         self.sl_mmin   = self._slider(inner, "Margen mínimo",      "dB",  r,   0,  10,  1.0, 1.0);   r += 1
 
-        # ── Status box ──
+        # Status box
         status_wrap = tk.Frame(left, bg=BG2, highlightthickness=1, highlightbackground="#c4c2ba")
         status_wrap.grid(row=1, column=0, sticky="ew")
 
@@ -156,7 +154,7 @@ class App(tk.Tk):
 
         self.status.pack(fill="x")
 
-        # ── Save button ──
+        # Save button
         btn_frame = tk.Frame(left, bg=BG2, highlightthickness=1, highlightbackground="#c4c2ba")
         btn_frame.grid(row=2, column=0, sticky="ew")
 
@@ -181,7 +179,7 @@ class App(tk.Tk):
         self.save_label = tk.Label(btn_frame, text="", bg=BG2, fg=FG_MUT, font=("Helvetica", 8), anchor="center")
         self.save_label.pack(fill="x", padx=10, pady=(0, 6))
 
-        # ── Right column (plot) ──
+        # Right column (plot)
         right = tk.Frame(self, bg=BG, padx=10, pady=12)
         right.grid(row=0, column=1, sticky="nsew")
         right.rowconfigure(0, weight=1)
@@ -194,7 +192,7 @@ class App(tk.Tk):
         self.cv = FigureCanvasTkAgg(self.fig, master=right)
         self.cv.get_tk_widget().grid(row=0, column=0, sticky="nsew")
 
-    # ── Widget constructors ───────────────────────────────────────────────────
+    # Widget constructors
     def _sep(self, p, title, row):
         tk.Label(p, text=title.upper(), bg=BG, fg=FG_MUT, font=("Helvetica", 8, "bold"), anchor="w").grid(row=row, column=0, columnspan=3, sticky="ew", pady=(12, 1))
         
@@ -245,7 +243,7 @@ class App(tk.Tk):
         sl.grid(row=row, column=1, sticky="ew", padx=(6, 4), pady=2)
         return var
 
-    # ── Actions ───────────────────────────────────────────────────────────────
+    # Actions
     def _update(self):
         try:
             r_orb    = float(self.e_rorb.get())
@@ -269,6 +267,7 @@ class App(tk.Tk):
             t_lna      = self.sl_tlna.get(),
             margin_min = self.sl_mmin.get(),
         )
+        
         self._last_ebn0      = ebn0_disp
         self._last_min_elevs = min_elevs
         self._last_r_orb     = r_orb
@@ -281,75 +280,79 @@ class App(tk.Tk):
         if self._last_ebn0 is None:
             return
 
-        with matplotlib.rc_context(PAPER_RC):
-            fig_p, ax_p = plt.subplots(figsize=(3.5, 2.8))
-            fig_p.patch.set_facecolor("#ffffff")
-            ax_p.set_facecolor("#ffffff")
+        fig_p, ax_p = plt.subplots()
 
-            ebn0_disp = self._last_ebn0
-            min_elevs = self._last_min_elevs
-            mmin      = self.sl_mmin.get()
+        fig_p.patch.set_facecolor("#ffffff")
+        ax_p.set_facecolor("#ffffff")
 
-            ax_p.plot(ANG, ebn0_disp, color="#2c2c2a", lw=1.5, label=r"$E_b/N_0$ Available", zorder=5)
+        ebn0_disp = self._last_ebn0
+        min_elevs = self._last_min_elevs
+        mmin      = self.sl_mmin.get()
 
-            for mod, req in MOD_REQS.items():
-                col = MOD_COLORS[mod]
-                eff = req + mmin
-                ax_p.axhline(eff, color=col, ls="--", lw=1.0, label=r"{} req+margin={:.1f} dB".format(mod, eff), zorder=3)
-                ax_p.fill_between(ANG, eff, ebn0_disp, where=ebn0_disp >= eff, color=col, alpha=0.09, zorder=1)
-                
-                elev = min_elevs[mod]
-                if elev is not None:
-                    ax_p.axvline(elev, color=col, ls=":", lw=0.8, alpha=0.7, zorder=2)
-                    ax_p.plot(elev, eff, 'o', color=col, markersize=4, zorder=6)
-                    ax_p.text(elev - 4, eff + 0.3, r"${:.0f}^\circ$".format(elev), color=col, fontsize=7, va="bottom")
+        ax_p.plot(ANG, ebn0_disp, color="#2c2c2a", lw=1.5, label=r"$E_b/N_0$ Disponible", zorder=5)
 
-            ax_p.set_xlabel(r"Elevation Angle ($^\circ$)", labelpad=3)
-            ax_p.set_ylabel(r"$E_b/N_0$ (dB)", labelpad=3)
-            ax_p.set_xlim(0, 90)
-            ax_p.grid(True, linestyle='--', linewidth=0.4, alpha=0.7, which="major")
-            ax_p.grid(True, linestyle='--', linewidth=0.2, alpha=0.3, which="minor")
-            ax_p.xaxis.set_minor_locator(AutoMinorLocator())
-            ax_p.yaxis.set_minor_locator(AutoMinorLocator())
+        for mod, req in MOD_REQS.items():
+            col = MOD_COLORS[mod]
+            eff = req + mmin
+            ax_p.axhline(eff, c=col, ls="--", lw=1.0, label=f"Límite {mod}", zorder=3)
+            ax_p.fill_between(ANG, eff, ebn0_disp, where=ebn0_disp >= eff, color=col, alpha=0.09, zorder=1)
+            
+            elev = min_elevs[mod]
+            if elev is not None:
+                ax_p.axvline(elev, c=col, ls=":", lw=0.8, alpha=0.7, zorder=2)
+                ax_p.plot(elev, eff, 'o', c=col, ms=4, zorder=6)
+                ax_p.text(elev - 4, eff + 0.3, r"${:.0f}^\circ$".format(elev), color=col, fontsize=12, va="bottom", fontweight='bold')
 
-            legend = ax_p.legend(loc="lower right", framealpha=1.0, edgecolor='black', fancybox=False)
-            legend.get_frame().set_linewidth(1.0)
+        ax_p.set_xlabel(r"Angulo de Elevación ($^\circ$)", labelpad=3)
+        ax_p.set_ylabel(r"$E_b/N_0$ (dB)"                , labelpad=3)
 
-            fig_p.tight_layout(pad=0.3)
+        ax_p.set_xlim(0, 90)
 
-            output_path = os.path.expanduser("~/Downloads/link_budget_plot.png")
-            fig_p.savefig(output_path, dpi=300, bbox_inches='tight', format='png')
-            plt.close(fig_p)
+        ax_p.grid(True, ls='--', lw=0.4, alpha=0.7, which="major")
+        ax_p.grid(True, ls='--', lw=0.2, alpha=0.3, which="minor")
+        
+        ax_p.xaxis.set_minor_locator(AutoMinorLocator())
+        ax_p.yaxis.set_minor_locator(AutoMinorLocator())
 
-        self.save_label.config(text="Guardado en ~/Downloads/LinkBudget_plot.png")
+        legend = ax_p.legend(loc="lower right", framealpha=1.0, edgecolor='black', fancybox=False)
+        legend.get_frame().set_linewidth(1.0)
+
+        fig_p.tight_layout(pad=0.3)
+
+        output_path = OUTPUT_DIR / "lb_rb_plot.png"
+        fig_p.savefig(output_path, dpi=600, bbox_inches='tight', format='png')  # dpi alto (tesis.mplstyle), para guardar
+        plt.close(fig_p)
+
+        self.save_label.config(text=f"Guardado en {output_path}")
 
     def _draw(self, ebn0_disp, min_elevs):
         ax = self.ax
         ax.cla()
         ax.set_facecolor("#ffffff")
 
-        ax.plot(ANG, ebn0_disp, color="#2c2c2a", lw=2.2, label=r"Eb/N0 Available", zorder=5)
+        ax.plot(ANG, ebn0_disp, c="#2c2c2a", lw=2.2, label=r"Eb/N0 Disponible", zorder=5)
 
         mmin = self.sl_mmin.get()
 
         for mod, req in MOD_REQS.items():
             col = MOD_COLORS[mod]
             eff = req + mmin
-            ax.axhline(eff, color=col, ls="--", lw=1.5, label=f"{mod} req+margin={eff:.1f} dB", zorder=3)
+
+            ax.axhline(eff, c=col, ls="--", lw=1.5, label=f"Límite {mod}", zorder=3)
             ax.fill_between(ANG, eff, ebn0_disp, where=ebn0_disp >= eff, color=col, alpha=0.09, zorder=1)
             
             elev = min_elevs[mod]
             if elev is not None:
-                ax.axvline(elev, color=col, ls=":", lw=1.0, alpha=0.7, zorder=2)
-                ax.plot(elev, eff, 'o', color=col, markersize=7, zorder=6)
-                ax.text(elev - 4, eff + 0.3, f"{elev:.0f}°", color=col, fontsize=9, va="bottom")
+                ax.axvline(elev, c=col, ls=":", lw=1.0, alpha=0.7, zorder=2)
+                ax.plot(elev, eff, 'o', c=col, ms=7, zorder=6)
+                ax.text(elev - 4, eff + 0.3, f"{elev:.0f}°", c=col, fontsize=12, va="bottom", fontweight='bold')
 
-        ax.set_xlabel("Elevation Angle (°)", fontsize=10)
-        ax.set_ylabel("Eb/N0 (dB)", fontsize=10)
+        ax.set_xlabel("Ángulo de Elevación (°)", labelpad=3)
+        ax.set_ylabel("Eb/N0 (dB)"             , labelpad=3)
         ax.set_xlim(0, 90)
 
-        ax.grid(True, linestyle='--', linewidth=0.4, alpha=0.7, which="major")
-        ax.grid(True, linestyle='--', linewidth=0.2, alpha=0.3, which="minor")
+        ax.grid(True, ls='--', lw=0.4, alpha=0.7, which="major")
+        ax.grid(True, ls='--', lw=0.2, alpha=0.3, which="minor")
         ax.xaxis.set_minor_locator(AutoMinorLocator())
         ax.yaxis.set_minor_locator(AutoMinorLocator())
 
@@ -362,7 +365,7 @@ class App(tk.Tk):
     def _refresh_status(self, ebn0_disp, margins, min_elevs):
         lines = [
             f"  Eb/N0 @ zenith (90°) : {ebn0_disp[-1]:+6.2f} dB",
-            f"  Eb/N0 @ 5° elevacion : {ebn0_disp[50]:+6.2f} dB",
+            f"  Eb/N0 @ 5° elevación : {ebn0_disp[50]:+6.2f} dB",
             "",
         ]
 
