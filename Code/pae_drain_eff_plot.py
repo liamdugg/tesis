@@ -55,7 +55,7 @@ fig, ax = plt.subplots()
 
 # drain eff. y pae vs. pout
 ax.plot(Pout, drain_eff, c=c_drain, marker='o', ms=4, mfc='none', label=r"Eficiencia de drain")
-ax.plot(Pout, pae      , c=c_pae  , marker='s', ms=4, mfc='none', label=r"PAE")
+ax.plot(Pout, pae      , ls='-',c=c_pae  , marker='s', ms=4, mfc='none', label=r"PAE")
 
 # punto de p1db
 ax.plot(Pout[idx_p1db], pae[idx_p1db], marker='o', ms=3, c='black', zorder=6)
