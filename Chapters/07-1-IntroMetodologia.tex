@@ -151,3 +151,9 @@ Siguiendo el principio de la prueba de dos tonos descripta en la Sección~\ref{s
     \caption{Diagrama en bloques del setup de medición de OIP3 del amplificador.}
     \label{fig:setup_medicion_oip3}
 \end{figure}
+
+% -----------------------------------------------------------------------------------------------%
+\subsubsection{Análisis térmico} \label{sec:metodologia_termico}
+Las mediciones anteriores caracterizan el desempeño eléctrico del amplificador, pero no informan sobre su estado térmico. El transistor disipa en forma de calor la fracción de la potencia de continua que no se convierte en señal de radiofrecuencia y, en la aplicación a bordo de un CubeSat, no existe convección: el calor solo puede evacuarse por conducción hacia la estructura y por radiación hacia el exterior. La temperatura de juntura es, por ende, un factor crítico para la aplicación. Por este motivo se realizó un análisis térmico, a partir de los valores medidos de tensión y corriente de drain, potencia de salida y ganancia en el punto de operación cercano al P1dB, y de los datos térmicos del fabricante del transistor.
+
+El objetivo del análisis es doble: estimar cuánto se calienta la juntura y determinar qué resistencia térmica puede tener el montaje de la placa sin superar la temperatura de juntura máxima admisible. De esta manera se establece un requisito para el diseño del montaje y para futuras iteraciones del circuito.

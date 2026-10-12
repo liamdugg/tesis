@@ -175,6 +175,144 @@ Se obtuvo un OIP3 de 39,83\,dBm. Este valor resulta consistente con la relación
 \end{figure}
 
 % -----------------------------------------------------------------------------------------------%
+\subsection{Análisis térmico} \label{sec:analisis_termico}
+Para el análisis se supuso el caso de operar con onda continua en el punto de medición más cercano a P1dB, con una potencia de salida de 30,92\,dBm. Un modelo circuital del sistema se ilustra en la Figura~\ref{fig:thermal_analysis}, en el cual la potencia equivale a una corriente, la temperatura a una tensión y cada tramo del camino del calor a una resistencia térmica.
+
+\begin{figure}
+    \centering
+    \ctikzset{bipoles/thickness=2}
+    \begin{tikzpicture}[line width=1pt]
+        \draw (7, 9) to[american current source, l={$P_{DIS}$}] (7, 11);
+        \draw (17, 11) to[esource, l={$T_{REF}$}] (17, 9);
+        \draw (7, 11) to[american resistor, /tikz/circuitikz/bipoles/length=1.12cm, l={$R_{jc}$}] (9, 11);
+        \draw (9, 11) to[american resistor, /tikz/circuitikz/bipoles/length=1.12cm, l={$R_{vias}$}] (11, 11);
+        \draw (11, 11) to[american resistor, /tikz/circuitikz/bipoles/length=1.12cm, l={$R_{PCB}$}] (13, 11);
+        \draw (13, 11) to[american resistor, /tikz/circuitikz/bipoles/length=1.12cm, l={$R_{cont}$}] (15, 11);
+        \draw (15, 11) to[american resistor, /tikz/circuitikz/bipoles/length=1.12cm, l={$R_{est}$}] (17, 11);
+        \draw (7, 9) -- (17, 9);
+        \node[shape=rectangle, minimum width=0.59cm, minimum height=0.465cm] at (7, 11.25){} node[anchor=center, align=center, text width=0.202cm, inner sep=6pt] at (7, 11.25){$T_{j}$};
+        \node[shape=rectangle, minimum width=0.59cm, minimum height=0.465cm] at (9, 11.25){} node[anchor=center, align=center, text width=0.202cm, inner sep=6pt] at (9, 11.25){$T_{c}$};
+        \node[ground] at (12, 9){};
+    \end{tikzpicture}
+    \caption{Modelo circuital para el análisis térmico.}
+    \label{fig:thermal_analysis}
+\end{figure}
+
+La fuente de corriente $P_{DIS}$ representa la potencia disipada por el transistor, es decir, la potencia que ingresa al dispositivo y no sale como señal de RF, y que se convierte en calor. La fuente de tensión $T_{REF}$ representa la temperatura de la superficie de apoyo del PCB y actúa como condición de borde del modelo. Entre ambas, el calor atraviesa en serie las siguientes resistencias térmicas, desde la juntura hacia la estructura.
+
+\begin{itemize}
+    \item $R_{jc}$: resistencia entre la juntura del transistor ($T_j$) y el pad de masa del encapsulado ($T_c$), cuyo valor especifica el fabricante.
+    \item $R_{vias}$: resistencia de las vías térmicas ubicadas bajo el pad de masa, que conducen el calor a través del espesor del PCB.
+    \item $R_{PCB}$: resistencia de esparcimiento del calor en el cobre del PCB, desde la zona de las vías hasta los puntos donde la placa apoya sobre la estructura.
+    \item $R_{cont}$: resistencia de contacto entre el PCB y la estructura de montaje, que depende de la sujeción de la placa y del material de interfaz.
+    \item $R_{est}$: resistencia de conducción en la estructura, hasta el punto donde se define $T_{REF}$.
+\end{itemize}
+
+\subsubsection{Potencia disipada}
+Como primer paso se calculó la potencia disipada:
+
+\begin{equation}
+    P_{DIS} = P_{DC} + P_{in} - P_{out}
+    \label{eq:th_pdiss}
+\end{equation}
+
+En el punto de medición considerado, la tensión de drain es $V_D = 28\,V$, la corriente de drain medida es $I_D = 134\,mA$ y la ganancia es de 11,32\,dB. Las potencias involucradas resultan
+
+\begin{equation}
+    P_{out} \approx 1,236\,W, \qquad P_{DC} = V_D \, I_D = 28\,V \cdot 0,134\,A \approx 3,752\,W
+    \label{eq:th_pout_pdc}
+\end{equation}
+
+\begin{equation}
+    P_{in,PA} = 30,92\,dBm - 11,32\,dB = 19,60\,dBm \approx 91\,mW
+    \label{eq:th_pin}
+\end{equation}
+
+y, reemplazando en la ecuación~\eqref{eq:th_pdiss}, la potencia disipada es
+
+\begin{equation}
+    P_{DIS} = 3,752 + 0,091 - 1,236 \approx 2,61\,W
+    \label{eq:th_pdiss_valor}
+\end{equation}
+
+\subsubsection{Modelo térmico}
+En el modelo de la Figura~\ref{fig:thermal_analysis}, la caída de temperatura en cada tramo es
+
+\begin{equation}
+    \Delta T = P_{DIS} \, R_{th}
+    \label{eq:th_deltaT}
+\end{equation}
+
+y la temperatura de juntura resulta
+
+\begin{equation}
+    T_j = T_{REF} + P_{DIS}\left(R_{jc} + R_{vias} + R_x\right), \qquad R_x = R_{PCB} + R_{cont} + R_{est}
+    \label{eq:th_tj}
+\end{equation}
+
+donde $R_x$ agrupa los tramos que dependen del montaje de la placa. Dado que el montaje de la placa dentro del CubeSat no está definido, $R_x$ no se calcula sino que se expresa como un requisito de diseño.
+
+De la hoja de datos del CGH40006S~\cite{macom} se toman $R_{jc} = 10,1\,^{\circ}C/W$, y una temperatura de juntura máxima $T_{j,max} = 175\,^{\circ}C$. El fabricante define la temperatura de case como la del pad bajo el encapsulado.
+
+\subsubsection{Resistencia térmica de las vías}
+Las vías ubicadas bajo el pad de masa del encapsulado constituyen el primer tramo del camino del calor dentro del PCB, y solo se consideraron las que caen dentro de la huella de dicho pad. Las vías están tapadas con máscara (tented) y no tienen soldadura en su interior, por lo que cada una se comporta como un tubo hueco de cobre y el calor se conduce únicamente por su pared. Los datos empleados son: un diámetro de agujero $d_o = 0,3\,mm$, un espesor medio de revestimiento de cobre en los agujeros de $t = 18\,\mu m$ según la especificación del fabricante del PCB, un espesor total de la placa $L=1,6\,mm$, $N=10$ vías dentro del pad y una conductividad térmica del cobre $k_{Cu} = 385\,W/mK$.
+
+El diámetro interior y el área de la corona circular de cobre de cada vía son
+
+\begin{equation}
+    d_i = d_o - 2t = 0,264\,mm, \qquad A = \frac{\pi}{4}\left(d_o^2 - d_i^2\right) = \pi \, t \, (d_o - t) \approx 1,59 \times 10^{-8}\,m^2
+    \label{eq:th_area}
+\end{equation}
+
+La resistencias de una vía, por conducción unidimensional a lo largo de su eje, y la de $N$ vías en paralelo son
+
+\begin{equation}
+    R_{vias,1} = \frac{L}{k_{Cu}\,A} \approx 261\,^{\circ}\text{C/W}, \qquad R_{vias} = \frac{R_{vias,1}}{N} \approx 26,1\,^{\circ}\text{C/W}
+    \label{eq:th_rvias}
+\end{equation}
+
+\subsubsection{Temperatura de referencia máxima y requisito para el montaje}
+Con $P_{DIS} = 2,61\,\text{W}$, los saltos de temperatura en el encapsulado y en las vías son
+
+\begin{equation}
+    \Delta T_{jc} = P_{DIS}\,R_{jc} \approx 26,4\,^{\circ}\text{C}, \qquad \Delta T_{vias} = P_{DIS}\,R_{vias} \approx 68,1\,^{\circ}\text{C}
+    \label{eq:th_saltos}
+\end{equation}
+
+Es decir, la juntura queda $94,5^\circ C$ por encima de la superficie de apoyo del PCB, incluso si el resto del camino fuera ideal ($R_x = 0$). La temperatura máxima admisible para dicha superficie es entonces
+
+\begin{equation}
+    T_{REF,max} = T_{j,max} - \left(\Delta T_{jc} + \Delta T_{vias}\right) \approx 175 - 94,5 = 80,5^\circ C
+    \label{eq:th_trefmax}
+\end{equation}
+
+Para una temperatura de referencia dada, la resistencia térmica máxima que puede tener el resto del camino surge de exigir $T_j \leq T_{j,max}$ en la ecuación~\eqref{eq:th_tj}:
+
+\begin{equation}
+    R_{x,max} = \frac{T_{j,max} - T_{REF}}{P_{DIS}} - R_{jc} - R_{vias}
+    \label{eq:th_rxmax}
+\end{equation}
+
+El Cuadro~\ref{tab:th_rxmax} evalúa esta expresión para tres valores de $T_{REF}$ a modo de ejemplo. Un valor negativo indica que el límite se supera aun con un montaje térmicamente ideal. 
+
+\begin{table}[H]
+    \centering
+    \caption{Resistencia térmica máxima admisible para el resto del camino del calor en función de la temperatura de referencia.}
+    \label{tab:th_rxmax}
+    \begin{tabular}{cc}
+        \hline\hline
+        \textbf{$T_{REF}$ (°C)} & \textbf{$R_{x,max}$ (°C/W)} \\
+        \hline
+        50 & 11,69 \\
+        \hline
+        70 & 4,03 \\
+        \hline
+        85 & $-1,71$ (sin solución) \\
+        \hline\hline
+    \end{tabular}
+\end{table}
+
+% -----------------------------------------------------------------------------------------------%
 \subsection{Resumen de resultados}
 El Cuadro~\ref{tab:resumen_resultados} presenta una vista consolidada de los resultados de caracterización descritos a lo largo de esta sección.
 
@@ -207,4 +345,6 @@ Comparando estos resultados contra los objetivos de diseño establecidos en el C
 
 Al comparar estos valores medidos con los obtenidos mediante simulación a nivel esquemático en el Cuadro~\ref{tab:pa_valores_importantes_ads}, es necesario considerar que ambos conjuntos de valores fueron evaluados en distintas condiciones de operación. La simulación se realizó para una potencia de entrada fija de 20\,dBm, mientras que los valores de gran señal medidos corresponden al punto de compresión de 1\,dB del dispositivo, ubicado a un nivel de excitación distinto. Con esta salvedad, la potencia de salida simulada de 36,157\,dBm a 20\,dBm de entrada resulta consistente con una curva de transferencia que satura en las proximidades de dicho valor, en tanto que la ganancia, la eficiencia de drain y la PAE simuladas exceden a las medidas, diferencia que resulta esperable dado el corrimiento de la frecuencia central y la resonancia parásita identificados en los parámetros de dispersión, ninguno de los cuales fue contemplado en el modelo esquemático original.
 
-En conjunto, los resultados obtenidos validan la metodología de diseño empleada, al tiempo que identifican dos aspectos concretos de mejora para futuras iteraciones del circuito: la incorporación de la inductancia equivalente serie de los componentes discretos de la red de estabilidad desde las primeras etapas de simulación, en lugar de ser una corrección posterior a la medición, y un modelado más detallado de los efectos parásitos del layout físico y del empaquetado de los componentes, en particular mediante la simulación electromagnética del layout completo, con el fin de anticipar la resonancia fuera de banda observada experimentalmente y reducir el desplazamiento de la banda de rechazo del filtro de salida identificado en la caracterización de distorsión armónica.
+Desde el diseño del amplificador se identificaron mejoras que permitirían ampliar el margen térmico, es decir, admitir una mayor temperatura de la superficie de apoyo de la placa o reducir la exigencia sobre su montaje. Dado que el tramo dominante del camino del calor son las vías, las mejoras más directas actúan sobre ellas. Rellenarlas con un material conductor haría que el calor se conduzca por toda su sección y no solo por la pared de cobre, con un beneficio que depende de la conductividad del material elegido. Reducir el espesor del PCB acortaría el recorrido del calor a través de las vías y disminuiría su resistencia térmica en la misma proporción, aunque obligaría a rediseñar las líneas de transmisión, dado que el ancho de una línea de $50\,\Omega$ depende del espesor del sustrato. Aumentar la cantidad de vías agregaría caminos en paralelo para el calor, si bien su número está limitado por el área del pad de masa del encapsulado.
+
+Por otra parte, mejorar la eficiencia del amplificador, por ejemplo mediante el ajuste de las terminaciones armónicas y de la polarización, reduciría el calor generado por el transistor a igual potencia de salida. Esto disminuiría el salto de temperatura en todo el camino y, además, acercaría al amplificador al objetivo de PAE, con el compromiso de linealidad que implica.
